@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         registerButton.setOnClickListener { registerUser() }
         loginButton.setOnClickListener { loginUser() }
     }
-
+    //function to register users
      fun registerUser() {
         val email = emailEditText.text.toString().trim()
         val password = passwordEditText.text.toString().trim()
