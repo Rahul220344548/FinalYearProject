@@ -8,46 +8,86 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="726dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="100dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="165dp"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:background="#EBFFFFFF"
+            tools:srcCompat="@drawable/Applogo1" />
+
+        <TextView
+            android:id="@+id/text_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="GymEase"
+            android:textSize="50sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editTextEmail"
-            android:layout_width="match_parent"
+            android:layout_width="331dp"
             android:layout_height="wrap_content"
-            android:hint="Email" />
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/edittext_border"
+            android:hint="Email"
+            android:gravity="center"
+            android:drawableEnd="@drawable/ic_email"/>
 
         <EditText
             android:id="@+id/editTextPassword"
-            android:layout_width="match_parent"
+            android:layout_width="330dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:hint="Password"
-            android:inputType="textPassword" />
-
-        <Button
-            android:id="@+id/buttonRegister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="registerUser"
-            android:text="Register" />
+            android:background="@drawable/edittext_border"
+            android:inputType="textPassword"
+            android:gravity="center"
+            android:drawableEnd="@drawable/baseline_remove_red_eye_24"/>
 
         <Button
             android:id="@+id/buttonLogin"
+            android:layout_width="245dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:onClick="loginUser"
+            android:layout_gravity="center_horizontal"
+            android:text="LOGIN"
+            app:backgroundTint="@color/orange"
+            />
+        <TextView
+            android:id="@+id/text_view_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="loginUser"
-            android:text="Login" />
+            android:gravity="center"
+            android:text="Forgot password?"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="15sp"
+             />
+        <Button
+            android:id="@+id/buttonRegister"
+            android:layout_width="136dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:onClick="registerUser"
+            android:text="JOIN CLUB"
+            android:textColor="#000000"
+            app:backgroundTint="@color/lightgreen"/>
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
