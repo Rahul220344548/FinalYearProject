@@ -24,10 +24,10 @@
             android:layout_width="match_parent"
             android:layout_height="165dp"
             android:background="#EBFFFFFF"
-            tools:srcCompat="@drawable/Applogo1" />
+            android:src="@drawable/gym_applogo" /> />
 
         <TextView
-            android:id="@+id/text_view_id"
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
