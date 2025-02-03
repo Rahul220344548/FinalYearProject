@@ -46,29 +46,150 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="35dp"
             android:text="Gender"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
-            android:orientation="vertical">
+            android:orientation="horizontal">
             <RadioButton android:id="@+id/radio_genderMale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:paddingLeft="10dp"
                 android:text="Male"/>
             <RadioButton android:id="@+id/radio_genderFemale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_marginLeft="20dp"
+                android:paddingLeft="10dp"
                 android:text="Female"/>
         </RadioGroup>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:text="Date of Birth"
+            android:textSize="18sp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="15dp"
+            android:padding="10dp">
 
+            <EditText
+                android:id="@+id/editDay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/edittext_border"
+                android:padding="8dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:hint="Day"/>
+
+            <EditText
+                android:id="@+id/editMonth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/edittext_border"
+                android:padding="8dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:hint="Month"/>
+
+            <EditText
+                android:id="@+id/editYear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/edittext_border"
+                android:padding="8dp"
+                android:gravity="center"
+                android:hint="Year"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editTextPhoneNumber"
+            android:layout_width="331dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:hint="Phone Number"
+            tools:layout_editor_absoluteX="40dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="331dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:hint="Email Address"
+            tools:layout_editor_absoluteX="40dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="331dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:hint="Password"
+            tools:layout_editor_absoluteX="40dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <EditText
+            android:id="@+id/editTextReEnterPassword"
+            android:layout_width="331dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:hint="Re-enter password"
+            tools:layout_editor_absoluteX="40dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <TextView
+            android:id="@+id/textViewSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Already have an account? Sign in"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/buttonSignUp"
+            android:layout_width="245dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Sign up"
+            app:backgroundTint="@color/orange"/>
+<!--            android:onClick="loginUser"-->
 
 
     </LinearLayout>
