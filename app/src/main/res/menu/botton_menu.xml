@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_home"
+        android:title="Home"
+        android:icon="@drawable/baseline_cottage_24"/>
+    <item
+        android:id="@+id/bottom_class"
+        android:title="Classes"
+        android:icon="@drawable/baseline_calendar_month_24"/>
+    <item
+        android:id="@+id/bottom_account"
+        android:title="Account"
+        android:icon="@drawable/sharp_account_circle_24"/>
+
+</menu>
