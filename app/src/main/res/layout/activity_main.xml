@@ -62,12 +62,11 @@
             android:id="@+id/buttonLogin"
             android:layout_width="245dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:onClick="loginUser"
-            android:layout_gravity="center_horizontal"
             android:text="LOGIN"
-            app:backgroundTint="@color/orange"
-            />
+            app:backgroundTint="@color/orange" />
         <TextView
             android:id="@+id/text_view_id"
             android:layout_width="match_parent"
@@ -78,15 +77,16 @@
             android:layout_marginBottom="10dp"
             android:textSize="15sp"
              />
+
         <Button
             android:id="@+id/buttonRegister"
             android:layout_width="136dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:onClick="registerUser"
+            android:onClick="goToSignUpPage"
             android:text="JOIN CLUB"
             android:textColor="#000000"
-            app:backgroundTint="@color/lightgreen"/>
+            app:backgroundTint="@color/lightgreen" />
 
     </LinearLayout>
 

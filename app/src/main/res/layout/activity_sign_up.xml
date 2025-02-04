@@ -53,23 +53,28 @@
             android:textStyle="bold" />
 
         <RadioGroup
+            android:id="@+id/radioGroup_Gender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
             android:orientation="horizontal">
-            <RadioButton android:id="@+id/radio_genderMale"
+
+            <RadioButton
+                android:id="@+id/radio_genderMale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
                 android:paddingLeft="10dp"
-                android:text="Male"/>
-            <RadioButton android:id="@+id/radio_genderFemale"
+                android:text="Male"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/radio_genderFemale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
                 android:layout_marginLeft="20dp"
                 android:paddingLeft="10dp"
-                android:text="Female"/>
+                android:text="Female"
+                android:textSize="18sp" />
         </RadioGroup>
 
         <TextView
@@ -169,7 +174,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="20dp"
             android:gravity="center"
-            android:hint="Re-enter password"
+            android:hint="Re-enter Password"
             tools:layout_editor_absoluteX="40dp"
             tools:layout_editor_absoluteY="16dp" />
 
@@ -181,14 +186,16 @@
             android:text="Already have an account? Sign in"
             android:textSize="15sp"
             android:textStyle="bold" />
+
         <Button
             android:id="@+id/buttonSignUp"
             android:layout_width="245dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:onClick="registerUser"
             android:text="Sign up"
-            app:backgroundTint="@color/orange"/>
+            app:backgroundTint="@color/orange" />
 <!--            android:onClick="loginUser"-->
 
 
