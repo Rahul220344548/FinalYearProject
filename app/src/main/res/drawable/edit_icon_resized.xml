@@ -1,0 +1,9 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <bitmap
+            android:src="@drawable/baseline_edit_24"
+            android:gravity="center"
+            android:width="48dp"
+            android:height="48dp"/>
+    </item>
+</layer-list>
