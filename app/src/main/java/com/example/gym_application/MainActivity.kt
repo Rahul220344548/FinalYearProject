@@ -39,6 +39,26 @@ class MainActivity : AppCompatActivity() {
         passwordEditText = findViewById(R.id.editTextPassword)
     }
 
+    fun autoLogin(view: View) {
+        val testEmail = "test@gmail.com"
+        val testPassword = "password123"
+
+        auth.signInWithEmailAndPassword(testEmail, testPassword)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Auto Login successful!", Toast.LENGTH_SHORT).show()
+
+                    // Navigate to HomeActivity
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish() // Close MainActivity to prevent back navigation
+                } else {
+                    // Display error message if login fails
+                    Toast.makeText(this, "Auto Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
 
     // Login user
     fun loginUser(view: View) {
