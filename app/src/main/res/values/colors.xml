@@ -6,4 +6,8 @@
     <color name = "lightgreen">#60EEA0</color>
     <color name = "lightblue">#77E1F9</color>
     <color name = "grey">#EDEDED</color>
+    <color name = "lightgrey">#D9D9D9</color>
+    <color name = "bronze">#CE8946</color>
+    <color name = "silver">#EEEEEE</color>
+    <color name = "gold">#FFD700</color>
 </resources>

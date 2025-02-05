@@ -92,6 +92,7 @@
                 android:textSize="25dp" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnMembership"
                 android:layout_width="333dp"
                 android:layout_height="72dp"
                 android:layout_marginStart="25dp"

@@ -42,11 +42,21 @@ class AccountFragment : Fragment() {
             goToEditProfile()
         }
 
+        val btnMembership : AppCompatButton = view.findViewById(R.id.btnMembership)
+        btnMembership.setOnClickListener{
+            goToMembershipPage()
+        }
+
         return view
     }
 
     private fun goToEditProfile() {
         val intent = Intent(requireContext(), EditProfileActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToMembershipPage(){
+        val intent = Intent(requireContext(), MembershipActivity::class.java)
         startActivity(intent)
     }
 
