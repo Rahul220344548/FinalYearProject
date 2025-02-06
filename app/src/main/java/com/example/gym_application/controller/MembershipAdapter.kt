@@ -11,25 +11,38 @@ class MembershipAdapter(
     private val onSelect: (MembershipPlans) -> Unit
 ) : RecyclerView.Adapter<MembershipAdapter.PlanViewHolder>() {
 
+    private var selectedPosition: Int = RecyclerView.NO_POSITION // Track selected position
+
     inner class PlanViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val title: TextView = view.findViewById(R.id.planTitle)
         private val duration: TextView = view.findViewById(R.id.planDuration)
         private val price: TextView = view.findViewById(R.id.planPrice)
         private val itemLayout: View = view
-        fun bind(plan: MembershipPlans) {
+
+        fun bind(plan: MembershipPlans, isSelected: Boolean) {
             title.text = plan.title
             duration.text = plan.duration
-            price.text = plan.price
+            price.text = "£" + plan.price.toString()
 
-
-            when (plan.title.lowercase()) {
-                "bronze plan" -> itemLayout.setBackgroundResource(R.drawable.bronze_background)
-                "silver plan" -> itemLayout.setBackgroundResource(R.drawable.silver_background)
-                "gold plan" -> itemLayout.setBackgroundResource(R.drawable.gold_background)
-                else -> itemLayout.setBackgroundResource(R.drawable.linear_layout_border)
+            // Set background based on selection
+            if (isSelected) {
+                itemLayout.setBackgroundResource(R.color.transparentBlue) // Highlighted background
+            } else {
+                when (plan.title.lowercase()) {
+                    "bronze plan" -> itemLayout.setBackgroundResource(R.drawable.bronze_background)
+                    "silver plan" -> itemLayout.setBackgroundResource(R.drawable.silver_background)
+                    "gold plan" -> itemLayout.setBackgroundResource(R.drawable.gold_background)
+                    else -> itemLayout.setBackgroundResource(R.drawable.linear_layout_border)
+                }
             }
 
-            itemView.setOnClickListener { onSelect(plan) }
+            itemView.setOnClickListener {
+                val previousPosition = selectedPosition
+                selectedPosition = adapterPosition
+                notifyItemChanged(previousPosition) // Update previously selected item
+                notifyItemChanged(selectedPosition) // Update newly selected item
+                onSelect(plan) // Notify selection
+            }
         }
     }
 
@@ -40,7 +53,7 @@ class MembershipAdapter(
     }
 
     override fun onBindViewHolder(holder: PlanViewHolder, position: Int) {
-        holder.bind(plans[position])
+        holder.bind(plans[position], position == selectedPosition)
     }
 
     override fun getItemCount(): Int = plans.size

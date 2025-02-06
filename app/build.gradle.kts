@@ -36,6 +36,7 @@ android {
     }
 }
 
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -49,4 +50,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.paypal.sdk:paypal-android-sdk:2.16.0")
 }

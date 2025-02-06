@@ -1,7 +1,9 @@
 package com.example.gym_application
 
 import MembershipAdapter
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ class MembershipActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MembershipAdapter
+    private var selectedPlan: MembershipPlans? = null
     private val database = FirebaseDatabase.getInstance().getReference("membershipPlan")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +27,19 @@ class MembershipActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val continueButton = findViewById<Button>(R.id.btnContinueToPayment)
+        continueButton.setOnClickListener {
+            if (selectedPlan != null) {
+                val intent = Intent(this, MembershipPaymentActivity::class.java)
+                intent.putExtra("planTitle", selectedPlan?.title)
+                intent.putExtra("planDuration", selectedPlan?.duration)
+                intent.putExtra("planPrice", selectedPlan?.price)
+                startActivity(intent)
+            }else {
+                Toast.makeText(this, "Please select a plan first!", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         fetchPlans()
     }
@@ -38,14 +54,15 @@ class MembershipActivity : AppCompatActivity() {
                         plans.add(plan)
                     }
                 }
-                adapter = MembershipAdapter(plans) { selectedPlan ->
-                    Toast.makeText(
-                        this@MembershipActivity,
-                        "Selected: ${selectedPlan.title}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
+                if (::adapter.isInitialized) {
+                    adapter.notifyDataSetChanged()  // Update adapter if it already exists
+                } else {
+                    adapter = MembershipAdapter(plans) { selected ->
+                        selectedPlan = selected
+                    }
+                    recyclerView.adapter = adapter  // Attach adapter only after data is available
                 }
-                recyclerView.adapter = adapter
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -53,4 +70,5 @@ class MembershipActivity : AppCompatActivity() {
             }
         })
     }
+
 }
