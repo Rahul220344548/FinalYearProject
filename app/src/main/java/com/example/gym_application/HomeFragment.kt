@@ -1,5 +1,6 @@
 package com.example.gym_application
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,9 +10,13 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import org.w3c.dom.Text
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class HomeFragment : Fragment() {
 
@@ -42,7 +47,7 @@ class HomeFragment : Fragment() {
         txtUserName = view.findViewById(R.id.txt_userName)
 
         txtMembershipType = view.findViewById(R.id.MembershipTypeTitle)
-
+        txtPlanExpiration =  view.findViewById(R.id.ExpiresEndDate)
         membershipCard = view.findViewById(R.id.membershipStatusCard)
         buyMembershipButton = view.findViewById(R.id.btnPurchaseMembership)
         rejoinMembershipButton = view.findViewById(R.id.btnReJoin)
@@ -73,6 +78,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun checkMembershipStatus() {
 
         val userId = auth.currentUser?.uid
@@ -86,9 +92,12 @@ class HomeFragment : Fragment() {
                     val membershipTitle = snapshot.child("membershipTitle").value?.toString() ?: "No Plan"
                     val membershipDuration = snapshot.child("membershipDuration").value?.toString() ?: "Unknown"
                     val membershipStatus = snapshot.child("membershipStatus").value?.toString()?.lowercase() ?: "inactive"
+                    val expirationDate = snapshot.child("endDate").value?.toString() ?: "Unknown"
+                    val formattedExpirationDate = formatExpirationDate( expirationDate )
 
                     if (membershipStatus == "active") {
                         txtMembershipType.text = "$membershipTitle - $membershipDuration Plan"
+                        txtPlanExpiration.text = "Expires - $formattedExpirationDate"
                         membershipCard.visibility = View.VISIBLE
 
                     } else {
@@ -104,6 +113,16 @@ class HomeFragment : Fragment() {
             }
 
         }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun formatExpirationDate(expirationDate : String): String {
+        val inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.US)
+        val outputFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.US)
+
+        val date = LocalDate.parse(expirationDate, inputFormatter)
+        return date.format(outputFormatter)
 
     }
 }
