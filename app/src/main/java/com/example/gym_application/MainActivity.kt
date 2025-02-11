@@ -48,12 +48,11 @@ class MainActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Auto Login successful!", Toast.LENGTH_SHORT).show()
 
-                    // Navigate to HomeActivity
                     val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
-                    finish() // Close MainActivity to prevent back navigation
+                    finish()
                 } else {
-                    // Display error message if login fails
+
                     Toast.makeText(this, "Auto Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
