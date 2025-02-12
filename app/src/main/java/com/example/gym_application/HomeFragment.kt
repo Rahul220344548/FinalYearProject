@@ -101,11 +101,9 @@ class HomeFragment : Fragment() {
                         membershipCard.visibility = View.VISIBLE
 
                     } else {
-                        membershipCard.visibility = View.GONE
                         rejoinMembershipButton.visibility = View.VISIBLE
                     }
                 } else {
-                    membershipCard.visibility = View.GONE
                     buyMembershipButton.visibility = View.VISIBLE
                 }
             }.addOnFailureListener { error ->

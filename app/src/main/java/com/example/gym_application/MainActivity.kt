@@ -40,8 +40,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun autoLogin(view: View) {
-        val testEmail = "test@gmail.com"
-        val testPassword = "password123"
+        val testEmail = "testname@gmail.com"
+        val testPassword = "password1"
 
         auth.signInWithEmailAndPassword(testEmail, testPassword)
             .addOnCompleteListener { task ->
