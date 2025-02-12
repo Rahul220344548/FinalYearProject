@@ -53,7 +53,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/linear_layout_border"
+        android:background="@drawable/btn_hover_selector"
         android:drawableStart="@drawable/baseline_update_24"
         android:drawablePadding="10dp"
         android:paddingStart="20dp"
@@ -61,8 +61,9 @@
         android:textStyle="bold"
         android:textAlignment="viewStart"
         android:textSize="20dp"
-        android:visibility="gone"/>/>
-<!--        android:onClick=""/>-->
+        android:visibility="gone"
+        android:onClick="goToMembershipPage"/>
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnReJoin"
@@ -71,7 +72,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/linear_layout_light_border"
+        android:background="@drawable/btn_hover_selector"
         android:drawableStart="@drawable/baseline_update_24"
         android:drawablePadding="10dp"
         android:paddingStart="20dp"
@@ -79,8 +80,8 @@
         android:textStyle="bold"
         android:textAlignment="viewStart"
         android:textSize="20dp"
-        android:visibility="gone"/>
-    <!--        android:onClick=""/>-->
+        android:visibility="gone"
+        android:onClick="goToMembershipPage"/>
 
 
     <include layout="@layout/upcoming_booking_container" />

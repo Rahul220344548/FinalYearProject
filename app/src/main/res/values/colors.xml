@@ -13,4 +13,8 @@
     <color name = "gold">#BFFFD700</color>
     <color name = "transparentBlue">#98FB98</color>
     <color name = "lightblack">#959595</color>
+    <color name = "darkblue">#5BC0EB</color>
+    <color name="hover_color">#FFA726</color>
+    <color name="pressed_color">#FF5722</color>
+    <color name="default_color">#2196F3</color>
 </resources>

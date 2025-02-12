@@ -1,5 +1,6 @@
 package com.example.gym_application
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import org.w3c.dom.Text
@@ -34,6 +36,7 @@ class HomeFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,9 +58,24 @@ class HomeFragment : Fragment() {
 
         setUserName()
         checkMembershipStatus()
+
+
+        val btnReJoin = view.findViewById<AppCompatButton>(R.id.btnReJoin)
+        val btnPurchaseMembership = view.findViewById<AppCompatButton>(R.id.btnPurchaseMembership)
+
+        btnReJoin.setOnClickListener {
+            goToMembershipPage()
+        }
+        btnPurchaseMembership.setOnClickListener {
+            goToMembershipPage()
+        }
         return view
     }
 
+    private fun goToMembershipPage(){
+        val intent = Intent(requireContext(), MembershipActivity::class.java)
+        startActivity(intent)
+    }
     private fun setUserName() {
         val userId = auth.currentUser?.uid
         if (userId != null) {
