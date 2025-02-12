@@ -1,12 +1,15 @@
 package com.example.gym_application
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
 
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,9 +41,39 @@ class MainActivity : AppCompatActivity() {
 
         emailEditText = findViewById(R.id.editTextEmail)
         passwordEditText = findViewById(R.id.editTextPassword)
+
+        val btnJohnAutoLogin: Button = findViewById(R.id.btnJohnAutoLogin)
+        btnJohnAutoLogin.setOnClickListener {
+            autoRahulLogin()
+        }
+
+        val btnRahulAutoLogin: Button = findViewById(R.id.btnRahulAutoLogin)
+        btnRahulAutoLogin.setOnClickListener {
+            autoJohnLogin()
+        }
+
     }
 
-    fun autoLogin(view: View) {
+    fun autoJohnLogin() {
+        val testEmail = "test@gmail.com"
+        val testPassword = "password123"
+
+        auth.signInWithEmailAndPassword(testEmail, testPassword)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Auto Login successful!", Toast.LENGTH_SHORT).show()
+
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+
+                    Toast.makeText(this, "Auto Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    fun autoRahulLogin() {
         val testEmail = "testname@gmail.com"
         val testPassword = "password1"
 
@@ -57,8 +91,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
     }
-
-
     // Login user
     fun loginUser(view: View) {
         val email = emailEditText.text.toString().trim()

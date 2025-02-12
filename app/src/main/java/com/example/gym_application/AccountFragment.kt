@@ -2,6 +2,7 @@ package com.example.gym_application
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,8 @@ class AccountFragment : Fragment() {
 
         val btnMembership : AppCompatButton = view.findViewById(R.id.btnMembership)
         btnMembership.setOnClickListener{
-            goToMembershipPage()
+            checkMembershipStatus()
+//            goToMembershipPage()
         }
 
         return view
@@ -92,4 +94,37 @@ class AccountFragment : Fragment() {
             txtEmail.text = "Not Logged In"
         }
     }
+
+    private fun checkMembershipStatus() {
+
+        val userId = auth.currentUser?.uid
+
+        if ( userId != null) {
+
+            val membershipStatusRef = database.child(userId).child("membershipDetails").child("membershipStatus")
+
+            membershipStatusRef.get().addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    val membershipStatus = snapshot.value.toString()
+
+                    if (membershipStatus == "active") {
+                        Toast.makeText(requireContext(), "You already have an active membership!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        goToMembershipPage()
+                    }
+                } else {
+                    goToMembershipPage()
+                }
+            }.addOnFailureListener { error ->
+                Toast.makeText(requireContext(), "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(requireContext(), "User not logged in!", Toast.LENGTH_SHORT).show()
+        }
+
+
+
+
+    }
+
 }
