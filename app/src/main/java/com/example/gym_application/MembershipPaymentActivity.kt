@@ -4,9 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.WorkDuration
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.gym_application.model.Membership
 import com.example.gym_application.model.MembershipPlans
 import com.google.firebase.auth.FirebaseAuth
@@ -16,6 +20,7 @@ import com.paypal.android.sdk.payments.PayPalPayment
 import com.paypal.android.sdk.payments.PayPalService
 import com.paypal.android.sdk.payments.PaymentActivity
 import com.paypal.android.sdk.payments.PaymentConfirmation
+import org.w3c.dom.Text
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -23,6 +28,14 @@ import java.util.Date
 import java.util.Locale
 
 class MembershipPaymentActivity : AppCompatActivity() {
+
+    private lateinit var txtMembershipTypeTitle: TextView
+    private lateinit var txtMembershipDuration: TextView
+    private lateinit var txtMembershipAmount: TextView
+    private lateinit var txtMembershipStartDate: TextView
+    private lateinit var txtMembershipEndDate: TextView
+
+
     private val PAYPAL_REQUEST_CODE = 123
     private val database = FirebaseDatabase.getInstance().getReference("users")
     private lateinit var auth: FirebaseAuth
@@ -30,13 +43,46 @@ class MembershipPaymentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_membership_payment)
+
         val amount = intent.getIntExtra("planPrice",0)
 
+        setConfirmationCardDetails()
+
         val config = createPayPalConfig()
-
         startPayPalService(config)
-
         setupPaymentButton(config, amount)
+    }
+
+    private fun setConfirmationCardDetails( ) {
+
+        val planTitle = intent.getStringExtra( "planTitle") ?: "Default Plan Title"
+        val capitalizePlanTitle =  planTitle.uppercase()
+        val planDuration = intent.getStringExtra( "planDuration") ?: "Default Plan Title"
+        val planAmount = intent.getIntExtra("planPrice",0)
+
+        txtMembershipTypeTitle = findViewById<TextView>(R.id.getMembershipTitle)
+        txtMembershipDuration = findViewById<TextView>(R.id.getMembershipDuration)
+        txtMembershipAmount = findViewById<TextView>(R.id.getTotalPayment)
+        txtMembershipStartDate = findViewById<TextView>(R.id.getStartDate)
+        txtMembershipEndDate = findViewById<TextView>(R.id.getEndDate)
+
+        txtMembershipTypeTitle.text = "$capitalizePlanTitle"
+        setMembershipTypeTitleColors(planTitle)
+        txtMembershipTypeTitle.visibility = View.VISIBLE
+
+
+        txtMembershipDuration.text = "$planDuration"
+        txtMembershipDuration.visibility = View.VISIBLE
+
+        txtMembershipStartDate.text = calculateMembershipStartDate()
+        txtMembershipStartDate.visibility = View.VISIBLE
+
+        txtMembershipEndDate.text = calculateMembershipEndDate( planDuration )
+        txtMembershipEndDate.visibility = View.VISIBLE
+
+        val formattedAmount = String.format("%.2f", planAmount.toDouble())
+        txtMembershipAmount.text = "£$formattedAmount"
+        txtMembershipAmount.visibility = View.VISIBLE
 
 
     }
@@ -136,4 +182,14 @@ class MembershipPaymentActivity : AppCompatActivity() {
         return SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(calendar.time)
     }
 
+    private fun setMembershipTypeTitleColors(planTitle: String) {
+
+        when (planTitle) {
+            "Bronze Plan" -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.bronze))
+            "Silver Plan" -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.silver))
+            "Gold Plan" -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.gold))
+            else -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.black)) // Default color
+        }
+
+    }
 }

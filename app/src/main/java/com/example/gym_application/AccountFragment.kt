@@ -46,7 +46,6 @@ class AccountFragment : Fragment() {
         val btnMembership : AppCompatButton = view.findViewById(R.id.btnMembership)
         btnMembership.setOnClickListener{
             checkMembershipStatus()
-//            goToMembershipPage()
         }
 
         return view
