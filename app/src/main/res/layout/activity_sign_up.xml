@@ -187,7 +187,11 @@
             android:gravity="center"
             android:text="Already have an account? Sign in"
             android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColorLink="@color/blue"
+            android:clickable="true"
+            android:focusable="true"
+            android:autoLink="none"/>
 
         <Button
             android:id="@+id/buttonSignUp"

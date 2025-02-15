@@ -1,11 +1,13 @@
 package com.example.gym_application
 
 import android.content.Intent
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +30,7 @@ class SignUp : AppCompatActivity() {
     private lateinit var email: EditText
     private lateinit var passsword: EditText
     private lateinit var confirmPass: EditText
+    private lateinit var signInTextView: TextView
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
@@ -53,8 +56,18 @@ class SignUp : AppCompatActivity() {
         passsword = findViewById<EditText>(R.id.editTextPassword)
         confirmPass = findViewById<EditText>(R.id.editTextReEnterPassword)
 
+        signInTextView= findViewById(R.id.textViewSignIn)
+
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
+
+
+        signInTextView.paintFlags = signInTextView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        signInTextView.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     //onClick register user
