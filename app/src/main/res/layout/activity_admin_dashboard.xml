@@ -17,43 +17,19 @@
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="66dp"
             android:id="@+id/toolbar"
             android:elevation="4dp"
             android:background="@color/indigo">
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:background="@drawable/rounded_admin_nav_header"
-                android:gravity="center_vertical">
 
-                <ImageView
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
-                    android:layout_marginStart="20dp"
-                    android:src="@drawable/baseline_density_small_24"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Admin Dashboard"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="32dp"
-                    android:textStyle="bold"/>
-
-
-            </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/fragment_contain" />
+            android:id="@+id/fragment_container" />
 
     </LinearLayout>
 
