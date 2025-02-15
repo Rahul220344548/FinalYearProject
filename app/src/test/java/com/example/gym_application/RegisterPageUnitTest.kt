@@ -32,6 +32,16 @@ class RegisterPageUnitTest {
     }
 
     @Test
+    fun `valid day should return true`() {
+        assertTrue(ValidationUtils.isValidDay("15"))
+    }
+
+    @Test
+    fun `invalid day above range should return false`() {
+        assertFalse(ValidationUtils.isValidDay("32"))  // Day must be 1-31
+    }
+
+    @Test
     fun `valid phone number should return true`() {
         assertTrue(ValidationUtils.isValidPhoneNumber("+12345678901"))
     }
