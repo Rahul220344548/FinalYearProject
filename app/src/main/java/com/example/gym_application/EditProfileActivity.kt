@@ -58,6 +58,9 @@ class EditProfileActivity : AppCompatActivity() {
                     txtLastName.setText(lastName)
                     txtPhoneNumber.setText(phoneNumber)
 
+                    txtFirstName.isEnabled = false
+                    txtLastName.isEnabled = false
+
                 }
             }.addOnFailureListener { error ->
                 Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
