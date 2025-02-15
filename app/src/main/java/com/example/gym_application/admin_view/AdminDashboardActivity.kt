@@ -8,6 +8,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
 
 class AdminDashboardActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
