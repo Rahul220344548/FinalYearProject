@@ -18,6 +18,8 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var txtFirstName: EditText
     private lateinit var txtLastName: EditText
     private lateinit var txtPhoneNumber: EditText
+    private lateinit var txtGender : EditText
+    private lateinit var txtBirthday : EditText
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
@@ -35,6 +37,8 @@ class EditProfileActivity : AppCompatActivity() {
         txtFirstName = findViewById<EditText>(R.id.editTextFirstName)
         txtLastName = findViewById<EditText>(R.id.editTextLastName)
         txtPhoneNumber = findViewById<EditText>(R.id.editTextPhoneNumber)
+        txtGender = findViewById<EditText>(R.id.editTextGender)
+        txtBirthday = findViewById<EditText>(R.id.editTextBirthday)
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().getReference("users")
@@ -53,13 +57,17 @@ class EditProfileActivity : AppCompatActivity() {
                     val firstName = snapshot.child("firstName").value.toString()
                     val lastName = snapshot.child("lastName").value.toString()
                     val phoneNumber = snapshot.child("phoneNumber").value.toString()
+                    val gender = snapshot.child("gender").value.toString()
+                    val birthday = snapshot.child("dateOfBirth").value.toString()
 
                     txtFirstName.setText(firstName)
                     txtLastName.setText(lastName)
                     txtPhoneNumber.setText(phoneNumber)
+                    txtGender.setText(gender)
+                    txtBirthday.setText(birthday)
 
-                    txtFirstName.isEnabled = false
-                    txtLastName.isEnabled = false
+                    txtGender.isEnabled = false
+                    txtBirthday.isEnabled = false
 
                 }
             }.addOnFailureListener { error ->
@@ -81,8 +89,18 @@ class EditProfileActivity : AppCompatActivity() {
             val lastName = txtLastName.text.toString().trim()
             val phoneNumber = txtPhoneNumber.text.toString().trim()
 
-            if (firstName.isEmpty() || lastName.isEmpty() || phoneNumber.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+            if (!isValidFirstname(firstName)) {
+                Toast.makeText(this, "First name must be at least 2 characters.", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            if (!isValidLastName(lastName)) {
+                Toast.makeText(this, "Last name must be at least 2 characters.", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            if (!isValidPhoneNumber(phoneNumber)) {
+                Toast.makeText(this, "Invalid phone number. It should be between 10 to 15 digits.", Toast.LENGTH_SHORT).show()
                 return
             }
 
@@ -96,12 +114,25 @@ class EditProfileActivity : AppCompatActivity() {
             userRef.updateChildren(userUpdates)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Profile Updated!", Toast.LENGTH_SHORT).show()
-                    finish() // Close activity after saving
+                    finish()
                 }
                 .addOnFailureListener { error ->
                     Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
                 }
         }
+    }
+
+    fun isValidFirstname( firstname : String) : Boolean {
+        return firstname.isNotEmpty() && firstname.length >=2
+    }
+
+    fun isValidLastName ( lastname : String) : Boolean {
+        return lastname.isNotEmpty() && lastname.length >=2
+    }
+
+    fun isValidPhoneNumber ( phoneNumber : String ) : Boolean {
+        val phonePattern = "^[+]?[0-9]{10,15}$"
+        return phoneNumber.matches(phonePattern.toRegex())
     }
 
     fun onCancel(view: View){
