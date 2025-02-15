@@ -52,4 +52,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.paypal.sdk:paypal-android-sdk:2.16.0")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:3.11.2")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+
 }

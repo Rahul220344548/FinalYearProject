@@ -112,8 +112,8 @@ class SignUp : AppCompatActivity() {
             return "Please enter a valid day of birth (1-31)"
         }
 
-        if (!isValidDay(dayOfBirth.text.toString())) {
-            return "Please enter a valid day of birth (1-31)"
+        if (!isValidMonth(monthOfBirth.text.toString())) {
+            return "Please enter a valid month of birth (1-12)"
         }
 
         if (!isValidYear(yearOfBirth.text.toString())) {
