@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.model.UserDetails
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-
+// merged membership branch
 class SignUp : AppCompatActivity() {
     private lateinit var firstName: EditText
     private lateinit var lastName: EditText
