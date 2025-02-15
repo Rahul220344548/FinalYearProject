@@ -163,6 +163,7 @@
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:hint="Password"
+            android:inputType="textPassword"
             tools:layout_editor_absoluteX="40dp"
             tools:layout_editor_absoluteY="16dp" />
 
@@ -175,6 +176,7 @@
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:hint="Re-enter Password"
+            android:inputType="textPassword"
             tools:layout_editor_absoluteX="40dp"
             tools:layout_editor_absoluteY="16dp" />
 

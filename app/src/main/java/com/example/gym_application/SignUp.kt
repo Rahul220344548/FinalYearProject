@@ -59,94 +59,81 @@ class SignUp : AppCompatActivity() {
 
     //onClick register user
     fun registerUser(view: View) {
-        if(genderRadioGroup.checkedRadioButtonId == -1)
-        {
-            Toast.makeText(this,  "please select gender", Toast.LENGTH_SHORT).show()
+
+        if (genderRadioGroup.checkedRadioButtonId == -1) {
+            Toast.makeText(this, "Please select gender", Toast.LENGTH_SHORT).show()
             return
-        }else {
-            Toast.makeText(this,  genderRadioGroup.id.toString() , Toast.LENGTH_SHORT).show()
-            gender = findViewById<RadioButton>(genderRadioGroup.checkedRadioButtonId)
         }
+
+        // Get selected gender radio button
+        gender = findViewById(genderRadioGroup.checkedRadioButtonId)
+
+
         val validationMessage: String = validateDetails()
-
-        //if it is not empty (there is an error)
-        if(!validationMessage.isEmpty())
-        {
-            Toast.makeText(this, "Registration failed: ${validationMessage}", Toast.LENGTH_SHORT).show()
+        if (validationMessage.isNotEmpty()) {
+            Toast.makeText(this, "Registration failed: $validationMessage", Toast.LENGTH_SHORT).show()
             return
         }
 
-        dateOfBirth =  dayOfBirth.text.toString()+"/"+monthOfBirth.text.toString()+"/"+yearOfBirth.text.toString()
-
+        dateOfBirth = String.format(
+            "%s/%s/%s",
+            dayOfBirth.text.toString().trim(),
+            monthOfBirth.text.toString().trim(),
+            yearOfBirth.text.toString().trim()
+        )
         addUser()
     }
 
     //validation for all the fields
     private fun validateDetails(): String {
-        if(firstName.text.toString().isNullOrEmpty())
-        {
-            return "Please fill in your first name"
+
+        if (!isValidFirstname(firstName.text.toString())) {
+            return "Please enter a valid first name (at least 2 characters)"
         }
 
-        if(lastName.text.toString().isNullOrEmpty())
-        {
-            return "Please fill in your last name"
+        if (!isValidLastName(lastName.text.toString())) {
+            return "Please enter a valid last name (at least 2 characters)"
         }
 
-        if(dayOfBirth.text.toString() != confirmPass.text.toString())
-        {
-            return "Please fill in your Day of birth"
+        if (!isValidDay(dayOfBirth.text.toString())) {
+            return "Please enter a valid day of birth (1-31)"
         }
 
-        if(monthOfBirth.text.toString() != confirmPass.text.toString())
-        {
-            return "Please fill in your month of birth"
+        if (!isValidDay(dayOfBirth.text.toString())) {
+            return "Please enter a valid day of birth (1-31)"
         }
 
-        if(yearOfBirth.text.toString() != confirmPass.text.toString())
-        {
-            return "Please fill in your year of birth"
+        if (!isValidYear(yearOfBirth.text.toString())) {
+            return "Please enter a valid year of birth"
         }
 
-        //null
-        if(dateOfBirth.isNullOrEmpty())
-        {
-            return "Please fill in your first name"
+        if (!isValidDateOfBirth(dayOfBirth.text.toString(), monthOfBirth.text.toString(), yearOfBirth.text.toString())) {
+            return "Invalid date of birth. Ensure it's a past date."
         }
 
-
-        //if it is future date - send message
-        if(dateOfBirth.isNullOrEmpty())
-        {
-            return "Please fill in your first name"
+        if (!isValidPhoneNumber(phoneNumber.text.toString())) {
+            return "Please enter a valid phone number (10-15 digits, can start with +)"
         }
 
-        if(phoneNumber.text.toString().isNullOrEmpty())
-        {
-            return "Please fill in your Phone Number"
+        if (!isValidEmail(email.text.toString())) {
+            return "Please enter a valid email address (e.g., user@example.com)"
         }
 
-        if(email.text.toString().isNullOrEmpty())
-        {
-            return "Please fill in your Email"
+        if (!isValidPassword(passsword.text.toString())) {
+            return "Password must be at least 6 characters long"
         }
 
-        if(passsword.text.toString().isNullOrEmpty())
-        {
-            return "Please fill in your Password"
+        if (!doPasswordsMatch(passsword.text.toString(), confirmPass.text.toString())) {
+            return "Passwords do not match"
         }
 
-        if(confirmPass.text.toString().isNullOrEmpty())
-        {
-            return "Please fill in your last name"
-        }
-
-        if(passsword.text.toString() != confirmPass.text.toString())
-        {
-            return "Password does not match"
+        if (!isValidGender(genderRadioGroup.checkedRadioButtonId)) {
+            return "Please select a gender"
         }
 
         return ""
+
+
     }
 
     //saves user email and password to Auth in firebase
@@ -190,9 +177,64 @@ class SignUp : AppCompatActivity() {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failed to save user data: ${it.message}", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Failed to save user data: ${exception.message}", Toast.LENGTH_LONG).show()
+                exception.printStackTrace() // Print error log in Logcat
             }
+    }
+
+    fun isValidFirstname( firstname : String) : Boolean {
+        return firstname.isNotEmpty() && firstname.length >=2
+    }
+
+    fun isValidLastName ( lastname : String) : Boolean {
+        return lastname.isNotEmpty() && lastname.length >=2
+    }
+
+    fun isValidDay ( day: String) : Boolean {
+        return day.isNotEmpty() && day.toIntOrNull() in 1..31
+    }
+
+    fun isValidMonth(month: String): Boolean {
+        return month.isNotEmpty() && month.toIntOrNull() in 1..12
+    }
+
+    fun isValidYear(year: String): Boolean {
+        val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
+        return year.isNotEmpty() && year.toIntOrNull() in 1900..currentYear
+    }
+
+    fun isValidDateOfBirth(day: String, month: String, year: String): Boolean {
+        if (!isValidDay(day) || !isValidMonth(month) || !isValidYear(year)) return false
+
+        val dobCalendar = java.util.Calendar.getInstance()
+        dobCalendar.set(year.toInt(), month.toInt() - 1, day.toInt())
+
+        val today = java.util.Calendar.getInstance()
+        return !dobCalendar.after(today)
+    }
+
+    fun isValidPhoneNumber ( phoneNumber : String ) : Boolean {
+        val phonePattern = "^[+]?[0-9]{10,15}$"
+        return phoneNumber.matches(phonePattern.toRegex())
+    }
+
+    fun isValidEmail( email : String) : Boolean {
+        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        return email.matches(emailPattern.toRegex())
+    }
+
+    fun isValidPassword(password: String): Boolean {
+        return password.length >= 6
+    }
+
+    fun doPasswordsMatch(password: String, confirmPassword: String): Boolean {
+        return password == confirmPassword
+    }
+
+    // is no gender is selected
+    fun isValidGender(gender: Int): Boolean {
+        return gender != -1
     }
 
     override fun onBackPressed() {
