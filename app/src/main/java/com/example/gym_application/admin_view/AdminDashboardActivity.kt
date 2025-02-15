@@ -16,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.gym_application.AccountFragment
+import com.example.gym_application.HomeFragment
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.navigation_fragments.AdminClassesFragment
 import com.example.gym_application.admin_view.navigation_fragments.AdminHomeFragment
@@ -55,9 +56,7 @@ class AdminDashboardActivity : AppCompatActivity(), OnNavigationItemSelectedList
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.nav_home -> {
-                drawerLayout.closeDrawer(GravityCompat.START)
-            }
+            R.id.nav_home -> replaceFragment(AdminHomeFragment())
             R.id.nav_users -> replaceFragment(AdminUserFragment())
             R.id.nav_clases -> replaceFragment(AdminClassesFragment())
             R.id.nav_membership -> replaceFragment(AdminMembershipFragment())
@@ -69,13 +68,9 @@ class AdminDashboardActivity : AppCompatActivity(), OnNavigationItemSelectedList
     }
 
     private fun replaceFragment (fragment: Fragment) {
-        val container = findViewById<FrameLayout>(R.id.frame_container)
-        if (container == null) {
-            Log.e("FragmentError", "Frame container not found!")
-            return
-        }
+
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.frame_container, fragment)
+        transaction.replace(R.id.fragment_container, fragment)
         transaction.commit()
 
     }
