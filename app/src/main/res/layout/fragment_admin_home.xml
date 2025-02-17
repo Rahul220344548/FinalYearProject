@@ -5,29 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".admin_view.navigation_fragments.AdminHomeFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="HELLO ADMIN HOME FRAGMENT"
-        android:layout_centerInParent="true"/>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:id="@+id/relativeLayout"
         android:layout_height="200dp"
-        android:background="@drawable/rounded_admin_nav_header">
+        android:background="@drawable/rounded_admin_nav_header"
+        android:padding="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Admin Dashboard"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textSize="30dp"
+            android:fontFamily="serif-monospace"
             android:textColor="@color/white"
-            android:textSize="32dp"
             android:textStyle="bold"/>
 
+    </RelativeLayout>
 
-    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/relativeLayout"
+        android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hello Admin Fragment"
+        android:textSize="20sp" />
+</LinearLayout>
 
 
 </RelativeLayout>

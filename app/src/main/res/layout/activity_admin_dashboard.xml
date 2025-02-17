@@ -20,8 +20,12 @@
             android:layout_height="66dp"
             android:id="@+id/toolbar"
             android:elevation="4dp"
-            android:background="@color/indigo"/>
-
+            android:background="@color/indigo"
+            app:titleTextAppearance="@style/AppNameStyle" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#5A67A0"/>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
