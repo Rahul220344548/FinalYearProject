@@ -146,6 +146,7 @@
         android:backgroundTint="@color/orange"
         android:onClick="startPayPalPayment"
         android:text="PAY NOW"
+        android:drawableRight="@drawable/baseline_shopping_cart_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
