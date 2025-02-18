@@ -5,17 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".admin_view.navigation_fragments.AdminClassesFragment">
-    
+
     <Button
         android:id="@+id/btnAddClass"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:drawableLeft="@drawable/baseline_add_24"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/baseline_add_24"
         android:backgroundTint="@color/peach2"
-        android:layout_marginStart="150dp"
-        android:layout_marginEnd="10dp"
-        android:text="ADD CLASS" />
+        android:textColor="@color/black"
+        android:layout_marginEnd="5dp"
+        android:layout_alignParentEnd="true"
+        android:text="ADD A CLASS" />
 
     <LinearLayout
         android:id="@+id/buttonContainer"
@@ -23,8 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:orientation="horizontal"
         android:gravity="center">
 
@@ -33,6 +33,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
             android:textSize="15sp"
             android:text="Class List"
             android:background="@drawable/class_button_style"/>
@@ -41,6 +42,7 @@
             android:id="@+id/btnScheduleList"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:layout_marginRight="2dp"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:text="ScheduleList"
@@ -52,16 +54,15 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:text="BookingList"
+            android:text="Booking List"
             android:background="@drawable/class_button_style"/>
     </LinearLayout>
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainer"
+        android:id="@+id/fragment_buttonContainer"
         android:layout_below="@id/buttonContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="30dp" />
+        android:layout_height="match_parent" />
 
 
 
