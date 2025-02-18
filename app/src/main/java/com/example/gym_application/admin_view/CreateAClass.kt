@@ -21,11 +21,14 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var classDescription: EditText
     private lateinit var autoCompleteColorTextView: AutoCompleteTextView
     private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
+    private lateinit var autoCompleteInstructorTextView: AutoCompleteTextView
 
     private lateinit var selectedColor: String
     private lateinit var selectedRoom: String
+    private lateinit var selectedInstructor: String
 
     private val database = FirebaseDatabase.getInstance().getReference("classes")
+    private val instructorDatabase = FirebaseDatabase.getInstance().getReference("users")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +52,7 @@ class CreateAClass : AppCompatActivity() {
 
         setUpSelectColordropdown()
         setUpSelectRoomdropdown()
+        setUpSelectInstructordropdown()
 
 
     }
@@ -69,7 +73,8 @@ class CreateAClass : AppCompatActivity() {
                 title,
                 description,
                 selectedColor,
-                selectedRoom
+                selectedRoom,
+                selectedInstructor
             )
 
             database.child(classId).setValue(newClass)
@@ -79,6 +84,7 @@ class CreateAClass : AppCompatActivity() {
                     classDescription.text.clear()
                     autoCompleteColorTextView.text.clear()
                     autoCompleteRoomTextView.text.clear()
+                    autoCompleteInstructorTextView.text.clear()
                     finish()
                 }
                 .addOnFailureListener {
@@ -119,6 +125,38 @@ class CreateAClass : AppCompatActivity() {
         autoCompleteRoomTextView.setOnItemClickListener { parent, _, position, _ ->
             selectedRoom = parent.getItemAtPosition(position) as String
         }
+
+    }
+
+    private fun setUpSelectInstructordropdown() {
+
+        autoCompleteInstructorTextView = findViewById(R.id.auto_complete_instructor)
+
+        val instructorList = mutableListOf<String>()
+
+        instructorDatabase.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                for (userSnapshot in snapshot.children) {
+                    val role = userSnapshot.child("role").getValue(String::class.java)
+                    if (role == "Instructor") {
+                        val firstName = userSnapshot.child("firstName").getValue(String::class.java) ?: ""
+                        val lastName = userSnapshot.child("lastName").getValue(String::class.java) ?: ""
+                        val fullName = "$firstName $lastName"
+                        instructorList.add(fullName)
+                    }
+                }
+                val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, instructorList)
+                autoCompleteInstructorTextView.setAdapter(arrayAdapter)
+
+                autoCompleteInstructorTextView.setOnItemClickListener { parent, _, position, _ ->
+                    selectedInstructor = parent.getItemAtPosition(position) as String
+                }
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Error fetching instructors: ${it.message}", Toast.LENGTH_SHORT).show()
+        }
+
+
 
     }
 
