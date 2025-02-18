@@ -1,6 +1,7 @@
 package com.example.gym_application.admin_view
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +50,10 @@ class CreateAClass : AppCompatActivity() {
 //        }
 //
 //        return rootView
+    }
+
+    fun onCancelbtn(view: View){
+        finish()
     }
 
 }
