@@ -1,6 +1,7 @@
 package com.example.gym_application.admin_view
 
 import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,6 +18,17 @@ class CreateAClass : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "GymEase"
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()  // Handle the back press
+        return true
     }
 
     private fun dropdown() {
