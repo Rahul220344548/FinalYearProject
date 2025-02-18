@@ -24,6 +24,7 @@
         android:textSize="18sp" />
 
     <EditText
+        android:id="@+id/editTextClassTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/edittext_border"
@@ -37,7 +38,7 @@
         android:textSize="18sp" />
 
     <EditText
-        android:id="@+id/class_description"
+        android:id="@+id/editTextClassDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/edittext_border"
