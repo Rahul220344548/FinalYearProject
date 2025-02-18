@@ -33,6 +33,8 @@ class AdminClassesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_admin_classes, container, false)
 //        return inflater.inflate(R.layout.fragment_admin_classes, container, false)
 
+        goToFragment(FragmentClassList())
+
         val btnClassList: AppCompatButton = view.findViewById(R.id.btnClassList)
         val btnScheduleList: AppCompatButton= view.findViewById(R.id.btnScheduleList)
         val btnBookingList: AppCompatButton = view.findViewById(R.id.btnBookingList)

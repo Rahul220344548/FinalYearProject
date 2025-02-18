@@ -2,6 +2,8 @@ package com.example.gym_application.admin_view
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -17,6 +19,8 @@ class CreateAClass : AppCompatActivity() {
 
     private lateinit var classTitle: EditText
     private lateinit var classDescription: EditText
+    private lateinit var autoCompleteTextView: AutoCompleteTextView
+    private lateinit var selectedColor: String
 
     private val database = FirebaseDatabase.getInstance().getReference("classes")
 
@@ -37,6 +41,10 @@ class CreateAClass : AppCompatActivity() {
 
         classTitle =  findViewById<EditText>(R.id.editTextClassTitle)
         classDescription = findViewById<EditText>(R.id.editTextClassDescription)
+        autoCompleteTextView = findViewById(R.id.auto_complete_txt)
+
+        setUpdropdown()
+
 
 
     }
@@ -53,13 +61,14 @@ class CreateAClass : AppCompatActivity() {
 
         val classId = database.push().key
         if (classId != null) {
-            val newClass = ClassModel(title, description)
+            val newClass = ClassModel(title, description,  selectedColor)
 
             database.child(classId).setValue(newClass)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Added Class Successfully", Toast.LENGTH_SHORT).show()
                     classTitle.text.clear()
                     classDescription.text.clear()
+                    autoCompleteTextView.text.clear()
                     finish()
                 }
                 .addOnFailureListener {
@@ -78,24 +87,16 @@ class CreateAClass : AppCompatActivity() {
         return true
     }
 
-    private fun dropdown() {
+    private fun setUpdropdown() {
+        val colors = resources.getStringArray(R.array.colors)
 
-//        val rootView = inflater.inflate(R.layout.fragment_admin_classes, container, false)
-//
-//        val colors = resources.getStringArray(R.array.colors)
-//
-//        val arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, colors)
-//
-//        val autoCompleteTextView = rootView.findViewById<AutoCompleteTextView>(R.id.auto_complete_txt)
-//
-//        autoCompleteTextView.setAdapter(arrayAdapter)
-//
-//        autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
-//            val selectedColor = parent.getItemAtPosition(position) as String
-//            // Do something with the selected color
-//        }
-//
-//        return rootView
+        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, colors)
+        autoCompleteTextView.setAdapter(arrayAdapter)
+
+        autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
+            selectedColor = parent.getItemAtPosition(position) as String
+        }
+
     }
 
     fun onCancelbtn(view: View){
