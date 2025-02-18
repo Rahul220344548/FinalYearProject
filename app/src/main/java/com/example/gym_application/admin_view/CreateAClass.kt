@@ -27,7 +27,7 @@ class CreateAClass : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()  // Handle the back press
+        onBackPressed()
         return true
     }
 
