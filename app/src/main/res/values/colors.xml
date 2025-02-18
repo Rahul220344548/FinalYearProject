@@ -19,4 +19,5 @@
     <color name="hover_color">#FFA726</color>
     <color name="pressed_color">#FF5722</color>
     <color name="default_color">#2196F3</color>
+    <color name="peach">#E57373</color>
 </resources>
