@@ -5,14 +5,14 @@
     <string name="open_admin_nav">Open Navigation Drawer</string>
     <string name="close_admin_nav">Close Navigation Drawer</string>
 
-    <string name = "dropdown_name">Dropdown Menu</string>
-    <string name = "select">Select</string>
+    <string name="dropdown_name">Dropdown Menu</string>
+    <string name="select">Select</string>
 
     <style name="AppNameStyle">
         <item name="android:textSize">26sp</item>
     </style>
 
-    <string-array name ="colors">
+    <string-array name="colors">
         <item>Red</item>
         <item>Orange</item>
         <item>Yellow</item>
