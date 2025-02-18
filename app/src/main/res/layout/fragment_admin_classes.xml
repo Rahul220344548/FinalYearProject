@@ -93,7 +93,12 @@
             <include
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/class_details" />
+                layout="@layout/class_details_information" />
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/class_schedule_information" />
 
         </LinearLayout>
 
