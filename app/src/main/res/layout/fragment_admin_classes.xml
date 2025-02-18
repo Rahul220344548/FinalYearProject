@@ -85,7 +85,8 @@
                     android:id="@+id/auto_complete_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"/>
+                    android:inputType="none"
+                    android:background="@drawable/dropdown_background"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
