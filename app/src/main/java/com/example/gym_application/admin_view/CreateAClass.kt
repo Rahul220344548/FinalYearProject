@@ -19,8 +19,11 @@ class CreateAClass : AppCompatActivity() {
 
     private lateinit var classTitle: EditText
     private lateinit var classDescription: EditText
-    private lateinit var autoCompleteTextView: AutoCompleteTextView
+    private lateinit var autoCompleteColorTextView: AutoCompleteTextView
+    private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
+
     private lateinit var selectedColor: String
+    private lateinit var selectedRoom: String
 
     private val database = FirebaseDatabase.getInstance().getReference("classes")
 
@@ -41,10 +44,11 @@ class CreateAClass : AppCompatActivity() {
 
         classTitle =  findViewById<EditText>(R.id.editTextClassTitle)
         classDescription = findViewById<EditText>(R.id.editTextClassDescription)
-        autoCompleteTextView = findViewById(R.id.auto_complete_txt)
+        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
+        autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
 
-        setUpdropdown()
-
+        setUpSelectColordropdown()
+        setUpSelectRoomdropdown()
 
 
     }
@@ -61,14 +65,20 @@ class CreateAClass : AppCompatActivity() {
 
         val classId = database.push().key
         if (classId != null) {
-            val newClass = ClassModel(title, description,  selectedColor)
+            val newClass = ClassModel(
+                title,
+                description,
+                selectedColor,
+                selectedRoom
+            )
 
             database.child(classId).setValue(newClass)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Added Class Successfully", Toast.LENGTH_SHORT).show()
                     classTitle.text.clear()
                     classDescription.text.clear()
-                    autoCompleteTextView.text.clear()
+                    autoCompleteColorTextView.text.clear()
+                    autoCompleteRoomTextView.text.clear()
                     finish()
                 }
                 .addOnFailureListener {
@@ -87,14 +97,27 @@ class CreateAClass : AppCompatActivity() {
         return true
     }
 
-    private fun setUpdropdown() {
+    private fun setUpSelectColordropdown() {
         val colors = resources.getStringArray(R.array.colors)
 
         val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, colors)
-        autoCompleteTextView.setAdapter(arrayAdapter)
+        autoCompleteColorTextView.setAdapter(arrayAdapter)
 
-        autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
+        autoCompleteColorTextView.setOnItemClickListener { parent, _, position, _ ->
             selectedColor = parent.getItemAtPosition(position) as String
+        }
+
+    }
+
+    private fun setUpSelectRoomdropdown() {
+
+        val rooms = resources.getStringArray(R.array.rooms)
+
+        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, rooms)
+        autoCompleteRoomTextView.setAdapter(arrayAdapter)
+
+        autoCompleteRoomTextView.setOnItemClickListener { parent, _, position, _ ->
+            selectedRoom = parent.getItemAtPosition(position) as String
         }
 
     }
