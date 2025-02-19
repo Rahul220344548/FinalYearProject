@@ -22,6 +22,7 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var autoCompleteColorTextView: AutoCompleteTextView
     private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
     private lateinit var autoCompleteInstructorTextView: AutoCompleteTextView
+    private lateinit var classLimit : EditText
 
     private lateinit var selectedColor: String
     private lateinit var selectedRoom: String
@@ -49,6 +50,7 @@ class CreateAClass : AppCompatActivity() {
         classDescription = findViewById<EditText>(R.id.editTextClassDescription)
         autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
         autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
+        classLimit = findViewById<EditText>(R.id.editTextClassLimit)
 
         setUpSelectColordropdown()
         setUpSelectRoomdropdown()
@@ -60,6 +62,7 @@ class CreateAClass : AppCompatActivity() {
     fun addClassbtn(view: View) {
         val title = classTitle.text.toString().trim()
         val description = classDescription.text.toString().trim()
+        val capacity = classLimit.text.toString().trim().toIntOrNull() ?: 0
 
         if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(this,"Please fill in blacks",Toast.LENGTH_SHORT).show()
@@ -74,7 +77,8 @@ class CreateAClass : AppCompatActivity() {
                 description,
                 selectedColor,
                 selectedRoom,
-                selectedInstructor
+                selectedInstructor,
+                capacity
             )
 
             database.child(classId).setValue(newClass)

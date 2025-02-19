@@ -5,5 +5,6 @@ data class ClassModel(
     val classDescription: String = "",
     val classColor: String = "",
     val classLocation: String = "",
-    val classInstructor: String = ""
+    val classInstructor: String = "",
+    val classMaxCapacitiy: Int,
 )
