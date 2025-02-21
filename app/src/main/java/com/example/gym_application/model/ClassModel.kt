@@ -8,6 +8,8 @@ data class ClassModel(
     val classInstructor: String = "",
     val classMaxCapacitiy: Int,
     val classGenderRestrictuons: String = "",
-    val StartTime: String = "",
-    val EndTime: String = ""
+    val startTime: String = "",
+    val endTime: String = "",
+    val startAvailability: String = "",
+    val endAvailability: String = ""
 )

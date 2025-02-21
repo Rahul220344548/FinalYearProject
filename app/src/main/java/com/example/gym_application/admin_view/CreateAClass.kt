@@ -93,6 +93,9 @@ class CreateAClass : AppCompatActivity() {
         val startTime = autoCompleteStartTime.text.toString().trim()
         val endTime = autoCompleteEndTime.text.toString().trim()
 
+        val startAvailability = autoCompleteStartClassAvalibility.text.toString().trim()
+        val endAvailability = autoCompleteEndClassAvalibility.text.toString().trim()
+
 
         if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(this,"Please fill in blacks",Toast.LENGTH_SHORT).show()
@@ -107,15 +110,10 @@ class CreateAClass : AppCompatActivity() {
         val classId = database.push().key
         if (classId != null) {
             val newClass = ClassModel(
-                title,
-                description,
-                selectedColor,
-                selectedRoom,
-                selectedInstructor,
-                capacity,
-                genderRestriction,
-                startTime,
-                endTime
+                title, description, selectedColor,
+                selectedRoom, selectedInstructor, capacity, genderRestriction,
+                startTime, endTime,
+                startAvailability, endAvailability
             )
 
             database.child(classId).setValue(newClass)
@@ -129,6 +127,8 @@ class CreateAClass : AppCompatActivity() {
                     genderRestrictionsRadioGroup.clearCheck()
                     autoCompleteStartTime.text.clear()
                     autoCompleteEndTime.text.clear()
+                    autoCompleteStartClassAvalibility.text.clear()
+                    autoCompleteEndClassAvalibility.text.clear()
                     finish()
                 }
                 .addOnFailureListener {
