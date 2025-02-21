@@ -337,6 +337,8 @@ class CreateAClass : AppCompatActivity() {
         val selectedGenderId = genderRestrictionsRadioGroup.checkedRadioButtonId
         val startTime = autoCompleteStartTime.text.toString().trim()
         val endTime = autoCompleteEndTime.text.toString().trim()
+        val startAvailability = autoCompleteStartClassAvalibility.text.toString().trim()
+        val endAvailability = autoCompleteEndClassAvalibility.text.toString().trim()
         val occurrences = getSelectedOccurrences()
 
         if (!ValidationClassCreation.isValidClassTitle(title)) {
@@ -369,6 +371,10 @@ class CreateAClass : AppCompatActivity() {
 
         if (!ValidationClassCreation.isValidTime(startTime, endTime)) {
             return "Invalid time: Class duration must be 30 minutes or 1 hour"
+        }
+
+        if (!ValidationClassCreation.isValidEndDate(startAvailability, endAvailability)) {
+            return "End date must be after or on the start date"
         }
 
         if (!ValidationClassCreation.isValidOccurrences(occurrences)) {

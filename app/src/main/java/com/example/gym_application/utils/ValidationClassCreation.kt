@@ -53,6 +53,25 @@ object ValidationClassCreation {
         }
     }
 
+    fun isValidEndDate(startDate: String, endDate: String): Boolean {
+        if (endDate.isEmpty()) {
+            return false
+        }
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+        return try {
+            val start = dateFormat.parse(startDate)
+            val end = dateFormat.parse(endDate)
+
+            if (start != null && end != null) {
+                return !end.before(start)
+            }
+            false
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     fun isValidOccurrences(occurrences: List<String>): Boolean {
         return occurrences.isNotEmpty()
     }
