@@ -198,8 +198,8 @@ class CreateAClass : AppCompatActivity() {
 
         val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
-        while (calendar.get(Calendar.HOUR_OF_DAY) < 19 ||
-            (calendar.get(Calendar.HOUR_OF_DAY) == 19 && calendar.get(Calendar.MINUTE) == 0)) {
+        while (calendar.get(Calendar.HOUR_OF_DAY) < 20 ||
+            (calendar.get(Calendar.HOUR_OF_DAY) == 20 && calendar.get(Calendar.MINUTE) == 30)) {
             timeSlots.add(timeFormat.format(calendar.time))
             calendar.add(Calendar.MINUTE, 30)
         }
@@ -224,8 +224,8 @@ class CreateAClass : AppCompatActivity() {
 
         val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
-        while (calendar.get(Calendar.HOUR_OF_DAY) < 19 ||
-            (calendar.get(Calendar.HOUR_OF_DAY) == 19 && calendar.get(Calendar.MINUTE) == 30)) {
+        while (calendar.get(Calendar.HOUR_OF_DAY) < 20 ||
+            (calendar.get(Calendar.HOUR_OF_DAY) == 20 && calendar.get(Calendar.MINUTE) == 0)) {
             timeSlots.add(timeFormat.format(calendar.time))
             calendar.add(Calendar.MINUTE, 30)
         }
