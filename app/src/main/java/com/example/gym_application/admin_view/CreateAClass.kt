@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -43,6 +44,14 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var selectedRoom: String
     private lateinit var selectedInstructor: String
 
+    private lateinit var checkboxMon: CheckBox
+    private lateinit var checkboxTue: CheckBox
+    private lateinit var checkboxWed: CheckBox
+    private lateinit var checkboxThu: CheckBox
+    private lateinit var checkboxFri: CheckBox
+    private lateinit var checkboxSat: CheckBox
+    private lateinit var checkboxSun: CheckBox
+
     private val database = FirebaseDatabase.getInstance().getReference("classes")
     private val instructorDatabase = FirebaseDatabase.getInstance().getReference("users")
 
@@ -71,6 +80,14 @@ class CreateAClass : AppCompatActivity() {
         autoCompleteStartClassAvalibility = findViewById(R.id.auto_complete_startClassAvaliablity)
         autoCompleteEndClassAvalibility = findViewById(R.id.auto_complete_endClassAvaliablity)
 
+        checkboxMon = findViewById(R.id.checkbox_mon)
+        checkboxTue = findViewById(R.id.checkbox_tue)
+        checkboxWed = findViewById(R.id.checkbox_wed)
+        checkboxThu = findViewById(R.id.checkbox_thu)
+        checkboxFri = findViewById(R.id.checkbox_fri)
+        checkboxSat = findViewById(R.id.checkbox_sat)
+        checkboxSun = findViewById(R.id.checkbox_sun)
+
         setUpSelectColordropdown()
         setUpSelectRoomdropdown()
         setUpSelectInstructordropdown()
@@ -96,6 +113,8 @@ class CreateAClass : AppCompatActivity() {
         val startAvailability = autoCompleteStartClassAvalibility.text.toString().trim()
         val endAvailability = autoCompleteEndClassAvalibility.text.toString().trim()
 
+        val occurrences = mutableListOf<String>()
+
 
         if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(this,"Please fill in blacks",Toast.LENGTH_SHORT).show()
@@ -107,13 +126,27 @@ class CreateAClass : AppCompatActivity() {
             return
         }
 
+        if (checkboxMon.isChecked) occurrences.add("Monday")
+        if (checkboxTue.isChecked) occurrences.add("Tuesday")
+        if (checkboxWed.isChecked) occurrences.add("Wednesday")
+        if (checkboxThu.isChecked) occurrences.add("Thursday")
+        if (checkboxFri.isChecked) occurrences.add("Friday")
+        if (checkboxSat.isChecked) occurrences.add("Saturday")
+        if (checkboxSun.isChecked) occurrences.add("Sunday")
+
+        if (occurrences.isEmpty()) {
+            Toast.makeText(this, "Please select at least one occurrence", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val classId = database.push().key
         if (classId != null) {
             val newClass = ClassModel(
                 title, description, selectedColor,
                 selectedRoom, selectedInstructor, capacity, genderRestriction,
                 startTime, endTime,
-                startAvailability, endAvailability
+                startAvailability, endAvailability,
+                occurrences
             )
 
             database.child(classId).setValue(newClass)
@@ -129,6 +162,15 @@ class CreateAClass : AppCompatActivity() {
                     autoCompleteEndTime.text.clear()
                     autoCompleteStartClassAvalibility.text.clear()
                     autoCompleteEndClassAvalibility.text.clear()
+
+                    checkboxMon.isChecked = false
+                    checkboxTue.isChecked = false
+                    checkboxWed.isChecked = false
+                    checkboxThu.isChecked = false
+                    checkboxFri.isChecked = false
+                    checkboxSat.isChecked = false
+                    checkboxSun.isChecked = false
+
                     finish()
                 }
                 .addOnFailureListener {
@@ -295,6 +337,16 @@ class CreateAClass : AppCompatActivity() {
             datePickerDialog.show()
 
         }
+    }
+
+    private fun initializeCheckBoxes(){
+        checkboxMon = findViewById(R.id.checkbox_mon)
+        checkboxTue = findViewById(R.id.checkbox_tue)
+        checkboxWed = findViewById(R.id.checkbox_wed)
+        checkboxThu = findViewById(R.id.checkbox_thu)
+        checkboxFri = findViewById(R.id.checkbox_fri)
+        checkboxSat = findViewById(R.id.checkbox_sat)
+        checkboxSun = findViewById(R.id.checkbox_sun)
     }
 
     fun onCancelbtn(view: View){

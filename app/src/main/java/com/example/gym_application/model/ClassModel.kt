@@ -11,5 +11,6 @@ data class ClassModel(
     val startTime: String = "",
     val endTime: String = "",
     val startAvailability: String = "",
-    val endAvailability: String = ""
+    val endAvailability: String = "",
+    val occurrences: List<String> = listOf()
 )
