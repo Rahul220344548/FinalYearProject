@@ -44,13 +44,8 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var selectedRoom: String
     private lateinit var selectedInstructor: String
 
-    private lateinit var checkboxMon: CheckBox
-    private lateinit var checkboxTue: CheckBox
-    private lateinit var checkboxWed: CheckBox
-    private lateinit var checkboxThu: CheckBox
-    private lateinit var checkboxFri: CheckBox
-    private lateinit var checkboxSat: CheckBox
-    private lateinit var checkboxSun: CheckBox
+    private lateinit var checkBoxes: List<CheckBox>
+    private val daysOfWeek = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
     private val database = FirebaseDatabase.getInstance().getReference("classes")
     private val instructorDatabase = FirebaseDatabase.getInstance().getReference("users")
@@ -80,13 +75,7 @@ class CreateAClass : AppCompatActivity() {
         autoCompleteStartClassAvalibility = findViewById(R.id.auto_complete_startClassAvaliablity)
         autoCompleteEndClassAvalibility = findViewById(R.id.auto_complete_endClassAvaliablity)
 
-        checkboxMon = findViewById(R.id.checkbox_mon)
-        checkboxTue = findViewById(R.id.checkbox_tue)
-        checkboxWed = findViewById(R.id.checkbox_wed)
-        checkboxThu = findViewById(R.id.checkbox_thu)
-        checkboxFri = findViewById(R.id.checkbox_fri)
-        checkboxSat = findViewById(R.id.checkbox_sat)
-        checkboxSun = findViewById(R.id.checkbox_sun)
+        initializeCheckBoxes()
 
         setUpSelectColordropdown()
         setUpSelectRoomdropdown()
@@ -113,8 +102,7 @@ class CreateAClass : AppCompatActivity() {
         val startAvailability = autoCompleteStartClassAvalibility.text.toString().trim()
         val endAvailability = autoCompleteEndClassAvalibility.text.toString().trim()
 
-        val occurrences = mutableListOf<String>()
-
+        val occurrences = getSelectedOccurrences()
 
         if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(this,"Please fill in blacks",Toast.LENGTH_SHORT).show()
@@ -126,13 +114,6 @@ class CreateAClass : AppCompatActivity() {
             return
         }
 
-        if (checkboxMon.isChecked) occurrences.add("Monday")
-        if (checkboxTue.isChecked) occurrences.add("Tuesday")
-        if (checkboxWed.isChecked) occurrences.add("Wednesday")
-        if (checkboxThu.isChecked) occurrences.add("Thursday")
-        if (checkboxFri.isChecked) occurrences.add("Friday")
-        if (checkboxSat.isChecked) occurrences.add("Saturday")
-        if (checkboxSun.isChecked) occurrences.add("Sunday")
 
         if (occurrences.isEmpty()) {
             Toast.makeText(this, "Please select at least one occurrence", Toast.LENGTH_SHORT).show()
@@ -162,15 +143,7 @@ class CreateAClass : AppCompatActivity() {
                     autoCompleteEndTime.text.clear()
                     autoCompleteStartClassAvalibility.text.clear()
                     autoCompleteEndClassAvalibility.text.clear()
-
-                    checkboxMon.isChecked = false
-                    checkboxTue.isChecked = false
-                    checkboxWed.isChecked = false
-                    checkboxThu.isChecked = false
-                    checkboxFri.isChecked = false
-                    checkboxSat.isChecked = false
-                    checkboxSun.isChecked = false
-
+                    resetCheckBoxes()
                     finish()
                 }
                 .addOnFailureListener {
@@ -339,16 +312,26 @@ class CreateAClass : AppCompatActivity() {
         }
     }
 
-    private fun initializeCheckBoxes(){
-        checkboxMon = findViewById(R.id.checkbox_mon)
-        checkboxTue = findViewById(R.id.checkbox_tue)
-        checkboxWed = findViewById(R.id.checkbox_wed)
-        checkboxThu = findViewById(R.id.checkbox_thu)
-        checkboxFri = findViewById(R.id.checkbox_fri)
-        checkboxSat = findViewById(R.id.checkbox_sat)
-        checkboxSun = findViewById(R.id.checkbox_sun)
+    private fun initializeCheckBoxes() {
+        checkBoxes = listOf(
+            findViewById(R.id.checkbox_mon),
+            findViewById(R.id.checkbox_tue),
+            findViewById(R.id.checkbox_wed),
+            findViewById(R.id.checkbox_thu),
+            findViewById(R.id.checkbox_fri),
+            findViewById(R.id.checkbox_sat),
+            findViewById(R.id.checkbox_sun)
+        )
     }
 
+    private fun getSelectedOccurrences(): List<String> {
+        return checkBoxes.mapIndexedNotNull { index, checkBox ->
+            if (checkBox.isChecked) daysOfWeek[index] else null
+        }
+    }
+    private fun resetCheckBoxes() {
+        checkBoxes.forEach { it.isChecked = false }
+    }
     fun onCancelbtn(view: View){
         finish()
     }
