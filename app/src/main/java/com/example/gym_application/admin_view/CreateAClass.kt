@@ -32,7 +32,7 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var genderRestrictionsRadioGroup : RadioGroup
 
     private lateinit var autoCompleteStartTime: AutoCompleteTextView
-
+    private lateinit var autoCompleteEndTime : AutoCompleteTextView
 
     private lateinit var autoCompleteStartClassAvalibility: AutoCompleteTextView
 
@@ -65,13 +65,13 @@ class CreateAClass : AppCompatActivity() {
         classLimit = findViewById<EditText>(R.id.editTextClassLimit)
         genderRestrictionsRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_GenderRestrictions)
 
-
-
         autoCompleteStartClassAvalibility = findViewById(R.id.auto_complete_startClassAvaliablity)
 
         setUpSelectColordropdown()
         setUpSelectRoomdropdown()
         setUpSelectInstructordropdown()
+        setUpStartTimeDropdown()
+        setUpEndTimeDropdown()
         setUpStartClassAvaliablity()
 
 
@@ -184,6 +184,58 @@ class CreateAClass : AppCompatActivity() {
         }
 
 
+
+    }
+
+    private fun setUpStartTimeDropdown() {
+
+        autoCompleteStartTime = findViewById(R.id.auto_complete_startTime)
+
+        val timeSlots = mutableListOf<String>()
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 9)
+        calendar.set(Calendar.MINUTE, 0)
+
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        while (calendar.get(Calendar.HOUR_OF_DAY) < 19 ||
+            (calendar.get(Calendar.HOUR_OF_DAY) == 19 && calendar.get(Calendar.MINUTE) == 0)) {
+            timeSlots.add(timeFormat.format(calendar.time))
+            calendar.add(Calendar.MINUTE, 30)
+        }
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, timeSlots)
+        autoCompleteStartTime.setAdapter(adapter)
+
+        autoCompleteStartTime.setOnItemClickListener { parent, _, position, _ ->
+            autoCompleteStartTime.setText(parent.getItemAtPosition(position) as String, false)
+        }
+
+
+    }
+
+    private fun setUpEndTimeDropdown() {
+        val autoCompleteEndTime = findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
+
+        val timeSlots = mutableListOf<String>()
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 9)
+        calendar.set(Calendar.MINUTE, 30)
+
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        while (calendar.get(Calendar.HOUR_OF_DAY) < 19 ||
+            (calendar.get(Calendar.HOUR_OF_DAY) == 19 && calendar.get(Calendar.MINUTE) == 30)) {
+            timeSlots.add(timeFormat.format(calendar.time))
+            calendar.add(Calendar.MINUTE, 30)
+        }
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, timeSlots)
+        autoCompleteEndTime.setAdapter(adapter)
+
+        autoCompleteEndTime.setOnItemClickListener { parent, _, position, _ ->
+            autoCompleteEndTime.setText(parent.getItemAtPosition(position) as String, false)
+        }
 
     }
 
