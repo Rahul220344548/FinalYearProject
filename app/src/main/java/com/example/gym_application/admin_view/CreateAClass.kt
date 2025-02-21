@@ -347,9 +347,22 @@ class CreateAClass : AppCompatActivity() {
     private fun validationFields() : String {
 
         val title = classTitle.text.toString().trim()
+        val description = classDescription.text.toString().trim()
+        val capacity = classLimit.text.toString().trim()
+
         if (!ValidationClassCreation.isValidClassTitle(title)) {
             return "Please enter a valid first name (at least 2 characters)"
         }
+
+        if (!ValidationClassCreation.isValidClassDescription(description)) {
+            return "Please enter a class Description"
+        }
+
+        if (!ValidationClassCreation.isValidCapacity(capacity)) {
+            return "Please enter a valid class limit ( must be < 20 )"
+        }
+
+
         return ""
     }
 }

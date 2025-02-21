@@ -10,6 +10,15 @@ object ValidationClassCreation {
         return title.length >2
     }
 
+    fun isValidClassDescription( description : String) : Boolean {
+        return description.isNotEmpty()
+    }
+
+    fun isValidCapacity(capacity: String): Boolean {
+        val cap = capacity.toIntOrNull()
+        return cap != null && cap > 0 && cap <= 20
+    }
+
     fun isValidTime(startTime: String, endTime: String): Boolean {
         val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
