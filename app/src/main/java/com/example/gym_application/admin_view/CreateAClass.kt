@@ -346,7 +346,7 @@ class CreateAClass : AppCompatActivity() {
         }
 
         if (!ValidationClassCreation.isValidClassDescription(description)) {
-            return "Please enter a class Description"
+            return "Class description must be between 1 and 120 words"
         }
 
         if (!ValidationClassCreation.isValidClassColor(selectedColor)) {

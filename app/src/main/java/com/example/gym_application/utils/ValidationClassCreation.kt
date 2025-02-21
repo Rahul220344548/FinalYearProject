@@ -10,8 +10,12 @@ object ValidationClassCreation {
         return title.length >2
     }
 
-    fun isValidClassDescription( description : String) : Boolean {
-        return description.isNotEmpty()
+    fun isValidClassDescription(description: String): Boolean {
+        if (description.isEmpty()) {
+            return false
+        }
+        val wordCount = description.trim().split("\\s+".toRegex()).size
+        return wordCount in 1..120
     }
 
     fun isValidClassColor(selectedColor: String?): Boolean {
