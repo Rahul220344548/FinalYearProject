@@ -5,6 +5,8 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
@@ -23,6 +25,7 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
     private lateinit var autoCompleteInstructorTextView: AutoCompleteTextView
     private lateinit var classLimit : EditText
+    private lateinit var genderRestrictionsRadioGroup : RadioGroup
 
     private lateinit var selectedColor: String
     private lateinit var selectedRoom: String
@@ -51,6 +54,7 @@ class CreateAClass : AppCompatActivity() {
         autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
         autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
         classLimit = findViewById<EditText>(R.id.editTextClassLimit)
+        genderRestrictionsRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_GenderRestrictions)
 
         setUpSelectColordropdown()
         setUpSelectRoomdropdown()
@@ -64,11 +68,15 @@ class CreateAClass : AppCompatActivity() {
         val description = classDescription.text.toString().trim()
         val capacity = classLimit.text.toString().trim().toIntOrNull() ?: 0
 
+        val selectedGenderId = genderRestrictionsRadioGroup.checkedRadioButtonId
+        val selectedGenderRadioButton = findViewById<RadioButton>(selectedGenderId)
+        val genderRestriction = selectedGenderRadioButton.text.toString()
+
+
         if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(this,"Please fill in blacks",Toast.LENGTH_SHORT).show()
             return
         }
-
 
         val classId = database.push().key
         if (classId != null) {
@@ -78,7 +86,8 @@ class CreateAClass : AppCompatActivity() {
                 selectedColor,
                 selectedRoom,
                 selectedInstructor,
-                capacity
+                capacity,
+                genderRestriction
             )
 
             database.child(classId).setValue(newClass)
@@ -89,13 +98,13 @@ class CreateAClass : AppCompatActivity() {
                     autoCompleteColorTextView.text.clear()
                     autoCompleteRoomTextView.text.clear()
                     autoCompleteInstructorTextView.text.clear()
+                    genderRestrictionsRadioGroup.clearCheck()
                     finish()
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Error adding class: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
         }
-
 
         Toast.makeText(this,"Added Class Successfully",Toast.LENGTH_SHORT).show()
 
