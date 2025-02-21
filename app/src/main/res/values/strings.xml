@@ -21,7 +21,7 @@
         <item>Violet</item>
     </string-array>
 
-    <string-array name = "startTimes">
+    <string-array name="startTimes">
         <item>9:00AM</item>
         <item>9:00AM</item>
         <item>9:00AM</item>
@@ -32,6 +32,12 @@
         <item>Studio A</item>
         <item>Studio B</item>
     </string-array>
+
+    <style name="CustomTabText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
 
 
 </resources>
