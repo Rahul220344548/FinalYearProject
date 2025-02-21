@@ -16,16 +16,25 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
 import com.example.gym_application.model.ClassModel
 import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class CreateAClass : AppCompatActivity() {
 
     private lateinit var classTitle: EditText
     private lateinit var classDescription: EditText
     private lateinit var autoCompleteColorTextView: AutoCompleteTextView
+
     private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
     private lateinit var autoCompleteInstructorTextView: AutoCompleteTextView
     private lateinit var classLimit : EditText
     private lateinit var genderRestrictionsRadioGroup : RadioGroup
+
+    private lateinit var autoCompleteStartTime: AutoCompleteTextView
+
+
+    private lateinit var autoCompleteStartClassAvalibility: AutoCompleteTextView
 
     private lateinit var selectedColor: String
     private lateinit var selectedRoom: String
@@ -56,9 +65,14 @@ class CreateAClass : AppCompatActivity() {
         classLimit = findViewById<EditText>(R.id.editTextClassLimit)
         genderRestrictionsRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_GenderRestrictions)
 
+
+
+        autoCompleteStartClassAvalibility = findViewById(R.id.auto_complete_startClassAvaliablity)
+
         setUpSelectColordropdown()
         setUpSelectRoomdropdown()
         setUpSelectInstructordropdown()
+        setUpStartClassAvaliablity()
 
 
     }
@@ -170,6 +184,16 @@ class CreateAClass : AppCompatActivity() {
         }
 
 
+
+    }
+
+    private fun setUpStartClassAvaliablity() {
+
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val todayDate = dateFormat.format(Calendar.getInstance().time)
+
+        autoCompleteStartClassAvalibility.setText(todayDate)
+        autoCompleteStartClassAvalibility.isEnabled = false
 
     }
 
