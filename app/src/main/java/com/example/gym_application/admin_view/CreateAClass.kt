@@ -1,5 +1,6 @@
 package com.example.gym_application.admin_view
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -36,6 +37,7 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var autoCompleteEndTime : AutoCompleteTextView
 
     private lateinit var autoCompleteStartClassAvalibility: AutoCompleteTextView
+    private lateinit var autoCompleteEndClassAvalibility: AutoCompleteTextView
 
     private lateinit var selectedColor: String
     private lateinit var selectedRoom: String
@@ -67,14 +69,15 @@ class CreateAClass : AppCompatActivity() {
         genderRestrictionsRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_GenderRestrictions)
 
         autoCompleteStartClassAvalibility = findViewById(R.id.auto_complete_startClassAvaliablity)
+        autoCompleteEndClassAvalibility = findViewById(R.id.auto_complete_endClassAvaliablity)
 
         setUpSelectColordropdown()
         setUpSelectRoomdropdown()
         setUpSelectInstructordropdown()
         setUpStartTimeDropdown()
         setUpEndTimeDropdown()
-        setUpStartClassAvaliablity()
-
+        setUpStartClassAvailability()
+        setUpEndClassAvailability()
 
     }
 
@@ -252,7 +255,7 @@ class CreateAClass : AppCompatActivity() {
 
     }
 
-    private fun setUpStartClassAvaliablity() {
+    private fun setUpStartClassAvailability() {
 
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val todayDate = dateFormat.format(Calendar.getInstance().time)
@@ -260,6 +263,38 @@ class CreateAClass : AppCompatActivity() {
         autoCompleteStartClassAvalibility.setText(todayDate)
         autoCompleteStartClassAvalibility.isEnabled = false
 
+    }
+
+    private fun setUpEndClassAvailability() {
+        autoCompleteEndClassAvalibility.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog =
+                DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                    val selectedCalendar = Calendar.getInstance()
+                    selectedCalendar.set(selectedYear, selectedMonth, selectedDay)
+
+                    if (selectedCalendar.before(calendar)) {
+                        Toast.makeText(this, "End Date cannot be in the past!", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        val selectedDate = String.format(
+                            Locale.getDefault(),
+                            "%02d/%02d/%d",
+                            selectedDay,
+                            selectedMonth + 1,
+                            selectedYear
+                        )
+                        autoCompleteEndClassAvalibility.setText(selectedDate)
+                    }
+                }, year, month, day)
+            datePickerDialog.datePicker.minDate = calendar.timeInMillis
+            datePickerDialog.show()
+
+        }
     }
 
     fun onCancelbtn(view: View){
