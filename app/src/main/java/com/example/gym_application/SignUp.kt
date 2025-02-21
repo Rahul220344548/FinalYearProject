@@ -79,7 +79,6 @@ class SignUp : AppCompatActivity() {
             return
         }
 
-        // Get selected gender radio button
         gender = findViewById(genderRadioGroup.checkedRadioButtonId)
 
 

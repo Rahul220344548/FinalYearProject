@@ -6,6 +6,10 @@ import java.util.Locale
 
 object ValidationClassCreation {
 
+    fun isValidClassTitle(title : String) : Boolean{
+        return title.length >2
+    }
+
     fun isValidTime(startTime: String, endTime: String): Boolean {
         val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 

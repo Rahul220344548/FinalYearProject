@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.utils.ValidationClassCreation
+import com.example.gym_application.utils.ValidationUtils
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -88,6 +89,13 @@ class CreateAClass : AppCompatActivity() {
     }
 
     fun addClassbtn(view: View) {
+
+        val validationMessage : String = validationFields()
+        if (validationMessage.isNotEmpty()) {
+            Toast.makeText(this, "Class Creation failed!: $validationMessage", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val title = classTitle.text.toString().trim()
         val description = classDescription.text.toString().trim()
         val capacity = classLimit.text.toString().trim().toIntOrNull() ?: 0
@@ -336,4 +344,12 @@ class CreateAClass : AppCompatActivity() {
         finish()
     }
 
+    private fun validationFields() : String {
+
+        val title = classTitle.text.toString().trim()
+        if (!ValidationClassCreation.isValidClassTitle(title)) {
+            return "Please enter a valid first name (at least 2 characters)"
+        }
+        return ""
+    }
 }
