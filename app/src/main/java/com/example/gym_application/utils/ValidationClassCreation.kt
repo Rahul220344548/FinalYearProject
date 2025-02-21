@@ -19,6 +19,10 @@ object ValidationClassCreation {
         return cap != null && cap > 0 && cap <= 20
     }
 
+    fun isValidGenderSelection(selectedGenderId: Int): Boolean {
+        return selectedGenderId != -1
+    }
+
     fun isValidTime(startTime: String, endTime: String): Boolean {
         val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
@@ -36,4 +40,9 @@ object ValidationClassCreation {
             false
         }
     }
+
+    fun isValidOccurrences(occurrences: List<String>): Boolean {
+        return occurrences.isNotEmpty()
+    }
+
 }

@@ -112,15 +112,6 @@ class CreateAClass : AppCompatActivity() {
 
         val occurrences = getSelectedOccurrences()
 
-        if (title.isEmpty() || description.isEmpty()) {
-            Toast.makeText(this,"Please fill in blacks",Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (!ValidationClassCreation.isValidTime(startTime, endTime)){
-            Toast.makeText(this, "Invalid time: Class duration must be 30 minutes or 1 hour", Toast.LENGTH_SHORT).show()
-            return
-        }
 
 
         if (occurrences.isEmpty()) {
@@ -349,6 +340,10 @@ class CreateAClass : AppCompatActivity() {
         val title = classTitle.text.toString().trim()
         val description = classDescription.text.toString().trim()
         val capacity = classLimit.text.toString().trim()
+        val selectedGenderId = genderRestrictionsRadioGroup.checkedRadioButtonId
+        val startTime = autoCompleteStartTime.text.toString().trim()
+        val endTime = autoCompleteEndTime.text.toString().trim()
+        val occurrences = getSelectedOccurrences()
 
         if (!ValidationClassCreation.isValidClassTitle(title)) {
             return "Please enter a valid first name (at least 2 characters)"
@@ -362,6 +357,17 @@ class CreateAClass : AppCompatActivity() {
             return "Please enter a valid class limit ( must be < 20 )"
         }
 
+        if (!ValidationClassCreation.isValidGenderSelection(selectedGenderId)) {
+            return "Please select a gender restriction"
+        }
+
+        if (!ValidationClassCreation.isValidTime(startTime, endTime)) {
+            return "Invalid time: Class duration must be 30 minutes or 1 hour"
+        }
+
+        if (!ValidationClassCreation.isValidOccurrences(occurrences)) {
+            return "Please select at least one occurrence"
+        }
 
         return ""
     }
