@@ -14,6 +14,18 @@ object ValidationClassCreation {
         return description.isNotEmpty()
     }
 
+    fun isValidClassColor(selectedColor: String?): Boolean {
+        return !selectedColor.isNullOrEmpty()
+    }
+
+    fun isValidSelectRoom(selectedRoom: String?):Boolean {
+        return !selectedRoom.isNullOrEmpty()
+    }
+
+    fun isValidSelectInstructor(selectedInstructor : String?):Boolean {
+        return !selectedInstructor.isNullOrEmpty()
+    }
+
     fun isValidCapacity(capacity: String): Boolean {
         val cap = capacity.toIntOrNull()
         return cap != null && cap > 0 && cap <= 20

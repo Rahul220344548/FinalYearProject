@@ -41,9 +41,9 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var autoCompleteStartClassAvalibility: AutoCompleteTextView
     private lateinit var autoCompleteEndClassAvalibility: AutoCompleteTextView
 
-    private lateinit var selectedColor: String
-    private lateinit var selectedRoom: String
-    private lateinit var selectedInstructor: String
+    private var selectedColor: String = ""
+    private var selectedRoom: String = ""
+    private var selectedInstructor: String = ""
 
     private lateinit var checkBoxes: List<CheckBox>
     private val daysOfWeek = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
@@ -112,12 +112,6 @@ class CreateAClass : AppCompatActivity() {
 
         val occurrences = getSelectedOccurrences()
 
-
-
-        if (occurrences.isEmpty()) {
-            Toast.makeText(this, "Please select at least one occurrence", Toast.LENGTH_SHORT).show()
-            return
-        }
 
         val classId = database.push().key
         if (classId != null) {
@@ -346,11 +340,23 @@ class CreateAClass : AppCompatActivity() {
         val occurrences = getSelectedOccurrences()
 
         if (!ValidationClassCreation.isValidClassTitle(title)) {
-            return "Please enter a valid first name (at least 2 characters)"
+            return "Please enter a class Title (at least 3 characters)"
         }
 
         if (!ValidationClassCreation.isValidClassDescription(description)) {
             return "Please enter a class Description"
+        }
+
+        if (!ValidationClassCreation.isValidClassColor(selectedColor)) {
+            return "Please select a class color"
+        }
+
+        if (!ValidationClassCreation.isValidSelectRoom(selectedRoom)) {
+            return "Please select a Room"
+        }
+
+        if (!ValidationClassCreation.isValidSelectInstructor(selectedInstructor)) {
+            return "Please select a Instructor"
         }
 
         if (!ValidationClassCreation.isValidCapacity(capacity)) {
