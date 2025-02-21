@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
 import com.example.gym_application.model.ClassModel
+import com.example.gym_application.utils.ValidationClassCreation
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -86,9 +87,17 @@ class CreateAClass : AppCompatActivity() {
         val selectedGenderRadioButton = findViewById<RadioButton>(selectedGenderId)
         val genderRestriction = selectedGenderRadioButton.text.toString()
 
+        val startTime = autoCompleteStartTime.text.toString().trim()
+        val endTime = autoCompleteEndTime.text.toString().trim()
+
 
         if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(this,"Please fill in blacks",Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (!ValidationClassCreation.isValidTime(startTime, endTime)){
+            Toast.makeText(this, "Invalid time: Class duration must be 30 minutes or 1 hour", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -101,7 +110,9 @@ class CreateAClass : AppCompatActivity() {
                 selectedRoom,
                 selectedInstructor,
                 capacity,
-                genderRestriction
+                genderRestriction,
+                startTime,
+                endTime
             )
 
             database.child(classId).setValue(newClass)
@@ -113,6 +124,8 @@ class CreateAClass : AppCompatActivity() {
                     autoCompleteRoomTextView.text.clear()
                     autoCompleteInstructorTextView.text.clear()
                     genderRestrictionsRadioGroup.clearCheck()
+                    autoCompleteStartTime.text.clear()
+                    autoCompleteEndTime.text.clear()
                     finish()
                 }
                 .addOnFailureListener {
@@ -215,7 +228,7 @@ class CreateAClass : AppCompatActivity() {
     }
 
     private fun setUpEndTimeDropdown() {
-        val autoCompleteEndTime = findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
+        autoCompleteEndTime = findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
 
         val timeSlots = mutableListOf<String>()
         val calendar = Calendar.getInstance()

@@ -7,5 +7,7 @@ data class ClassModel(
     val classLocation: String = "",
     val classInstructor: String = "",
     val classMaxCapacitiy: Int,
-    val classGenderRestrictuons: String = ""
+    val classGenderRestrictuons: String = "",
+    val StartTime: String = "",
+    val EndTime: String = ""
 )
