@@ -8,11 +8,11 @@
     tools:context=".EditProfileActivity">
 
     <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:id="@+id/user_toolbar"
+        layout="@layout/user_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
     <LinearLayout
         android:layout_width="0dp"
