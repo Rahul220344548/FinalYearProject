@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.example.gym_application.model.Membership
 import com.example.gym_application.model.MembershipPlans
@@ -43,6 +44,11 @@ class MembershipPaymentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_membership_payment)
+
+        val toolbar: Toolbar = findViewById(R.id.user_toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "GymEase"
 
         val amount = intent.getIntExtra("planPrice",0)
 
@@ -191,5 +197,10 @@ class MembershipPaymentActivity : AppCompatActivity() {
             else -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.black)) // Default color
         }
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
