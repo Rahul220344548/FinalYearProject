@@ -9,12 +9,6 @@
         android:layout_height="200dp"
         android:padding="16dp">
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/menu_bar"
-            android:src="@drawable/baseline_density_small_24"
-            />
 
         <ImageView
             android:layout_width="40dp"

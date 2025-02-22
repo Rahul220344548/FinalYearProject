@@ -78,20 +78,6 @@
                 android:textSize="25dp" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="333dp"
-                android:layout_height="72dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="25dp"
-                android:background="@drawable/btn_bacjground_1"
-                android:drawableStart="@drawable/baseline_credit_card_24"
-                android:drawablePadding="20dp"
-                android:paddingStart="50dp"
-                android:text="Payment History"
-                android:textAlignment="viewStart"
-                android:textSize="25dp" />
-
-            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnMembership"
                 android:layout_width="333dp"
                 android:layout_height="72dp"
@@ -105,6 +91,21 @@
                 android:text="Membership"
                 android:textAlignment="viewStart"
                 android:textSize="25dp" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="333dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="25dp"
+                android:background="@drawable/btn_bacjground_1"
+                android:drawableStart="@drawable/baseline_credit_card_24"
+                android:drawablePadding="20dp"
+                android:paddingStart="50dp"
+                android:text="FAQ"
+                android:textAlignment="viewStart"
+                android:textSize="25dp" />
+
+
 
             <Button
                 android:id="@+id/btnSignOut"
