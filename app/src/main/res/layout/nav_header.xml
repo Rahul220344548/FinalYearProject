@@ -26,7 +26,11 @@
             android:textSize="30sp"
             android:fontFamily="serif-monospace"
             android:textColor="@color/white"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:shadowColor="#AA000000"
+            android:shadowRadius="1"
+            android:shadowDx="2"
+            android:shadowDy="2"/>
 
         <TextView
             android:id="@+id/txt_userName"
@@ -36,6 +40,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:textSize="30sp"
+            android:shadowColor="#AA000000"
+            android:shadowRadius="1"
+            android:shadowDx="2"
+            android:shadowDy="2"
             android:fontFamily="serif-monospace"
             android:textColor="@color/white"
             android:textStyle="bold"/>
