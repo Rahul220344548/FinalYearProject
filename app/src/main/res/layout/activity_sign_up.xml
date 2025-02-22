@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignUp">
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/user_toolbar"/>
 
     <LinearLayout
         android:layout_width="0dp"
