@@ -21,12 +21,6 @@ class ClassesFragment : Fragment() {
 
         val rootView = inflater.inflate(R.layout.fragment_classes, container, false)
 
-        // Set up the toolbar
-        val toolbar: Toolbar = rootView.findViewById(R.id.user_toolbar)
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as AppCompatActivity).supportActionBar?.title = "GymEase"
-
         val viewPager: ViewPager2 = rootView.findViewById(R.id.viewPager)
         val adapter = ClassesPagerAdapter(this)
         viewPager.adapter = adapter
