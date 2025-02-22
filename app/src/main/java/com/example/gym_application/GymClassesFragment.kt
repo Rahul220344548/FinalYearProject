@@ -20,6 +20,8 @@ class GymClassesFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CalendarAdapter
+
+    private lateinit var textSelectedDate: TextView
     private var currentMonth: LocalDate = LocalDate.now()
 
 
@@ -30,8 +32,13 @@ class GymClassesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_gym_classes, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerView)
+        textSelectedDate = view.findViewById(R.id.text_selected_date) // Reference to new TextView
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        adapter = CalendarAdapter()
+
+        adapter = CalendarAdapter { selectedDate ->
+            textSelectedDate.text = "Selected Date: ${selectedDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))}"
+
+        }
         recyclerView.adapter = adapter
 
         val ivCalendarPrevious: ImageView = view.findViewById(R.id.iv_calendar_previous)
