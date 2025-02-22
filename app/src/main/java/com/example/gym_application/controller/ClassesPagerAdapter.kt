@@ -1,3 +1,5 @@
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.gym_application.BookedClassesFragment
@@ -9,6 +11,7 @@ class ClassesPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
         return 2
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> GymClassesFragment()

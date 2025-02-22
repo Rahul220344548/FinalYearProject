@@ -1,5 +1,7 @@
 package com.example.gym_application
 
+import FirebaseDatabaseHelper
+import GymClassesAdapter
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -20,8 +22,8 @@ class GymClassesFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CalendarAdapter
+    private lateinit var classAdapter: GymClassesAdapter
 
-    private lateinit var textSelectedDate: TextView
     private var currentMonth: LocalDate = LocalDate.now()
 
 
@@ -32,11 +34,19 @@ class GymClassesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_gym_classes, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerView)
-        textSelectedDate = view.findViewById(R.id.text_selected_date) // Reference to new TextView
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
+        val classesRecyclerView: RecyclerView = view.findViewById(R.id.classesRecyclerView)
+        classesRecyclerView.layoutManager = LinearLayoutManager(context)
+        classAdapter = GymClassesAdapter(emptyList())
+        classesRecyclerView.adapter = classAdapter
+
         adapter = CalendarAdapter { selectedDate ->
-            textSelectedDate.text = "Selected Date: ${selectedDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))}"
+            val formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("EEEE"))
+
+            FirebaseDatabaseHelper().getClassesForDate(formattedDate) { classList ->
+                classAdapter.updateData(classList) // Update RecyclerView
+            }
 
         }
         recyclerView.adapter = adapter
@@ -75,4 +85,7 @@ class GymClassesFragment : Fragment() {
         }.filter { it.isEqual(today) || it.isAfter(today) }
         adapter.submitList(dates)
     }
+
+
+
 }

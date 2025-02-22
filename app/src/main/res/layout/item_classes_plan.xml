@@ -6,7 +6,7 @@
     android:layout_marginTop="15dp"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
-    android:background="@drawable/linear_layout_light_border"
+    android:background="@drawable/layout_classes_item_border"
     android:padding="20dp">
 
     <LinearLayout
@@ -21,7 +21,7 @@
             android:src="@drawable/baseline_access_time_24" />
 
         <TextView
-            android:id="@+id/classStartTime"
+            android:id="@+id/recyClassStartTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -29,19 +29,28 @@
             android:text="17:30 " />
 
         <TextView
-            android:id="@+id/classLength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
+            android:layout_marginStart="10dp"
             android:textSize="18sp"
-            android:text=". 30min" />
+            android:text="." />
+
+        <TextView
+            android:id="@+id/recyClassLength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:textSize="18sp"
+            android:text="time" />
 
 
     </LinearLayout>
 
 
     <TextView
-        android:id="@+id/classTitle"
+        android:id="@+id/recyClassTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Class Title"
@@ -53,7 +62,7 @@
         android:textStyle="italic | bold " />
 
     <TextView
-        android:id="@+id/classDuration"
+        android:id="@+id/recyClassRestrictions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Class Restriction: "
