@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -18,7 +17,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.utils.ValidationClassCreation
-import com.example.gym_application.utils.ValidationUtils
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -38,15 +36,11 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var autoCompleteStartTime: AutoCompleteTextView
     private lateinit var autoCompleteEndTime : AutoCompleteTextView
 
-    private lateinit var autoCompleteStartClassAvalibility: AutoCompleteTextView
-    private lateinit var autoCompleteEndClassAvalibility: AutoCompleteTextView
+    private lateinit var startDate: AutoCompleteTextView
 
     private var selectedColor: String = ""
     private var selectedRoom: String = ""
     private var selectedInstructor: String = ""
-
-    private lateinit var checkBoxes: List<CheckBox>
-    private val daysOfWeek = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
     private val database = FirebaseDatabase.getInstance().getReference("classes")
     private val instructorDatabase = FirebaseDatabase.getInstance().getReference("users")
@@ -72,19 +66,14 @@ class CreateAClass : AppCompatActivity() {
         autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
         classLimit = findViewById<EditText>(R.id.editTextClassLimit)
         genderRestrictionsRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_GenderRestrictions)
-
-        autoCompleteStartClassAvalibility = findViewById(R.id.auto_complete_startClassAvaliablity)
-        autoCompleteEndClassAvalibility = findViewById(R.id.auto_complete_endClassAvaliablity)
-
-        initializeCheckBoxes()
+        startDate = findViewById(R.id.auto_complete_starDate)
 
         setUpSelectColordropdown()
         setUpSelectRoomdropdown()
         setUpSelectInstructordropdown()
         setUpStartTimeDropdown()
         setUpEndTimeDropdown()
-        setUpStartClassAvailability()
-        setUpEndClassAvailability()
+        setUpStartDate()
 
     }
 
@@ -107,20 +96,15 @@ class CreateAClass : AppCompatActivity() {
         val startTime = autoCompleteStartTime.text.toString().trim()
         val endTime = autoCompleteEndTime.text.toString().trim()
 
-        val startAvailability = autoCompleteStartClassAvalibility.text.toString().trim()
-        val endAvailability = autoCompleteEndClassAvalibility.text.toString().trim()
-
-        val occurrences = getSelectedOccurrences()
-
+        val startDate = startDate.text.toString().trim()
 
         val classId = database.push().key
         if (classId != null) {
             val newClass = ClassModel(
                 title, description, selectedColor,
-                selectedRoom, selectedInstructor, capacity, genderRestriction,
+                selectedRoom, selectedInstructor, capacity, 0, genderRestriction,
                 startTime, endTime,
-                startAvailability, endAvailability,
-                occurrences
+                startDate
             )
 
             database.child(classId).setValue(newClass)
@@ -134,9 +118,7 @@ class CreateAClass : AppCompatActivity() {
                     genderRestrictionsRadioGroup.clearCheck()
                     autoCompleteStartTime.text.clear()
                     autoCompleteEndTime.text.clear()
-                    autoCompleteStartClassAvalibility.text.clear()
-                    autoCompleteEndClassAvalibility.text.clear()
-                    resetCheckBoxes()
+                   this.startDate.text.clear()
                     finish()
                 }
                 .addOnFailureListener {
@@ -263,18 +245,8 @@ class CreateAClass : AppCompatActivity() {
 
     }
 
-    private fun setUpStartClassAvailability() {
-
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val todayDate = dateFormat.format(Calendar.getInstance().time)
-
-        autoCompleteStartClassAvalibility.setText(todayDate)
-        autoCompleteStartClassAvalibility.isEnabled = false
-
-    }
-
-    private fun setUpEndClassAvailability() {
-        autoCompleteEndClassAvalibility.setOnClickListener {
+    private fun setUpStartDate() {
+        startDate.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
@@ -296,7 +268,7 @@ class CreateAClass : AppCompatActivity() {
                             selectedMonth + 1,
                             selectedYear
                         )
-                        autoCompleteEndClassAvalibility.setText(selectedDate)
+                        startDate.setText(selectedDate)
                     }
                 }, year, month, day)
             datePickerDialog.datePicker.minDate = calendar.timeInMillis
@@ -305,26 +277,6 @@ class CreateAClass : AppCompatActivity() {
         }
     }
 
-    private fun initializeCheckBoxes() {
-        checkBoxes = listOf(
-            findViewById(R.id.checkbox_mon),
-            findViewById(R.id.checkbox_tue),
-            findViewById(R.id.checkbox_wed),
-            findViewById(R.id.checkbox_thu),
-            findViewById(R.id.checkbox_fri),
-            findViewById(R.id.checkbox_sat),
-            findViewById(R.id.checkbox_sun)
-        )
-    }
-
-    private fun getSelectedOccurrences(): List<String> {
-        return checkBoxes.mapIndexedNotNull { index, checkBox ->
-            if (checkBox.isChecked) daysOfWeek[index] else null
-        }
-    }
-    private fun resetCheckBoxes() {
-        checkBoxes.forEach { it.isChecked = false }
-    }
     fun onCancelbtn(view: View){
         finish()
     }
@@ -337,9 +289,7 @@ class CreateAClass : AppCompatActivity() {
         val selectedGenderId = genderRestrictionsRadioGroup.checkedRadioButtonId
         val startTime = autoCompleteStartTime.text.toString().trim()
         val endTime = autoCompleteEndTime.text.toString().trim()
-        val startAvailability = autoCompleteStartClassAvalibility.text.toString().trim()
-        val endAvailability = autoCompleteEndClassAvalibility.text.toString().trim()
-        val occurrences = getSelectedOccurrences()
+        val startDate = this.startDate.text.toString().trim()
 
         if (!ValidationClassCreation.isValidClassTitle(title)) {
             return "Please enter a class Title (at least 3 characters)"
@@ -373,13 +323,9 @@ class CreateAClass : AppCompatActivity() {
             return "Invalid time: Class duration must be 30 minutes or 1 hour"
         }
 
-        if (!ValidationClassCreation.isValidEndDate(startAvailability, endAvailability)) {
+/*        if (!ValidationClassCreation.isValidEndDate(startAvailability, endAvailability)) {
             return "End date must be after or on the start date"
-        }
-
-        if (!ValidationClassCreation.isValidOccurrences(occurrences)) {
-            return "Please select at least one occurrence"
-        }
+        }*/
 
         return ""
     }

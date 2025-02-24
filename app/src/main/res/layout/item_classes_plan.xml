@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="15dp"
     android:layout_marginStart="20dp"
+    android:layout_marginTop="15dp"
     android:layout_marginEnd="20dp"
     android:background="@drawable/layout_classes_item_border"
+    android:orientation="vertical"
     android:padding="20dp">
 
     <LinearLayout
@@ -24,26 +24,26 @@
             android:id="@+id/recyClassStartTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:text="17:30 "
             android:textSize="18sp"
-            android:text="17:30 " />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_marginStart="10dp"
+            android:text="."
             android:textSize="18sp"
-            android:text="." />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/recyClassLength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_marginStart="10dp"
+            android:text="time"
             android:textSize="18sp"
-            android:text="time" />
+            android:textStyle="bold" />
 
 
     </LinearLayout>
@@ -53,12 +53,12 @@
         android:id="@+id/recyClassTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Class Title"
-        android:textSize="25sp"
         android:shadowColor="#AA000000"
-        android:shadowRadius="1"
         android:shadowDx="2"
         android:shadowDy="2"
+        android:shadowRadius="1"
+        android:text="Class Title"
+        android:textSize="25sp"
         android:textStyle="italic | bold " />
 
     <TextView
@@ -67,8 +67,15 @@
         android:layout_height="wrap_content"
         android:text="Class Restriction: "
         android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/remainBookings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remaining bookings: "
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
 
 </LinearLayout>

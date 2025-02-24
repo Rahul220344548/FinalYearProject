@@ -1,6 +1,5 @@
 import com.example.gym_application.model.ClassModel
 import com.google.firebase.database.*
-import com.google.firebase.database.IgnoreExtraProperties
 
 class FirebaseDatabaseHelper {
 
@@ -13,7 +12,7 @@ class FirebaseDatabaseHelper {
                 for (classSnapshot in snapshot.children) {
                     val classData = classSnapshot.getValue(ClassModel::class.java)
                     classData?.let {
-                        if (it.occurrences.contains(selectedDate)) { // Match with selected day
+                        if (it.classStartDate.contains(selectedDate)) { // Match with selected day
                             classList.add(it)
                         }
                     }

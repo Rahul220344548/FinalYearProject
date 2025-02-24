@@ -1,5 +1,4 @@
 package com.example.gym_application.model
-import com.google.firebase.database.IgnoreExtraProperties
 
 data class ClassModel(
     val classTitle: String = "",
@@ -7,14 +6,13 @@ data class ClassModel(
     val classColor: String = "",
     val classLocation: String = "",
     val classInstructor: String = "",
-    val classMaxCapacitiy: Int,
-    val classGenderRestrictuons: String = "",
-    val startTime: String = "",
-    val endTime: String = "",
-    val startAvailability: String = "",
-    val endAvailability: String = "",
-    val occurrences: List<String> = listOf()
+    val classMaxCapacity: Int,
+    val classCurrentBookings: Int,
+    val classGenderRestrictions: String = "",
+    val classStartTime: String = "",
+    val classEndTime: String = "",
+    val classStartDate: String = "",
 ) {
 
-    constructor() : this("", "", "", "", "", 0, "", "", "", "", "", listOf())
+    constructor() : this("", "", "", "", "", 0, 0, "", "", "","")
 }

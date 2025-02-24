@@ -13,9 +13,11 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 class GymClassesFragment : Fragment() {
@@ -42,7 +44,7 @@ class GymClassesFragment : Fragment() {
         classesRecyclerView.adapter = classAdapter
 
         adapter = CalendarAdapter { selectedDate ->
-            val formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("EEEE"))
+            val formattedDate = formatDate(selectedDate.toString());
 
             FirebaseDatabaseHelper().getClassesForDate(formattedDate) { classList ->
                 classAdapter.updateData(classList) // Update RecyclerView
@@ -70,6 +72,14 @@ class GymClassesFragment : Fragment() {
         updateMonthDisplay(textDateMonth)
         updateRecyclerView()
         return view
+    }
+
+    private fun formatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date!!)
     }
 
     private fun updateMonthDisplay(textView: TextView) {

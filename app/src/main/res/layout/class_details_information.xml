@@ -90,7 +90,7 @@
             android:id="@+id/radio_genderAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All"
+            android:text="None"
             android:textSize="18sp" />
         <RadioButton
             android:id="@+id/radio_genderMale"
