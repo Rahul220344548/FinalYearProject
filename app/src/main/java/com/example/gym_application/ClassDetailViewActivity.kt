@@ -61,9 +61,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
     private fun setUpClassAvailableFor() {
         val classAvailabilityFor = intent.getStringExtra("classGenderRestrictions")
         txtclassAvailability = findViewById<TextView>(R.id.classAvailabilityFor)
-
         if (classAvailabilityFor == "None") {
-
             txtclassAvailability.text = classAvailabilityFor
         }else {
             txtclassAvailability.text = "$classAvailabilityFor only"
