@@ -1,8 +1,10 @@
 package com.example.gym_application
 
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -10,9 +12,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.gym_application.utils.ValidationClassCreation
+import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -44,17 +48,41 @@ class ClassDetailViewActivity : AppCompatActivity() {
     }
 
 
-     fun btnBookClass(view: View) {
+    fun btnBookClass(view: View) {
 
-         // gets current user ID
+        // gets current user ID
         val userId = getCurrentUserId()
-        Toast.makeText(this, "$userId", Toast.LENGTH_SHORT).show()
+
 
         // if user membershipstatus is not active then return
         // if user gender does not matches with class gender then return
         // bookclass()
 
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.book_class_dialog_box, null)
 
+        val dialogBuilder = AlertDialog.Builder(this)
+         .setView(dialogView)
+         .setCancelable(false)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+        val btnCancelBooking = dialogView.findViewById<MaterialButton>(R.id.btnCancelBooking)
+        val btnConfirmBooking = dialogView.findViewById<MaterialButton>(R.id.btnConfirmBooking)
+
+        btnCancelBooking.setOnClickListener {
+         alertDialog.dismiss()
+        }
+
+        btnConfirmBooking.setOnClickListener {
+         alertDialog.dismiss()
+
+         val userId = getCurrentUserId()
+         Toast.makeText(this, "Booking confirmed for user: $userId", Toast.LENGTH_SHORT).show()
+
+
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
