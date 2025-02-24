@@ -1,5 +1,7 @@
 package com.example.gym_application.admin_view
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -17,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.gym_application.AccountFragment
 import com.example.gym_application.HomeFragment
+import com.example.gym_application.MainActivity
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.navigation_fragments.AdminClassesFragment
 import com.example.gym_application.admin_view.navigation_fragments.AdminHomeFragment
@@ -61,7 +64,17 @@ class AdminDashboardActivity : AppCompatActivity(), OnNavigationItemSelectedList
             R.id.nav_clases -> replaceFragment(AdminClassesFragment())
             R.id.nav_membership -> replaceFragment(AdminMembershipFragment())
             R.id.nav_payment-> replaceFragment(AdminPaymentFragment())
-            R.id.nav_logout-> Toast.makeText(this,"Logout!",Toast.LENGTH_SHORT).show()
+                R.id.nav_logout-> {
+                    val sharedPreferences = getSharedPreferences("your_prefs", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.clear()
+                    editor.apply()
+                    Toast.makeText(this, "Logged out successfully!", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+
+                }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
