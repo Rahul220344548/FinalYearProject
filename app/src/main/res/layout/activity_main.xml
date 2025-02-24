@@ -63,6 +63,15 @@
             android:inputType="textPassword" />
 
         <Button
+            android:id="@+id/btnAdminAutoLogin"
+            android:layout_width="136dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Admin"
+            android:textColor="#000000"
+            app:backgroundTint="@color/indigo" />
+
+        <Button
             android:id="@+id/btnJohnAutoLogin"
             android:layout_width="136dp"
             android:layout_height="wrap_content"

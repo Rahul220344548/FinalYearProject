@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.gym_application.admin_view.AdminDashboardActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -52,6 +53,11 @@ class MainActivity : AppCompatActivity() {
             autoJohnLogin()
         }
 
+        val btnAdminAutoLogin : Button = findViewById(R.id.btnAdminAutoLogin)
+        btnAdminAutoLogin.setOnClickListener {
+            autoAdminLogin()
+        }
+
     }
 
     fun autoJohnLogin() {
@@ -83,6 +89,25 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Auto Login successful!", Toast.LENGTH_SHORT).show()
 
                     val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+
+                    Toast.makeText(this, "Auto Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    fun autoAdminLogin() {
+        val testEmail = "admin@admin.com"
+        val testPassword = "admin123"
+
+        auth.signInWithEmailAndPassword(testEmail, testPassword)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Auto Login successful!", Toast.LENGTH_SHORT).show()
+
+                    val intent = Intent(this, AdminDashboardActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {
