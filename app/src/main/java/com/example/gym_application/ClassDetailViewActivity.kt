@@ -95,10 +95,10 @@ class ClassDetailViewActivity : AppCompatActivity() {
         val btnBookClass = findViewById<Button>(R.id.btnBookClass)
         // if class is full
         if (currBookings >= maxCapacity) {
-
             txtClassRemainingSpot.setTextColor(ContextCompat.getColor(this,R.color.red))
             txtClassRemainingSpot.text = "Class Full"
             btnBookClass.isEnabled = false
+            // hide button btnBookClass.visibility = View.INVISIBLE
             return
         }
         txtClassRemainingSpot.text = "Available ($remainingSpots spots left)"
