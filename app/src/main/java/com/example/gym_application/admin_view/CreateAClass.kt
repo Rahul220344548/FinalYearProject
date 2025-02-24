@@ -31,7 +31,7 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
     private lateinit var autoCompleteInstructorTextView: AutoCompleteTextView
     private lateinit var classLimit : EditText
-    private lateinit var genderRestrictionsRadioGroup : RadioGroup
+    private lateinit var classAvailabilityForRadioGroup : RadioGroup
 
     private lateinit var autoCompleteStartTime: AutoCompleteTextView
     private lateinit var autoCompleteEndTime : AutoCompleteTextView
@@ -65,7 +65,7 @@ class CreateAClass : AppCompatActivity() {
         autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
         autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
         classLimit = findViewById<EditText>(R.id.editTextClassLimit)
-        genderRestrictionsRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_GenderRestrictions)
+        classAvailabilityForRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_ClassAvailabilityFor)
         startDate = findViewById(R.id.auto_complete_starDate)
 
         setUpSelectColordropdown()
@@ -89,7 +89,7 @@ class CreateAClass : AppCompatActivity() {
         val description = classDescription.text.toString().trim()
         val capacity = classLimit.text.toString().trim().toIntOrNull() ?: 0
 
-        val selectedGenderId = genderRestrictionsRadioGroup.checkedRadioButtonId
+        val selectedGenderId = classAvailabilityForRadioGroup.checkedRadioButtonId
         val selectedGenderRadioButton = findViewById<RadioButton>(selectedGenderId)
         val genderRestriction = selectedGenderRadioButton.text.toString()
 
@@ -115,7 +115,7 @@ class CreateAClass : AppCompatActivity() {
                     autoCompleteColorTextView.text.clear()
                     autoCompleteRoomTextView.text.clear()
                     autoCompleteInstructorTextView.text.clear()
-                    genderRestrictionsRadioGroup.clearCheck()
+                    classAvailabilityForRadioGroup.clearCheck()
                     autoCompleteStartTime.text.clear()
                     autoCompleteEndTime.text.clear()
                    this.startDate.text.clear()
@@ -286,7 +286,7 @@ class CreateAClass : AppCompatActivity() {
         val title = classTitle.text.toString().trim()
         val description = classDescription.text.toString().trim()
         val capacity = classLimit.text.toString().trim()
-        val selectedGenderId = genderRestrictionsRadioGroup.checkedRadioButtonId
+        val selectedGenderId = classAvailabilityForRadioGroup.checkedRadioButtonId
         val startTime = autoCompleteStartTime.text.toString().trim()
         val endTime = autoCompleteEndTime.text.toString().trim()
         val startDate = this.startDate.text.toString().trim()

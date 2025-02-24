@@ -75,13 +75,13 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gender Restrictions"
+        android:text="Class Availability For"
         android:layout_marginTop="10dp"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <RadioGroup
-        android:id="@+id/radioGroup_GenderRestrictions"
+        android:id="@+id/radioGroup_ClassAvailabilityFor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -90,7 +90,7 @@
             android:id="@+id/radio_genderAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="None"
+            android:text="All"
             android:textSize="18sp" />
         <RadioButton
             android:id="@+id/radio_genderMale"

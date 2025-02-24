@@ -62,7 +62,7 @@
         android:textStyle="italic | bold " />
 
     <TextView
-        android:id="@+id/recyClassRestrictions"
+        android:id="@+id/recyclassAvailabilityFor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Class Restriction: "

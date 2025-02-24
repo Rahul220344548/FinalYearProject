@@ -17,7 +17,7 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
         val classTitle: TextView = view.findViewById(R.id.recyClassTitle)
         val classStartTime: TextView = view.findViewById(R.id.recyClassStartTime)
         val classLength : TextView = view.findViewById(R.id.recyClassLength)
-        val classRestriction: TextView = view.findViewById(R.id.recyClassRestrictions)
+        val classAvailabilityFor: TextView = view.findViewById(R.id.recyclassAvailabilityFor)
         val remainingBookings: TextView = view.findViewById(R.id.remainBookings)
     }
 
@@ -40,7 +40,7 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
 
         holder.classLength.text = "$durationMinutes min"
 
-        holder.classRestriction.text = "Class Restrictions: ${gymClass.classGenderRestrictions}"
+        holder.classAvailabilityFor.text = "Class Restrictions: ${gymClass.classAvailabilityFor}"
         holder.remainingBookings.text = "Remaining bookings: ${remainingBookings}"
 
         // Set click listener
@@ -51,7 +51,7 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
                 putExtra("classStartTime", gymClass.classStartTime)
                 putExtra("classEndTime", gymClass.classEndTime)
                 putExtra("classLocation", gymClass.classLocation)
-                putExtra("classGenderRestrictions", gymClass.classGenderRestrictions)
+                putExtra("classAvailabilityFor", gymClass.classAvailabilityFor)
                 putExtra("classInstructor",gymClass.classInstructor)
                 putExtra("classCurrentBookings", gymClass.classCurrentBookings)
                 putExtra("classMaxCapacity", gymClass.classMaxCapacity)

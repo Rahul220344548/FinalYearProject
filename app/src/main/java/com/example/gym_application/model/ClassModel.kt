@@ -8,7 +8,7 @@ data class ClassModel(
     val classInstructor: String = "",
     val classMaxCapacity: Int,
     val classCurrentBookings: Int,
-    val classGenderRestrictions: String = "",
+    val classAvailabilityFor: String = "",
     val classStartTime: String = "",
     val classEndTime: String = "",
     val classStartDate: String = "",
