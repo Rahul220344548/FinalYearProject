@@ -1,15 +1,17 @@
 package com.example.gym_application
 
+import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.utils.ValidationClassCreation
 import org.w3c.dom.Text
-
+@RequiresApi(Build.VERSION_CODES.O)
 class ClassDetailViewActivity : AppCompatActivity() {
 
     private lateinit var txtClassTitle : TextView
@@ -37,70 +39,35 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setClassDetailInfo() {
-
-        val currBookings = intent.getIntExtra("classCurrentBookings",0)
-        val maxCapacity = intent.getIntExtra("classMaxCapacity",0)
-        val remainingSpots = maxCapacity - currBookings
-
-        val inClassLocation = intent.getStringExtra("classLocation")
-
-        val inClassInstructor = intent.getStringExtra("classInstructor")
-
-        val inClassDescription = intent.getStringExtra("classDescription")
-
-
-
-
-
-        txtClassRemainingSpot =findViewById<TextView>(R.id.classRemainingSpots)
-        txtClassRemainingSpot.text = "Available ($remainingSpots spots left)"
-
-        txtClassLocation = findViewById<TextView>(R.id.classLocation)
-        txtClassLocation.text = inClassLocation
-
-        txtClassInstructor =findViewById<TextView>(R.id.classInstructor)
-        txtClassInstructor.text = inClassInstructor
-
-        txtClassDescription = findViewById<TextView>(R.id.classDescription)
-        txtClassDescription.text = inClassDescription
-
-
-
+        setUpScheduleInfo()
+        setUpClassAvailableFor()
+        setUpClassStatus()
+        setUpClassLocation()
+        setUpClassInstructor()
+        setUpClassInstructor()
+        setUpClassDescription()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpScheduleInfo() {
-
-        val inClassTitle = intent.getStringExtra("classTitle")
-        val inClassStartDate = intent.getStringExtra("classStartDate")
-
-        val inClassStartTime = intent.getStringExtra("classStartTime") ?: "00:00"
-        val inClassEndTime = intent.getStringExtra("classEndTime") ?: "00:00"
-
-        val startMinutes = ValidationClassCreation.convertTimeToMinutes(inClassStartTime)
-        val endMinutes = ValidationClassCreation.convertTimeToMinutes(inClassEndTime)
-        val duration = endMinutes - startMinutes
-
-        txtClassTitle = findViewById<TextView>(R.id.classTitle)
-        txtClassTitle.text = inClassTitle
-
-        txtClassScheduledDate = findViewById<TextView>(R.id.classScheduledDate)
-        txtClassScheduledDate.text = inClassStartDate
-
-        txtClassScheduledTime = findViewById<TextView>(R.id.classScheduledTime)
-        txtClassScheduledTime.text = "$inClassStartTime - $inClassEndTime"
-
-        txtclassLength = findViewById<TextView>(R.id.classLength)
-        txtclassLength.text = "$duration min"
-
+        setUpClassTitle()
+        setUpClassStartDate()
+        setUpClassTimes()
+        setUpClassDuration()
     }
 
     private fun setUpClassAvailableFor() {
         val classAvailabilityFor = intent.getStringExtra("classGenderRestrictions")
         txtclassAvailability = findViewById<TextView>(R.id.classAvailabilityFor)
-        txtclassAvailability.text = classAvailabilityFor
 
+        if (classAvailabilityFor == "None") {
 
+            txtclassAvailability.text = classAvailabilityFor
+        }else {
+            txtclassAvailability.text = "$classAvailabilityFor only"
+        }
     }
 
     private fun setUpClassStatus() {
@@ -110,6 +77,63 @@ class ClassDetailViewActivity : AppCompatActivity() {
         val remainingSpots = maxCapacity - currBookings
         txtClassRemainingSpot =findViewById<TextView>(R.id.classRemainingSpots)
         txtClassRemainingSpot.text = "Available ($remainingSpots spots left)"
+    }
+
+    private fun setUpClassLocation() {
+        val inClassLocation = intent.getStringExtra("classLocation")
+        txtClassLocation = findViewById<TextView>(R.id.classLocation)
+        txtClassLocation.text = inClassLocation
+
+    }
+
+    private fun setUpClassInstructor() {
+
+        val inClassInstructor = intent.getStringExtra("classInstructor")
+        txtClassInstructor =findViewById<TextView>(R.id.classInstructor)
+        txtClassInstructor.text = inClassInstructor
+
+    }
+
+    private fun setUpClassDescription() {
+        val inClassDescription = intent.getStringExtra("classDescription")
+        txtClassDescription = findViewById<TextView>(R.id.classDescription)
+        txtClassDescription.text = inClassDescription
+    }
+
+    private fun setUpClassTitle(){
+
+        val inClassTitle = intent.getStringExtra("classTitle")
+        txtClassTitle = findViewById<TextView>(R.id.classTitle)
+        txtClassTitle.text = inClassTitle
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setUpClassStartDate() {
+        val inClassStartDate = intent.getStringExtra("classStartDate") ?: "01/01/2000"
+        txtClassScheduledDate = findViewById<TextView>(R.id.classScheduledDate)
+        val formatDate = ValidationClassCreation.formatDate(inClassStartDate)
+        txtClassScheduledDate.text = formatDate
+    }
+    private fun setUpClassTimes() {
+        val inClassStartTime = intent.getStringExtra("classStartTime") ?: "00:00"
+        val inClassEndTime = intent.getStringExtra("classEndTime") ?: "00:00"
+
+        txtClassScheduledTime = findViewById<TextView>(R.id.classScheduledTime)
+        txtClassScheduledTime.text = "$inClassStartTime - $inClassEndTime"
+
+    }
+    private fun setUpClassDuration() {
+
+        val inClassStartTime = intent.getStringExtra("classStartTime") ?: "00:00"
+        val inClassEndTime = intent.getStringExtra("classEndTime") ?: "00:00"
+
+        val startMinutes = ValidationClassCreation.convertTimeToMinutes(inClassStartTime)
+        val endMinutes = ValidationClassCreation.convertTimeToMinutes(inClassEndTime)
+        val duration = endMinutes - startMinutes
+
+        txtclassLength = findViewById<TextView>(R.id.classLength)
+        txtclassLength.text = "$duration min"
+
 
     }
     override fun onSupportNavigateUp(): Boolean {

@@ -1,6 +1,11 @@
 package com.example.gym_application.utils
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Calendar
 import java.util.Locale
 
@@ -86,5 +91,22 @@ object ValidationClassCreation {
         val minutes = parts[1].toInt()
         return (hours * 60) + minutes
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun formatDate(inputDate: String): String {
+        val inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val outputFormatter = DateTimeFormatter.ofPattern("EEEE dd, MMMM")
+
+        return try {
+
+            val parsedDate = LocalDate.parse(inputDate, inputFormatter)
+
+            parsedDate.format(outputFormatter)
+        } catch (e: DateTimeParseException) {
+
+            "Invalid date format"
+        }
+    }
+
 
 }
