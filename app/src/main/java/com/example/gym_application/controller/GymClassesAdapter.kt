@@ -30,7 +30,7 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val gymClass = classList[position]
         holder.classTitle.text = gymClass.classTitle
-        holder.classStartTime.text = "Start: ${gymClass.classStartDate}"
+        holder.classStartTime.text = "${gymClass.classStartTime} - ${gymClass.classEndTime}"
 
         val startMinutes = convertTimeToMinutes(gymClass.classStartTime)
         val endMinutes = convertTimeToMinutes(gymClass.classEndTime)
@@ -40,8 +40,8 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
 
         holder.classLength.text = "$durationMinutes min"
 
-        holder.classAvailabilityFor.text = "Class Restrictions: ${gymClass.classAvailabilityFor}"
-        holder.remainingBookings.text = "Remaining bookings: ${remainingBookings}"
+        holder.classAvailabilityFor.text = "Class Eligible For: ${gymClass.classAvailabilityFor}"
+        holder.remainingBookings.text = "available spaces: ${remainingBookings}"
 
         // Set click listener
         holder.itemView.setOnClickListener {
