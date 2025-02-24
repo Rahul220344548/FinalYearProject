@@ -236,18 +236,20 @@
         android:id="@+id/btnBookClass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="35dp"
         android:layout_marginEnd="35dp"
         android:backgroundTint="@color/peach2"
-        android:text="BOOK CLASS"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:onClick="btnBookClass"
+        android:padding="15dp"
         android:shadowColor="#000000"
         android:shadowDx="5"
         android:shadowDy="5"
         android:shadowRadius="10"
-        android:layout_alignParentBottom="true"/>
+        android:text="BOOK CLASS"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:enabled="true"/>
 
 
 </RelativeLayout>

@@ -1,17 +1,20 @@
 package com.example.gym_application
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.content.ContextCompat
 import com.example.gym_application.utils.ValidationClassCreation
-import org.w3c.dom.Text
+import com.google.firebase.auth.FirebaseAuth
+
 @RequiresApi(Build.VERSION_CODES.O)
 class ClassDetailViewActivity : AppCompatActivity() {
 
@@ -41,7 +44,16 @@ class ClassDetailViewActivity : AppCompatActivity() {
     }
 
 
-    private fun btnBookClass() {
+     fun btnBookClass(view: View) {
+
+         // gets current user ID
+        val userId = getCurrentUserId()
+        Toast.makeText(this, "$userId", Toast.LENGTH_SHORT).show()
+
+        // if user membershipstatus is not active then return
+        // if user gender does not matches with class gender then return
+        // bookclass()
+
 
     }
 
@@ -80,7 +92,19 @@ class ClassDetailViewActivity : AppCompatActivity() {
         val maxCapacity = intent.getIntExtra("classMaxCapacity",0)
         val remainingSpots = maxCapacity - currBookings
         txtClassRemainingSpot =findViewById<TextView>(R.id.classRemainingSpots)
+        val btnBookClass = findViewById<Button>(R.id.btnBookClass)
+        // if class is full
+        if (currBookings >= maxCapacity) {
+
+            txtClassRemainingSpot.setTextColor(ContextCompat.getColor(this,R.color.red))
+            txtClassRemainingSpot.text = "Class Full"
+            btnBookClass.isEnabled = false
+            return
+        }
         txtClassRemainingSpot.text = "Available ($remainingSpots spots left)"
+        txtClassRemainingSpot.setTextColor(ContextCompat.getColor(this, R.color.available_green))
+        btnBookClass.isEnabled = true
+
     }
 
     private fun setUpClassLocation() {
@@ -140,9 +164,14 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
 
     }
+
+    private fun getCurrentUserId(): String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        return user?.uid // Returns the unique Firebase UID or null if not logged in
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
-
 }
