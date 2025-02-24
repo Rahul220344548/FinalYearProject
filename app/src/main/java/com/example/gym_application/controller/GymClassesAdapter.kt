@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.gym_application.ClassDetailViewActivity
 import com.example.gym_application.MainActivity
 import com.example.gym_application.R
 import com.example.gym_application.model.ClassModel
@@ -44,14 +45,17 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
 
         // Set click listener
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, MainActivity::class.java).apply {
+            val intent = Intent(holder.itemView.context, ClassDetailViewActivity::class.java).apply {
                 putExtra("classTitle", gymClass.classTitle)
                 putExtra("classStartDate", gymClass.classStartDate)
                 putExtra("classStartTime", gymClass.classStartTime)
                 putExtra("classEndTime", gymClass.classEndTime)
+                putExtra("classLocation", gymClass.classLocation)
                 putExtra("classGenderRestrictions", gymClass.classGenderRestrictions)
+                putExtra("classInstructor",gymClass.classInstructor)
                 putExtra("classCurrentBookings", gymClass.classCurrentBookings)
                 putExtra("classMaxCapacity", gymClass.classMaxCapacity)
+                putExtra("classDescription", gymClass.classDescription)
             }
             holder.itemView.context.startActivity(intent)
         }

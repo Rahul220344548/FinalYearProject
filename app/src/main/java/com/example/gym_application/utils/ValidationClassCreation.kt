@@ -80,4 +80,11 @@ object ValidationClassCreation {
         return occurrences.isNotEmpty()
     }
 
+    fun convertTimeToMinutes(time: String): Int {
+        val parts = time.split(":")
+        val hours = parts[0].toInt()
+        val minutes = parts[1].toInt()
+        return (hours * 60) + minutes
+    }
+
 }
