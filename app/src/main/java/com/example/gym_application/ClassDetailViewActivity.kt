@@ -53,36 +53,50 @@ class ClassDetailViewActivity : AppCompatActivity() {
         // gets current user ID
         val userId = getCurrentUserId()
 
-
         // if user membershipstatus is not active then return
         // if user gender does not matches with class gender then return
-        // bookclass()
+
+        showBookClassDialog()
+
+    }
+
+    private fun showBookClassDialog() {
+
+        /**
+         * Displays a confirmation dialog for booking a class.
+         * Users can confirm or cancel the booking.
+         */
 
         val dialogView = LayoutInflater.from(this).inflate(R.layout.book_class_dialog_box, null)
 
         val dialogBuilder = AlertDialog.Builder(this)
-         .setView(dialogView)
-         .setCancelable(false)
+            .setView(dialogView)
+            .setCancelable(false)
 
         val alertDialog = dialogBuilder.create()
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         alertDialog.show()
 
+
         val btnCancelBooking = dialogView.findViewById<MaterialButton>(R.id.btnCancelBooking)
         val btnConfirmBooking = dialogView.findViewById<MaterialButton>(R.id.btnConfirmBooking)
 
+
         btnCancelBooking.setOnClickListener {
-         alertDialog.dismiss()
+            alertDialog.dismiss()
         }
 
         btnConfirmBooking.setOnClickListener {
-         alertDialog.dismiss()
-
-         val userId = getCurrentUserId()
-         Toast.makeText(this, "Booking confirmed for user: $userId", Toast.LENGTH_SHORT).show()
-
-
+            alertDialog.dismiss()
+            confirmClassBooking()
         }
+
+    }
+
+    private fun confirmClassBooking() {
+        val userId = getCurrentUserId()
+        Toast.makeText(this, "Booking confirmed for user: $userId", Toast.LENGTH_SHORT).show()
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
