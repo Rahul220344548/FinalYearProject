@@ -122,7 +122,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
         setUpClassInstructor()
         setUpClassInstructor()
         setUpClassDescription()
-        setUpClassBookButton(classId)
+        setUpBookAndCancelButton(classId)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -252,56 +252,25 @@ class ClassDetailViewActivity : AppCompatActivity() {
             }
     }
 
-    //diable button for user who are already booked
-    private fun setUpClassBookButton(classId: String?) {
+    private fun setUpBookAndCancelButton(classId: String?) {
+
+        val firebaseHelper = FirebaseDatabaseHelper()
+        val userId = getCurrentUserId().toString()
 
         val btnBookClass = findViewById<Button>(R.id.btnBookClass)
         val bookingConfirmTextView = findViewById<TextView>(R.id.bookingConfirmationText)
         val btnCancelClass = findViewById<Button>(R.id.btnCancelClassBooking)
 
-        hasUserAlreadyBookedThisClass(classId ?: "") { isBooked ->
+        firebaseHelper.hasUserAlreadyBookedThisClass(userId,classId ?: "") { isBooked ->
             if (isBooked) {
                 bookingConfirmTextView.visibility = View.VISIBLE
                 btnBookClass.visibility = View.GONE
                 btnCancelClass.visibility = View.VISIBLE
-//                btnBookClass.isClickable = false
-//                btnBookClass.isEnabled = false
-//                btnBookClass.text = "Already Booked"
             } else {
                 btnBookClass.isClickable = true
                 btnBookClass.isEnabled = true
                 btnBookClass.text = "Book Class"
             }
-        }
-    }
-
-
-    private fun hasUserAlreadyBookedThisClass(classId: String, callback: (Boolean) -> Unit) {
-
-        val userId = getCurrentUserId().toString()
-        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
-            .child(userId)
-            .child("bookings")
-            .child("current")
-
-        databaseReference.get().addOnSuccessListener { snapshot ->
-            if (snapshot.exists()) {
-                var isBooked = false
-
-                for (dataSnapshot in snapshot.children) {
-                    val userClassBooking = dataSnapshot.getValue(UserClassBooking::class.java)
-                    if (userClassBooking?.classId == classId) {
-                        isBooked = true
-                        break
-                    }
-                }
-                callback(isBooked)
-            }else {
-                callback(false)
-            }
-        }.addOnFailureListener {
-            println("Error fetching data: ${it.message}")
-            callback(false)
         }
     }
 

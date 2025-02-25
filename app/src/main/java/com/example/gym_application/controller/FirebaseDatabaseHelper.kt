@@ -1,4 +1,5 @@
 import com.example.gym_application.model.ClassModel
+import com.example.gym_application.model.UserClassBooking
 import com.google.firebase.database.*
 
 class FirebaseDatabaseHelper {
@@ -26,4 +27,32 @@ class FirebaseDatabaseHelper {
             }
         })
     }
+
+    fun hasUserAlreadyBookedThisClass(userId: String, classId: String, callback: (Boolean) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+            .child(userId)
+            .child("bookings")
+            .child("current")
+
+        databaseReference.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                var isBooked = false
+
+                for (dataSnapshot in snapshot.children) {
+                    val userClassBooking = dataSnapshot.getValue(UserClassBooking::class.java)
+                    if (userClassBooking?.classId == classId) {
+                        isBooked = true
+                        break
+                    }
+                }
+                callback(isBooked)
+            } else {
+                callback(false)
+            }
+        }.addOnFailureListener {
+            println("Error fetching data: ${it.message}")
+            callback(false)
+        }
+    }
+
 }
