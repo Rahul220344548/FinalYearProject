@@ -1,3 +1,4 @@
+import android.widget.Toast
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.model.UserClassBooking
 import com.google.firebase.database.*
@@ -28,6 +29,8 @@ class FirebaseDatabaseHelper {
         })
     }
 
+
+
     fun hasUserAlreadyBookedThisClass(userId: String, classId: String, callback: (Boolean) -> Unit) {
         val databaseReference = FirebaseDatabase.getInstance().getReference("users")
             .child(userId)
@@ -53,6 +56,29 @@ class FirebaseDatabaseHelper {
             println("Error fetching data: ${it.message}")
             callback(false)
         }
+    }
+
+    fun getUserMembershipStatus(userId:String,callback: (String?) -> Unit ) {
+
+        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+            .child(userId)
+            .child("membershipDetails")
+            .child("membershipStatus")
+
+
+        databaseReference.get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    val membershipStatus = snapshot.getValue(String::class.java)
+                    callback(membershipStatus)
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnSuccessListener { exception ->
+                callback(null)
+            }
+
     }
 
 }

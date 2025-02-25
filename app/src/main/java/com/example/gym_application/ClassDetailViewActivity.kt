@@ -61,13 +61,25 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
     fun btnBookClass(view: View) {
 
+        val firebaseHelper = FirebaseDatabaseHelper()
         // gets current user ID
-        val userId = getCurrentUserId()
+        val userId = getCurrentUserId().toString()
+
 
         // if user membershipstatus is not active then return
+
+        firebaseHelper.getUserMembershipStatus(userId) { membershipStatus ->
+            if ( membershipStatus != "active") {
+                Toast.makeText(this, "No active membership. Cannot book class.", Toast.LENGTH_LONG).show()
+                return@getUserMembershipStatus
+            }
+            showBookClassDialog()
+        }
+
+        firebaseHelper.
+
         // if user gender does not matches with class gender then return
 
-        showBookClassDialog()
 
     }
 
