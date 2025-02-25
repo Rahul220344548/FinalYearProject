@@ -59,6 +59,9 @@ class ClassDetailViewActivity : AppCompatActivity() {
         setClassDetailInfo()
     }
 
+    fun btnCancelBooking() {
+
+    }
 
     fun btnBookClass(view: View) {
         val firebaseHelper = FirebaseDatabaseHelper()
