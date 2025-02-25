@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.gym_application.model.UserClassBooking
+import com.example.gym_application.utils.ClassBookingUtils
 import com.example.gym_application.utils.ValidationClassCreation
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
@@ -62,25 +63,30 @@ class ClassDetailViewActivity : AppCompatActivity() {
     fun btnBookClass(view: View) {
 
         val firebaseHelper = FirebaseDatabaseHelper()
-        // gets current user ID
         val userId = getCurrentUserId().toString()
-
-
-        // if user membershipstatus is not active then return
 
         firebaseHelper.getUserMembershipStatus(userId) { membershipStatus ->
             if ( membershipStatus != "active") {
-                Toast.makeText(this, "No active membership. Cannot book class.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Activate your membership to book this class!"
+                    , Toast.LENGTH_LONG).show()
                 return@getUserMembershipStatus
             }
-            showBookClassDialog()
+            val classAvailabilityFor = intent.getStringExtra("classAvailabilityFor").toString();
+            firebaseHelper.getUserGender(userId) { userGender ->
+                if (userGender != null) {
+                    if (ClassBookingUtils.canUserBookClass(classAvailabilityFor,userGender)) {
+                        showBookClassDialog()
+                    } else {
+                        Toast.makeText(this, "This class is only available for $classAvailabilityFor participants."
+                            , Toast.LENGTH_LONG).show()
+                        return@getUserGender
+                    }
+                } else {
+                    println("Unable to fetch user gender. Please try again.")
+                }
+
+            }
         }
-
-        firebaseHelper.
-
-        // if user gender does not matches with class gender then return
-
-
     }
 
     private fun showBookClassDialog() {

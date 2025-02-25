@@ -60,17 +60,43 @@ class FirebaseDatabaseHelper {
 
     fun getUserMembershipStatus(userId:String,callback: (String?) -> Unit ) {
 
+        //  val membershipDetail = snapshot.child("membershipDetails")
+        //                        .child("membershipStatus").value.toString()
+
         val databaseReference = FirebaseDatabase.getInstance().getReference("users")
             .child(userId)
             .child("membershipDetails")
-            .child("membershipStatus")
 
 
         databaseReference.get()
             .addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
-                    val membershipStatus = snapshot.getValue(String::class.java)
+                    val membershipStatus = snapshot.child("membershipStatus").value.toString()
+//                    val membershipStatus = snapshot.getValue(String::class.java)
                     callback(membershipStatus)
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener { exception ->
+                callback(null)
+            }
+    }
+
+
+
+    // val gender = snapshot.child("gender").value.toString()
+
+    fun getUserGender(userId: String ,callback: (String?) -> Unit ) {
+
+        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+            .child(userId)
+
+        databaseReference.get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    val gender = snapshot.child("gender").value.toString()
+                    callback(gender)
                 } else {
                     callback(null)
                 }
@@ -78,7 +104,5 @@ class FirebaseDatabaseHelper {
             .addOnSuccessListener { exception ->
                 callback(null)
             }
-
     }
-
 }
