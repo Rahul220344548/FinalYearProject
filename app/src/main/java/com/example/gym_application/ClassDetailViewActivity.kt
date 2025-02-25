@@ -137,9 +137,9 @@ class ClassDetailViewActivity : AppCompatActivity() {
         val classAvailabilityFor = intent.getStringExtra("classAvailabilityFor")
         txtclassAvailability = findViewById<TextView>(R.id.classAvailabilityFor)
         if (classAvailabilityFor == "All") {
-            txtclassAvailability.text = classAvailabilityFor
+            txtclassAvailability.text = classAvailabilityFor?.toUpperCase()
         }else {
-            txtclassAvailability.text = "$classAvailabilityFor only"
+            txtclassAvailability.text = "$classAvailabilityFor only"?.toUpperCase()
         }
     }
 
@@ -189,7 +189,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
         val inClassTitle = intent.getStringExtra("classTitle")
         txtClassTitle = findViewById<TextView>(R.id.classTitle)
-        txtClassTitle.text = inClassTitle
+        txtClassTitle.text = inClassTitle?.toUpperCase()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -257,13 +257,16 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
         val btnBookClass = findViewById<Button>(R.id.btnBookClass)
         val bookingConfirmTextView = findViewById<TextView>(R.id.bookingConfirmationText)
+        val btnCancelClass = findViewById<Button>(R.id.btnCancelClassBooking)
 
         hasUserAlreadyBookedThisClass(classId ?: "") { isBooked ->
             if (isBooked) {
                 bookingConfirmTextView.visibility = View.VISIBLE
-                btnBookClass.isClickable = false
-                btnBookClass.isEnabled = false
-                btnBookClass.text = "Already Booked"
+                btnBookClass.visibility = View.GONE
+                btnCancelClass.visibility = View.VISIBLE
+//                btnBookClass.isClickable = false
+//                btnBookClass.isEnabled = false
+//                btnBookClass.text = "Already Booked"
             } else {
                 btnBookClass.isClickable = true
                 btnBookClass.isEnabled = true

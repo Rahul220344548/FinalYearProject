@@ -265,7 +265,26 @@
         android:text="BOOK CLASS"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:enabled="true"/>
+        android:enabled="true" />
+
+    <Button
+        android:id="@+id/btnCancelClassBooking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="35dp"
+        android:layout_marginEnd="35dp"
+        android:backgroundTint="@color/red"
+        android:padding="15dp"
+        android:shadowColor="#000000"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        android:shadowRadius="10"
+        android:text="Cancel Class Booking"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:enabled="true"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>
