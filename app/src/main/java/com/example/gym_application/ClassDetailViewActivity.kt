@@ -1,5 +1,7 @@
 package com.example.gym_application
 
+import FirebaseDatabaseHelper
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -15,9 +17,14 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.gym_application.model.UserClassBooking
 import com.example.gym_application.utils.ValidationClassCreation
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ClassDetailViewActivity : AppCompatActivity() {
@@ -32,6 +39,8 @@ class ClassDetailViewActivity : AppCompatActivity() {
     private lateinit var txtClassInstructor : TextView
     private lateinit var txtClassDescription : TextView
 
+    private lateinit var database: FirebaseDatabase
+    private lateinit var classRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +52,10 @@ class ClassDetailViewActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        setClassDetailInfo()
+        database = FirebaseDatabase.getInstance()
+        classRef = database.getReference("classes")
 
+        setClassDetailInfo()
     }
 
 
@@ -95,12 +106,15 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
     private fun confirmClassBooking() {
         val userId = getCurrentUserId()
-        Toast.makeText(this, "Booking confirmed for user: $userId", Toast.LENGTH_SHORT).show()
+        val classId = intent.getStringExtra("classId");
 
+        createClassBookingForUser(userId,classId)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setClassDetailInfo() {
+        val classId = intent.getStringExtra("classId");
+
         setUpScheduleInfo()
         setUpClassAvailableFor()
         setUpClassStatus()
@@ -108,6 +122,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
         setUpClassInstructor()
         setUpClassInstructor()
         setUpClassDescription()
+        setUpClassBookButton(classId)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -209,11 +224,83 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
     private fun getCurrentUserId(): String? {
         val user = FirebaseAuth.getInstance().currentUser
-        return user?.uid // Returns the unique Firebase UID or null if not logged in
+        return user?.uid
     }
 
+    private fun updateClassCurrentBooking(classId: String?){
+        val currBookings = intent.getIntExtra("classCurrentBookings",0)
+        val currentBookingCount = mapOf("classCurrentBookings" to currBookings+1)
+
+        classRef.child(classId?:"").updateChildren(currentBookingCount)
+            .addOnSuccessListener {
+                finish()
+            }
+            .addOnFailureListener { error ->
+                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun createClassBookingForUser(userId: String?, classId: String?){
+        database.reference.child("users").child(userId?:"").child("bookings").child("current").push().setValue(UserClassBooking(classId?:""))
+            .addOnSuccessListener {
+                updateClassCurrentBooking(classId)
+                onBackPressed()
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Failed to book the class: ${exception.message}", Toast.LENGTH_LONG).show()
+                exception.printStackTrace()
+            }
+    }
+
+    //diable button for user who are already booked
+    private fun setUpClassBookButton(classId: String?) {
+        val btnBookClass = findViewById<Button>(R.id.btnBookClass)
+
+        hasUserAlreadyBookedThisClass(classId ?: "") { isBooked ->
+            if (isBooked) {
+                btnBookClass.isClickable = false
+                btnBookClass.isEnabled = false
+                btnBookClass.text = "Already Booked"
+            } else {
+                btnBookClass.isClickable = true
+                btnBookClass.isEnabled = true
+                btnBookClass.text = "Book Class"
+            }
+        }
+    }
+
+    //get list from database and check if it matches with the Class Id. if found return true else false
+    private fun hasUserAlreadyBookedThisClass(classId: String, callback: (Boolean) -> Unit) {
+
+        val userId = getCurrentUserId().toString()
+        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+            .child(userId)
+            .child("bookings")
+            .child("current")
+
+        databaseReference.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                var isBooked = false
+
+                for (dataSnapshot in snapshot.children) {
+                    val userClassBooking = dataSnapshot.getValue(UserClassBooking::class.java)
+                    if (userClassBooking?.classId == classId) {
+                        isBooked = true
+                        break
+                    }
+                }
+                callback(isBooked)
+            }else {
+                callback(false)
+            }
+        }.addOnFailureListener {
+            println("Error fetching data: ${it.message}")
+            callback(false)
+        }
+    }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
+
 }

@@ -1,6 +1,7 @@
 package com.example.gym_application.model
 
 data class ClassModel(
+    val classId: String = "",
     val classTitle: String = "",
     val classDescription: String = "",
     val classColor: String = "",
@@ -14,5 +15,5 @@ data class ClassModel(
     val classStartDate: String = "",
 ) {
 
-    constructor() : this("", "", "", "", "", 0, 0, "", "", "","")
+    constructor() : this("","", "", "", "", "", 0, 0, "", "", "","")
 }

@@ -46,6 +46,7 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
         // Set click listener
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ClassDetailViewActivity::class.java).apply {
+                putExtra("classId", gymClass.classId)
                 putExtra("classTitle", gymClass.classTitle)
                 putExtra("classStartDate", gymClass.classStartDate)
                 putExtra("classStartTime", gymClass.classStartTime)

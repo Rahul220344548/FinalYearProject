@@ -100,7 +100,7 @@ class CreateAClass : AppCompatActivity() {
 
         val classId = database.push().key
         if (classId != null) {
-            val newClass = ClassModel(
+            val newClass = ClassModel(classId,
                 title, description, selectedColor,
                 selectedRoom, selectedInstructor, capacity, 0, genderRestriction,
                 startTime, endTime,
