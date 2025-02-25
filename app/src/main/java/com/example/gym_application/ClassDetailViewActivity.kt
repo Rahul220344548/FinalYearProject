@@ -61,10 +61,14 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
 
     fun btnBookClass(view: View) {
-
         val firebaseHelper = FirebaseDatabaseHelper()
         val userId = getCurrentUserId().toString()
 
+        validateUserAndBookClass(firebaseHelper, userId)
+
+    }
+
+    private fun validateUserAndBookClass(firebaseHelper: FirebaseDatabaseHelper, userId: String) {
         firebaseHelper.getUserMembershipStatus(userId) { membershipStatus ->
             if ( membershipStatus != "active") {
                 Toast.makeText(this, "Activate your membership to book this class!"
@@ -84,9 +88,9 @@ class ClassDetailViewActivity : AppCompatActivity() {
                 } else {
                     println("Unable to fetch user gender. Please try again.")
                 }
-
             }
         }
+
     }
 
     private fun showBookClassDialog() {
