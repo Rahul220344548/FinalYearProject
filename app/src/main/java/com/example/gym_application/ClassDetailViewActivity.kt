@@ -254,10 +254,13 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
     //diable button for user who are already booked
     private fun setUpClassBookButton(classId: String?) {
+
         val btnBookClass = findViewById<Button>(R.id.btnBookClass)
+        val bookingConfirmTextView = findViewById<TextView>(R.id.bookingConfirmationText)
 
         hasUserAlreadyBookedThisClass(classId ?: "") { isBooked ->
             if (isBooked) {
+                bookingConfirmTextView.visibility = View.VISIBLE
                 btnBookClass.isClickable = false
                 btnBookClass.isEnabled = false
                 btnBookClass.text = "Already Booked"
@@ -269,7 +272,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
         }
     }
 
-    //get list from database and check if it matches with the Class Id. if found return true else false
+
     private fun hasUserAlreadyBookedThisClass(classId: String, callback: (Boolean) -> Unit) {
 
         val userId = getCurrentUserId().toString()
@@ -298,6 +301,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
             callback(false)
         }
     }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true

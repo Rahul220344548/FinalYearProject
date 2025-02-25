@@ -53,8 +53,24 @@
             android:layout_marginEnd="20dp"
             android:orientation="vertical">
 
-
-
+            <TextView
+                android:id="@+id/bookingConfirmationText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Booking Confirmed"
+                android:padding="20sp"
+                android:background="@drawable/book_class_btn_background"
+                android:drawableStart="@drawable/baseline_done_24"
+                android:drawableTint="@color/white"
+                android:drawablePadding="8dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:shadowColor="#AA000000"
+                android:shadowRadius="1"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:visibility="gone"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
