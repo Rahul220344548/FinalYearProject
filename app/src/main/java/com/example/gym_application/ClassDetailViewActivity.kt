@@ -68,12 +68,13 @@ class ClassDetailViewActivity : AppCompatActivity() {
         setClassDetailInfo()
     }
 
-    fun btnCancelBooking(view: View) {
-        cancelUserCurrentBooking()
-    }
-
     fun btnBookClass(view: View) {
         validateUserAndBookClass()
+
+    }
+
+    fun btnCancelBooking(view: View) {
+        showCancelClassDialog()
     }
 
     private fun cancelUserCurrentBooking() {
@@ -81,7 +82,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
         firebaseHelper.deleteUserCurrentBookingById(userId, classId?:"") { success ->
             if (success) {
-                Toast.makeText(this, "Booking deleted successfully!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Your booking has been successfully canceled.", Toast.LENGTH_LONG).show()
                 firebaseHelper.decrementClassCurrentBookings(classId?:"", currentBookingCount) { decrementSuccess ->
                     if (decrementSuccess) {
 
@@ -281,8 +282,10 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
         classRef.child(classId?:"").updateChildren(currentBookingCount)
             .addOnSuccessListener {
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
                 finish()
-                onBackPressed()
+
             }
             .addOnFailureListener { error ->
                 Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
@@ -316,6 +319,33 @@ class ClassDetailViewActivity : AppCompatActivity() {
                 btnBookClass.isEnabled = true
                 btnBookClass.text = "Book Class"
             }
+        }
+    }
+
+    private fun showCancelClassDialog() {
+
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.cancel_class_dialog_box, null)
+
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+
+        val btnCancelDialog = dialogView.findViewById<MaterialButton>(R.id.btnCancelDialogBox)
+        val btnConfirmCancellation = dialogView.findViewById<MaterialButton>(R.id.btnConfirmCancellation)
+
+
+        btnCancelDialog.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        btnConfirmCancellation.setOnClickListener {
+            alertDialog.dismiss()
+            cancelUserCurrentBooking()
         }
     }
 

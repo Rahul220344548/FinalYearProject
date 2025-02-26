@@ -1,6 +1,12 @@
 package com.example.gym_application.utils
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.LayoutInflater
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.example.gym_application.R
+import com.google.android.material.button.MaterialButton
 
 object ClassBookingUtils {
 
@@ -19,6 +25,8 @@ object ClassBookingUtils {
             else -> false // If classAvailableFor is unknown, deny booking
         }
     }
+
+
 
 
 }
