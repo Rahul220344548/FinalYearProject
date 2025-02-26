@@ -1,14 +1,12 @@
-import android.widget.Toast
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.model.UserClassBooking
 import com.google.firebase.database.*
 
 class FirebaseDatabaseHelper {
 
-    private val database = FirebaseDatabase.getInstance().reference.child("classes")
-
     fun getClassesForDate(selectedDate: String, callback: (List<ClassModel>) -> Unit) {
-        database.addListenerForSingleValueEvent(object : ValueEventListener {
+        val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
+        classDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val classList = mutableListOf<ClassModel>()
                 for (classSnapshot in snapshot.children) {
@@ -29,15 +27,12 @@ class FirebaseDatabaseHelper {
         })
     }
 
-
-
     fun hasUserAlreadyBookedThisClass(userId: String, classId: String, callback: (Boolean) -> Unit) {
-        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
-            .child(userId)
+        val userDatabase = FirebaseDatabase.getInstance().reference.child("users").child(userId)
             .child("bookings")
             .child("current")
 
-        databaseReference.get().addOnSuccessListener { snapshot ->
+        userDatabase.get().addOnSuccessListener { snapshot ->
             if (snapshot.exists()) {
                 var isBooked = false
 
@@ -59,12 +54,9 @@ class FirebaseDatabaseHelper {
     }
 
     fun getUserMembershipStatus(userId:String,callback: (String?) -> Unit ) {
+        val userDatabase = FirebaseDatabase.getInstance().reference.child("users").child(userId).child("membershipDetails")
 
-        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
-            .child(userId)
-            .child("membershipDetails")
-
-        databaseReference.get()
+        userDatabase.get()
             .addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
                     val membershipStatus = snapshot.child("membershipStatus").value.toString()
@@ -79,11 +71,9 @@ class FirebaseDatabaseHelper {
     }
 
     fun getUserGender(userId: String ,callback: (String?) -> Unit ) {
+        val userDatabase = FirebaseDatabase.getInstance().reference.child("users").child(userId)
 
-        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
-            .child(userId)
-
-        databaseReference.get()
+        userDatabase.get()
             .addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
                     val gender = snapshot.child("gender").value.toString()
@@ -94,6 +84,57 @@ class FirebaseDatabaseHelper {
             }
             .addOnSuccessListener { exception ->
                 callback(null)
+            }
+    }
+
+    fun deleteUserCurrentBookingById(userId: String, classId: String,callback: (Boolean) -> Unit) {
+        val userDatabase = FirebaseDatabase.getInstance().reference.child("users").child(userId).child("bookings").child("current")
+
+        userDatabase.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                var bookingDeleted = false
+
+                for (dataSnapshot in snapshot.children) {
+                    val userClassBooking = dataSnapshot.getValue(UserClassBooking::class.java)
+                    if (userClassBooking?.classId == classId) {
+                        // Delete the specific booking
+                        dataSnapshot.ref.removeValue().addOnSuccessListener {
+                            bookingDeleted = true
+                            callback(true) // Successfully deleted
+                        }.addOnFailureListener {
+                            println("Error deleting booking: ${it.message}")
+                            callback(false)
+                        }
+                        break
+                    }
+                }
+
+                if (!bookingDeleted) {
+                    callback(false) // Booking not found
+                }
+            } else {
+                callback(false) // No bookings exist
+            }
+        }.addOnFailureListener {
+            println("Error fetching data: ${it.message}")
+            callback(false)
+        }
+    }
+
+    fun decrementClassCurrentBookings(classId: String, currentBookingCount: Map<String, Int>, callback: (Boolean) -> Unit) {
+        val classDatabase = FirebaseDatabase.getInstance().reference.child("classes").child(classId)
+
+        // Convert Int values to Any? to match Firebase expectations
+        val updateData = currentBookingCount.mapValues { it.value as Any? } // ✅ Convert values properly
+
+        classDatabase.updateChildren(updateData)
+            .addOnSuccessListener {
+                println("Successfully decremented bookings for class $classId")
+                callback(true)
+            }
+            .addOnFailureListener { error ->
+                println("Error decrementing bookings: ${error.message}") // ✅ Debugging output
+                callback(false)
             }
     }
 }

@@ -42,14 +42,15 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/firstLinear"
-        android:layout_above="@id/btnBookClass">
+        android:layout_above="@id/btnBookClass"
+        android:layout_below="@id/firstLinear">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp"
             android:layout_marginEnd="20dp"
             android:orientation="vertical">
 
@@ -57,191 +58,195 @@
                 android:id="@+id/bookingConfirmationText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Booking Confirmed"
-                android:padding="20sp"
                 android:background="@drawable/book_class_btn_background"
                 android:drawableStart="@drawable/baseline_done_24"
-                android:drawableTint="@color/white"
                 android:drawablePadding="8dp"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
+                android:drawableTint="@color/white"
+                android:padding="20sp"
                 android:shadowColor="#AA000000"
-                android:shadowRadius="1"
                 android:shadowDx="2"
                 android:shadowDy="2"
-                android:visibility="gone"/>
+                android:shadowRadius="1"
+                android:text="Booking Confirmed"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Schedule"
                 android:paddingTop="10dp"
+                android:text="Schedule"
                 android:textSize="20sp"
-                android:textStyle="italic"/>
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/classScheduledDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text=""
-                android:textStyle="bold"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
-                android:shadowRadius="2"/>
+                android:shadowRadius="2"
+                android:text=""
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/classScheduledTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text=""
-                android:textStyle="italic"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
-                android:shadowRadius="2"/>
+                android:shadowRadius="2"
+                android:text=""
+                android:textSize="18sp"
+                android:textStyle="italic" />
+
             <TextView
                 android:id="@+id/classLength"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
                 android:drawableStart="@drawable/baseline_access_time_24"
-                android:text=""
-                android:textStyle="italic"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
-                android:shadowRadius="2"/>
+                android:shadowRadius="2"
+                android:text=""
+                android:textSize="18sp"
+                android:textStyle="italic" />
 
             <View
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_marginTop="5dp"
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Class Available for"
                 android:paddingTop="10dp"
+                android:text="Class Available for"
                 android:textSize="20sp"
-                android:textStyle="italic"/>
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/classAvailabilityFor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text=""
-                android:textStyle="bold"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
-                android:shadowRadius="2"/>
+                android:shadowRadius="2"
+                android:text=""
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
             <View
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_marginTop="5dp"
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Avaliability Status"
                 android:paddingTop="10dp"
+                android:text="Avaliability Status"
                 android:textSize="20sp"
-                android:textStyle="italic"/>
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/classRemainingSpots"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text=""
-                android:textStyle="bold"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
-                android:shadowRadius="2"/>
+                android:shadowRadius="2"
+                android:text=""
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
 
             <View
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_marginTop="5dp"
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Room"
                 android:paddingTop="10dp"
+                android:text="Room"
                 android:textSize="20sp"
-                android:textStyle="italic"/>
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/classLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text=""
-                android:textStyle="bold"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
-                android:shadowRadius="2"/>
+                android:shadowRadius="2"
+                android:text=""
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
             <View
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_marginTop="5dp"
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Instructor"
                 android:paddingTop="10dp"
+                android:text="Instructor"
                 android:textSize="20sp"
-                android:textStyle="italic"/>
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/classInstructor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text=""
-                android:textStyle="bold"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
-                android:shadowRadius="2"/>
+                android:shadowRadius="2"
+                android:text=""
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
             <View
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_marginTop="5dp"
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description"
                 android:paddingTop="10dp"
+                android:text="Description"
                 android:textSize="20sp"
-                android:textStyle="italic"/>
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/classDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="..."
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
-                android:shadowRadius="2"/>
+                android:shadowRadius="2"
+                android:text="..."
+                android:textSize="20sp" />
 
 
         </LinearLayout>
@@ -256,6 +261,7 @@
         android:layout_marginStart="35dp"
         android:layout_marginEnd="35dp"
         android:backgroundTint="@color/peach2"
+        android:enabled="true"
         android:onClick="btnBookClass"
         android:padding="15dp"
         android:shadowColor="#000000"
@@ -264,8 +270,7 @@
         android:shadowRadius="10"
         android:text="BOOK CLASS"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:enabled="true" />
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnCancelClassBooking"
@@ -275,6 +280,8 @@
         android:layout_marginStart="35dp"
         android:layout_marginEnd="35dp"
         android:backgroundTint="@color/red"
+        android:enabled="true"
+        android:onClick="btnCancelBooking"
         android:padding="15dp"
         android:shadowColor="#000000"
         android:shadowDx="5"
@@ -282,9 +289,8 @@
         android:shadowRadius="10"
         android:text="Cancel Class Booking"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:enabled="true"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.example.gym_application
 
 import FirebaseDatabaseHelper
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -43,6 +44,11 @@ class ClassDetailViewActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var classRef: DatabaseReference
 
+    private val userId = getCurrentUserId().toString()
+    private val firebaseHelper = FirebaseDatabaseHelper()
+    private lateinit var classId: String
+    private var currBookings: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -53,25 +59,49 @@ class ClassDetailViewActivity : AppCompatActivity() {
             onBackPressed()
         }
 
+        classId = intent.getStringExtra("classId")?:""
+        currBookings = intent.getIntExtra("classCurrentBookings",0)
+
         database = FirebaseDatabase.getInstance()
         classRef = database.getReference("classes")
 
         setClassDetailInfo()
     }
 
-    fun btnCancelBooking() {
-
+    fun btnCancelBooking(view: View) {
+        cancelUserCurrentBooking()
     }
 
     fun btnBookClass(view: View) {
-        val firebaseHelper = FirebaseDatabaseHelper()
-        val userId = getCurrentUserId().toString()
-
-        validateUserAndBookClass(firebaseHelper, userId)
-
+        validateUserAndBookClass()
     }
 
-    private fun validateUserAndBookClass(firebaseHelper: FirebaseDatabaseHelper, userId: String) {
+    private fun cancelUserCurrentBooking() {
+        val currentBookingCount = mapOf("classCurrentBookings" to currBookings-1)
+
+        firebaseHelper.deleteUserCurrentBookingById(userId, classId?:"") { success ->
+            if (success) {
+                Toast.makeText(this, "Booking deleted successfully!", Toast.LENGTH_LONG).show()
+                firebaseHelper.decrementClassCurrentBookings(classId?:"", currentBookingCount) { decrementSuccess ->
+                    if (decrementSuccess) {
+
+                        val intent = Intent(this, HomeActivity::class.java)
+                        intent.putExtra("navigateToClassesFragment", true)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        println("An Error cause: pLEASE CALL ADMIn")
+                    }
+                }
+            } else {
+                println("Failed to delete booking or booking not found.")
+            }
+        }
+    }
+
+
+    private fun validateUserAndBookClass() {
         firebaseHelper.getUserMembershipStatus(userId) { membershipStatus ->
             if ( membershipStatus != "active") {
                 Toast.makeText(this, "Activate your membership to book this class!"
@@ -130,16 +160,11 @@ class ClassDetailViewActivity : AppCompatActivity() {
     }
 
     private fun confirmClassBooking() {
-        val userId = getCurrentUserId()
-        val classId = intent.getStringExtra("classId");
-
-        createClassBookingForUser(userId,classId)
+        createClassBookingForUser()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setClassDetailInfo() {
-        val classId = intent.getStringExtra("classId");
-
         setUpScheduleInfo()
         setUpClassAvailableFor()
         setUpClassStatus()
@@ -147,7 +172,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
         setUpClassInstructor()
         setUpClassInstructor()
         setUpClassDescription()
-        setUpBookAndCancelButton(classId)
+        setUpBookAndCancelButton()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -170,7 +195,6 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
     private fun setUpClassStatus() {
 
-        val currBookings = intent.getIntExtra("classCurrentBookings",0)
         val maxCapacity = intent.getIntExtra("classMaxCapacity",0)
         val remainingSpots = maxCapacity - currBookings
         txtClassRemainingSpot =findViewById<TextView>(R.id.classRemainingSpots)
@@ -253,23 +277,23 @@ class ClassDetailViewActivity : AppCompatActivity() {
     }
 
     private fun updateClassCurrentBooking(classId: String?){
-        val currBookings = intent.getIntExtra("classCurrentBookings",0)
         val currentBookingCount = mapOf("classCurrentBookings" to currBookings+1)
 
         classRef.child(classId?:"").updateChildren(currentBookingCount)
             .addOnSuccessListener {
                 finish()
+                onBackPressed()
             }
             .addOnFailureListener { error ->
                 Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
-    private fun createClassBookingForUser(userId: String?, classId: String?){
+    private fun createClassBookingForUser(){
         database.reference.child("users").child(userId?:"").child("bookings").child("current").push().setValue(UserClassBooking(classId?:""))
             .addOnSuccessListener {
                 updateClassCurrentBooking(classId)
-                onBackPressed()
+                Toast.makeText(this, "Successfully booked the class", Toast.LENGTH_LONG).show()
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Failed to book the class: ${exception.message}", Toast.LENGTH_LONG).show()
@@ -277,11 +301,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
             }
     }
 
-    private fun setUpBookAndCancelButton(classId: String?) {
-
-        val firebaseHelper = FirebaseDatabaseHelper()
-        val userId = getCurrentUserId().toString()
-
+    private fun setUpBookAndCancelButton() {
         val btnBookClass = findViewById<Button>(R.id.btnBookClass)
         val bookingConfirmTextView = findViewById<TextView>(R.id.bookingConfirmationText)
         val btnCancelClass = findViewById<Button>(R.id.btnCancelClassBooking)
