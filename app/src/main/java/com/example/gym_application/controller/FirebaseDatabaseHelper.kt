@@ -137,4 +137,27 @@ class FirebaseDatabaseHelper {
                 callback(false)
             }
     }
+
+    fun getClassesFullDetails(classId: String , callback: (ClassModel?) -> Unit) {
+
+        val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
+            .child(classId)
+
+        classDatabase.get().addOnSuccessListener { snapshot ->
+
+            if (snapshot.exists()) {
+                val classDetails = snapshot.getValue(ClassModel::class.java)
+                callback(classDetails)
+            }else {
+                callback(null)
+            }
+
+        }.addOnFailureListener {
+            callback(null)
+        }
+
+
+
+    }
+
 }
