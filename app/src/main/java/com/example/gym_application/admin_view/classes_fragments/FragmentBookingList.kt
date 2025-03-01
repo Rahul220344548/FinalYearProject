@@ -5,10 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
+import com.example.gym_application.admin_view.adapter.AdminBookingListAdapter
 
 
 class FragmentBookingList : Fragment() {
+
+
+    private lateinit var adapter: AdminBookingListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -16,7 +21,15 @@ class FragmentBookingList : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_booking_list, container, false)
+
+
+
     }
+
+    private fun fetchAllClasses() {
+
+    }
+
 
 
 }

@@ -1,3 +1,4 @@
+import android.renderscript.Sampler.Value
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.model.UserClassBooking
 import com.google.firebase.database.*
@@ -157,6 +158,29 @@ class FirebaseDatabaseHelper {
         }
 
 
+
+    }
+
+
+    fun getAllClasses(callback: (List<ClassModel>) -> Unit) {
+        // fetches classes as objects and stores them in a list
+        val classDatebase = FirebaseDatabase.getInstance().reference.child("classes")
+
+        classDatebase.addListenerForSingleValueEvent( object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val classList = mutableListOf<ClassModel>()
+                for (classSnapshot in snapshot.children) {
+                    val classData = classSnapshot.getValue(ClassModel::class.java)
+                    classData?.let { classList.add(it) }
+                }
+                callback(classList)
+            }
+            override fun onCancelled(error: DatabaseError) {
+                println("Error Fetching Classes : ${error.message}")
+                callback(emptyList())
+            }
+        })
 
     }
 
