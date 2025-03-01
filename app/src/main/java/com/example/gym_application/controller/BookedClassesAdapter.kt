@@ -66,7 +66,7 @@ class BookedClassesAdapter (private var classList: List<ClassModel>) :
 
     override fun getItemCount() = classList.size
 
-    fun updateDate( newList : List<ClassModel>) {
+    fun updateData( newList : List<ClassModel>) {
         classList = newList
         notifyDataSetChanged()
     }

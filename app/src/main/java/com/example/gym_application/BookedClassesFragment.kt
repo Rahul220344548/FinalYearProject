@@ -54,8 +54,7 @@ class BookedClassesFragment : Fragment() {
         firebaseHelper.getUserCurrentBookings(userId?:"") { fetchedClassId ->
 
             if (fetchedClassId != null) {
-                Log.d("FetchUserCurrentBookings", "Fetched Class ID: $fetchedClassId")
-                fetchClassDetails(fetchedClassId)
+                fetchClassDetails(listOf(fetchedClassId))
             } else {
                 Log.d("FetchUserCurrentBookings", "No current class booking found")
 
@@ -65,20 +64,23 @@ class BookedClassesFragment : Fragment() {
 
     }
 
+    private fun fetchClassDetails(classIds : List<String>) {
+
+        val classDetailsList = mutableListOf<ClassModel>()
+
+        classIds.forEach { classId ->
 
 
-    private fun fetchClassDetails(classId:String) {
-
-        classFirebaseHelper.getClassesFullDetails(classId ?: "") { classdetails ->
-
-            if (classdetails != null) {
-                println("$classdetails")
-
-            }else {
-                println("Nothing Found")
+            classFirebaseHelper.getClassesFullDetails(classId) { classDetails ->
+                if (classDetails != null) {
+                    classDetailsList.add(classDetails)
+                    classAdapter.updateData(classDetailsList)
+                }
             }
 
+
         }
+
 
 
 
