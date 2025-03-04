@@ -18,6 +18,8 @@ import com.example.gym_application.R
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.utils.ValidationClassCreation
+import com.example.gym_application.utils.utilsSetUpClassScheduleDate
+import com.example.gym_application.utils.utilsSetUpEndTimeDropdown
 import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectInstructorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
@@ -179,59 +181,12 @@ class CreateAClass : AppCompatActivity() {
 
     private fun setUpEndTimeDropdown() {
         autoCompleteEndTime = findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
-
-        val timeSlots = mutableListOf<String>()
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 9)
-        calendar.set(Calendar.MINUTE, 30)
-
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-
-        while (calendar.get(Calendar.HOUR_OF_DAY) < 20 ||
-            (calendar.get(Calendar.HOUR_OF_DAY) == 20 && calendar.get(Calendar.MINUTE) == 0)) {
-            timeSlots.add(timeFormat.format(calendar.time))
-            calendar.add(Calendar.MINUTE, 30)
-        }
-
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, timeSlots)
-        autoCompleteEndTime.setAdapter(adapter)
-
-        autoCompleteEndTime.setOnItemClickListener { parent, _, position, _ ->
-            autoCompleteEndTime.setText(parent.getItemAtPosition(position) as String, false)
-        }
-
+        utilsSetUpEndTimeDropdown(this,autoCompleteEndTime)
     }
 
     private fun setUpStartDate() {
-        startDate.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val datePickerDialog =
-                DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                    val selectedCalendar = Calendar.getInstance()
-                    selectedCalendar.set(selectedYear, selectedMonth, selectedDay)
-
-                    if (selectedCalendar.before(calendar)) {
-                        Toast.makeText(this, "End Date cannot be in the past!", Toast.LENGTH_SHORT)
-                            .show()
-                    } else {
-                        val selectedDate = String.format(
-                            Locale.getDefault(),
-                            "%02d/%02d/%d",
-                            selectedDay,
-                            selectedMonth + 1,
-                            selectedYear
-                        )
-                        startDate.setText(selectedDate)
-                    }
-                }, year, month, day)
-            datePickerDialog.datePicker.minDate = calendar.timeInMillis
-            datePickerDialog.show()
-
-        }
+        startDate = findViewById(R.id.auto_complete_starDate)
+        utilsSetUpClassScheduleDate(this,startDate)
     }
 
     fun onCancelbtn(view: View){

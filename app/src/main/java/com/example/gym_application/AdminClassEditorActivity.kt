@@ -4,6 +4,8 @@ import FirebaseDatabaseHelper
 import android.os.Bundle
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -12,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.utils.utilsSetUpClassScheduleDate
+import com.example.gym_application.utils.utilsSetUpEndTimeDropdown
 import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectInstructorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
@@ -28,14 +32,12 @@ class AdminClassEditorActivity : AppCompatActivity() {
     private lateinit var autoCompleteInstructorTextView: AutoCompleteTextView
 
     private lateinit var classLimit : EditText
+    private lateinit var classAvailabilityForRadioGroup : RadioGroup
 
     private lateinit var autoCompleteStartTime: AutoCompleteTextView
     private lateinit var autoCompleteEndTime : AutoCompleteTextView
 
-    private lateinit var txtclassAvailability: TextView
-    private lateinit var txtClassRemainingSpot: TextView
-    private lateinit var txtClassLocation : TextView
-    private lateinit var txtClassInstructor : TextView
+    private lateinit var startDate: AutoCompleteTextView
 
     private var selectedColor: String = ""
     private var selectedRoom: String = ""
@@ -93,8 +95,13 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
                 classLimit.setText(classModel.classMaxCapacity.toString())
 
-//                classLimit.setText(classModel.classMaxCapacity)
+                setUpClassAvailabilityFor(classModel.classAvailabilityFor)
 
+                setUpStartTimedropdown()
+                autoCompleteStartTime.setText(classModel.classStartTime,false)
+
+                setUpEndTimedropdown()
+                autoCompleteEndTime.setText(classModel.classEndTime,false)
 
             }else{
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
@@ -131,10 +138,36 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
     }
 
-//    private fun setUpStartTimedropdown() {
-//        autoCompleteStartTime = findViewById(R.id.auto_complete_startTime)
-//        utilsSetUpStartTimeDropdown(this, autoCompleteStartTime)
-//    }
+    private fun setUpClassAvailabilityFor(classAvailabilityFor: String) {
+        classAvailabilityForRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_ClassAvailabilityFor)
+
+        val radioGroup = findViewById<RadioGroup>(R.id.radioGroup_ClassAvailabilityFor)
+        val radioGenderAll = findViewById<RadioButton>(R.id.radio_genderAll)
+        val radioGenderMale = findViewById<RadioButton>(R.id.radio_genderMale)
+        val radioGenderFemale = findViewById<RadioButton>(R.id.radio_genderFemale)
+
+        when (classAvailabilityFor.lowercase()) {
+            "all" -> radioGenderAll.isChecked = true
+            "male" -> radioGenderMale.isChecked = true
+            "female" -> radioGenderFemale.isChecked = true
+        }
+
+    }
+
+    private fun setUpStartTimedropdown() {
+        autoCompleteStartTime = findViewById(R.id.auto_complete_startTime)
+        utilsSetUpStartTimeDropdown(this, autoCompleteStartTime)
+    }
+
+    private fun setUpEndTimedropdown() {
+        autoCompleteEndTime = findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
+        utilsSetUpEndTimeDropdown(this,autoCompleteEndTime)
+    }
+
+    private fun setUpClassScheduledropdown() {
+        startDate = findViewById(R.id.auto_complete_starDate)
+        utilsSetUpClassScheduleDate(this,startDate)
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

@@ -199,6 +199,9 @@ class FirebaseDatabaseHelper {
                 val classRoom = snapshot.child("classLocation").value.toString()
                 val classInstructor = snapshot.child("classInstructor").value.toString()
                 val classMaxCapacity = snapshot.child("classMaxCapacity").value?.toString()?.toIntOrNull() ?: 0
+                val classAvailabilityFor = snapshot.child("classAvailabilityFor").value.toString()
+                val classStartTime = snapshot.child("classStartTime").value.toString()
+                val classEndTime =  snapshot.child("classEndTime").value.toString()
 
                 val classModel =  ClassModel (
                     classId,
@@ -208,6 +211,10 @@ class FirebaseDatabaseHelper {
                     classRoom,
                     classInstructor,
                     classMaxCapacity,
+                    0,
+                    classAvailabilityFor,
+                    classStartTime,
+                    classEndTime
                 )
 
                 callback(classModel)
