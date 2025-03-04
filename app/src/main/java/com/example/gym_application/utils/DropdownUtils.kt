@@ -37,3 +37,20 @@ fun utilsSetUpSelectRoomDropdown(
         selectedRoom(selected)
     }
 }
+
+fun utilsSetUpSelectInstructorDropdown(
+    context: Context,
+    instructorList: List<String>,
+    autoCompleteInstructorTextView : AutoCompleteTextView,
+    selectedInstructor: (String) -> Unit,
+) {
+
+    val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, instructorList)
+    autoCompleteInstructorTextView.setAdapter(arrayAdapter)
+
+    autoCompleteInstructorTextView.setOnItemClickListener { parent, _, position, _ ->
+        val selected = parent.getItemAtPosition(position) as String
+        selectedInstructor(selected)
+    }
+
+}

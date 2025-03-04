@@ -1,8 +1,13 @@
 package com.example.gym_application.controller
+import android.R
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import com.example.gym_application.model.UserClassBooking
 import com.google.firebase.database.*
+
+
 class UserFirebaseDatabaseHelper {
 
     fun getUserCurrentBookings(userId : String, callback: (String?) -> Unit) {
@@ -32,4 +37,31 @@ class UserFirebaseDatabaseHelper {
         }
 
     }
+
+    fun fetchInstructors (callback: (List<String>) -> Unit) {
+
+        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+        val instructorList = mutableListOf<String>()
+
+        databaseReference.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                for (userSnapshot in snapshot.children) {
+                    val role = userSnapshot.child("role").getValue(String::class.java)
+                    if (role == "Instructor") {
+                        val firstName = userSnapshot.child("firstName").getValue(String::class.java) ?: ""
+                        val lastName = userSnapshot.child("lastName").getValue(String::class.java) ?: ""
+                        val fullName = "$firstName $lastName"
+                        instructorList.add(fullName)
+                    }
+                }
+                callback(instructorList)
+            }else {
+                callback(emptyList())
+            }
+        }.addOnFailureListener {
+            callback(emptyList())
+        }
+
+    }
+
 }

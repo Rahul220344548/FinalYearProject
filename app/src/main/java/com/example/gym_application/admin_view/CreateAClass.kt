@@ -15,9 +15,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
+import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.utils.ValidationClassCreation
 import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
+import com.example.gym_application.utils.utilsSetUpSelectInstructorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
@@ -46,6 +48,8 @@ class CreateAClass : AppCompatActivity() {
 
     private val database = FirebaseDatabase.getInstance().getReference("classes")
     private val instructorDatabase = FirebaseDatabase.getInstance().getReference("users")
+
+    private val userFirebaseHelper = UserFirebaseDatabaseHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,19 +143,13 @@ class CreateAClass : AppCompatActivity() {
 
     private fun setUpSelectColordropdown() {
         autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
-
-        val colors = resources.getStringArray(R.array.colors)
-
         utilsSetUpSelectColorDropdown(this, autoCompleteColorTextView ) { color ->
             selectedColor = color
         }
-
     }
 
     private fun setUpSelectRoomdropdown() {
-
         autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
-
         utilsSetUpSelectRoomDropdown(this,autoCompleteRoomTextView) { room ->
             selectedRoom = room
         }
@@ -161,33 +159,16 @@ class CreateAClass : AppCompatActivity() {
     private fun setUpSelectInstructordropdown() {
 
         autoCompleteInstructorTextView = findViewById(R.id.auto_complete_instructor)
-
-        val instructorList = mutableListOf<String>()
-
-        instructorDatabase.get().addOnSuccessListener { snapshot ->
-            if (snapshot.exists()) {
-                for (userSnapshot in snapshot.children) {
-                    val role = userSnapshot.child("role").getValue(String::class.java)
-                    if (role == "Instructor") {
-                        val firstName = userSnapshot.child("firstName").getValue(String::class.java) ?: ""
-                        val lastName = userSnapshot.child("lastName").getValue(String::class.java) ?: ""
-                        val fullName = "$firstName $lastName"
-                        instructorList.add(fullName)
-                    }
+        userFirebaseHelper.fetchInstructors { instructorList ->
+            utilsSetUpSelectInstructorDropdown(
+                context = this, // Pass the context
+                instructorList = instructorList,
+                autoCompleteInstructorTextView = autoCompleteInstructorTextView,
+                selectedInstructor = { selected ->
+                    selectedInstructor = selected
                 }
-                val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, instructorList)
-                autoCompleteInstructorTextView.setAdapter(arrayAdapter)
-
-                autoCompleteInstructorTextView.setOnItemClickListener { parent, _, position, _ ->
-                    selectedInstructor = parent.getItemAtPosition(position) as String
-                }
-            }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Error fetching instructors: ${it.message}", Toast.LENGTH_SHORT).show()
+            )
         }
-
-
-
     }
 
     private fun setUpStartTimeDropdown() {
