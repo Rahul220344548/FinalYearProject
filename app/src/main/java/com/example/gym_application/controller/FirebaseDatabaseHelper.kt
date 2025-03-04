@@ -162,7 +162,6 @@ class FirebaseDatabaseHelper {
 
     }
 
-
     fun listenForClassUpdates(onDataChanged: (List<ClassModel>) -> Unit) {
         val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
 
@@ -181,6 +180,7 @@ class FirebaseDatabaseHelper {
         })
 
     }
+
 
     fun getClassInfobyId( classId: String , callback: (ClassModel?) -> Unit) {
 
@@ -238,6 +238,20 @@ class FirebaseDatabaseHelper {
             }
             .addOnFailureListener { e ->
                 onFailure(e)
+            }
+
+    }
+
+    fun updateClassDetails(classId: String, classUpdate: Map<String, Any>, callback: (Boolean) -> Unit) {
+        val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
+            .child(classId)
+
+        classDatabase.updateChildren(classUpdate)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
             }
 
     }

@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.utils.ValidationClassFields
 import com.example.gym_application.utils.utilsSetUpClassScheduleDate
 import com.example.gym_application.utils.utilsSetUpEndTimeDropdown
 import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
@@ -76,7 +77,7 @@ class AdminClassEditorActivity : AppCompatActivity() {
         classLimit = findViewById<EditText>(R.id.editTextClassLimit)
 
         initializeTextFields()
-
+        setUpClassScheduledropdown()
 
     }
 
@@ -115,7 +116,28 @@ class AdminClassEditorActivity : AppCompatActivity() {
         }
     }
 
-    fun updateClassBtn( view: View) {
+    fun onUpdateBtn( view: View) {
+
+        val validationMessage = validationFields()
+
+        if (validationMessage.isNotEmpty()) {
+            Toast.makeText(this, "Class Update Failed: $validationMessage", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val capacity = classLimit.text.toString().toIntOrNull() ?: 0
+
+        val classUpdate = mapOf (
+            "classMaxCapacity" to capacity
+        )
+
+        firebaseHelper.updateClassDetails(classId, classUpdate) { success ->
+            if (success) {
+                Toast.makeText(this, "Class updated successfully", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Failed to update class", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     }
 
@@ -221,6 +243,22 @@ class AdminClassEditorActivity : AppCompatActivity() {
     private fun setUpClassScheduledropdown() {
         startDate = findViewById(R.id.auto_complete_starDate)
         utilsSetUpClassScheduleDate(this,startDate)
+    }
+
+    private fun validationFields() : String {
+
+        return ValidationClassFields.validateClassFields(
+            title = txtClassTitle.text.toString().trim(),
+            description = txtClassDescription.text.toString().trim(),
+            capacity = classLimit.text.toString().trim(),
+            selectedGenderId = classAvailabilityForRadioGroup.checkedRadioButtonId,
+            startTime = autoCompleteStartTime.text.toString().trim(),
+            endTime = autoCompleteEndTime.text.toString().trim(),
+            startDate = startDate.text.toString().trim(),
+            selectedColor = autoCompleteColorTextView.text.toString().trim(),
+            selectedRoom = autoCompleteRoomTextView.text.toString().trim(),
+            selectedInstructor = autoCompleteInstructorTextView.text.toString().trim()
+        )
     }
 
     override fun onSupportNavigateUp(): Boolean {

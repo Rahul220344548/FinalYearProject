@@ -68,7 +68,8 @@
                     android:layout_marginRight="5dp"
                     android:textSize="18sp"
                     android:backgroundTint="@color/available_green"
-                    android:text="Update" />
+                    android:text="Update"
+                    android:onClick="onUpdateBtn"/>
 
                 <Button
                     android:id="@+id/btnDeleteClass"

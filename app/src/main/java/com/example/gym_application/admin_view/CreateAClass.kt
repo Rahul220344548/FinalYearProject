@@ -205,9 +205,9 @@ class CreateAClass : AppCompatActivity() {
             startTime = autoCompleteStartTime.text.toString().trim(),
             endTime = autoCompleteEndTime.text.toString().trim(),
             startDate = startDate.text.toString().trim(),
-            selectedColor = selectedColor,  // Assuming this is declared in your Activity
-            selectedRoom = selectedRoom,  // Assuming this is declared in your Activity
-            selectedInstructor = selectedInstructor  // Assuming this is declared in your Activity
+            selectedColor = selectedColor,
+            selectedRoom = selectedRoom,
+            selectedInstructor = selectedInstructor
         )
     }
 }
