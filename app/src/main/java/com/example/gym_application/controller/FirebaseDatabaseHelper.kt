@@ -1,4 +1,5 @@
 import android.renderscript.Sampler.Value
+import android.util.Log
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.model.UserClassBooking
 import com.google.firebase.database.*
@@ -162,23 +163,20 @@ class FirebaseDatabaseHelper {
     }
 
 
-    fun getAllClasses(callback: (List<ClassModel>) -> Unit) {
-        // fetches classes as objects and stores them in a list
-        val classDatebase = FirebaseDatabase.getInstance().reference.child("classes")
+    fun listenForClassUpdates(onDataChanged: (List<ClassModel>) -> Unit) {
+        val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
 
-        classDatebase.addListenerForSingleValueEvent( object : ValueEventListener {
-
+        classDatabase.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val classList = mutableListOf<ClassModel>()
                 for (classSnapshot in snapshot.children) {
                     val classData = classSnapshot.getValue(ClassModel::class.java)
                     classData?.let { classList.add(it) }
                 }
-                callback(classList)
+                onDataChanged(classList)
             }
             override fun onCancelled(error: DatabaseError) {
-                println("Error Fetching Classes : ${error.message}")
-                callback(emptyList())
+                println("Error Fetching Classes: ${error.message}")
             }
         })
 
@@ -228,7 +226,19 @@ class FirebaseDatabaseHelper {
 
     }
 
-    fun deleteClass () {
+    fun deleteClass (classId: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+
+        val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
+            .child(classId)
+
+        classDatabase.removeValue()
+
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener { e ->
+                onFailure(e)
+            }
 
     }
 

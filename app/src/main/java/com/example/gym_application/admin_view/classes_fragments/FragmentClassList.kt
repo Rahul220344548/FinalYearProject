@@ -40,7 +40,7 @@ class FragmentClassList : Fragment() {
 
     private fun fetchClassesList() {
 
-        classFirebaseHelper.getAllClasses { classList ->
+        classFirebaseHelper.listenForClassUpdates { classList ->
             if (classList.isNotEmpty()) {
                 adapter.updateData(classList)
             }else {

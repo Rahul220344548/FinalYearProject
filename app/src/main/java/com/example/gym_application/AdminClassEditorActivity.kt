@@ -154,7 +154,13 @@ class AdminClassEditorActivity : AppCompatActivity() {
     }
 
     private fun deleteClassFromDatabase() {
-
+        firebaseHelper.deleteClass( classId, onSuccess = {
+            Toast.makeText(this, "Class deleted successfully", Toast.LENGTH_SHORT).show()
+            finish()
+        },
+            onFailure = { e ->
+                Toast.makeText(this, "Failed to delete class: ${e.message}", Toast.LENGTH_LONG).show()
+            })
     }
 
     private fun setUpSelectColordropdown() {
