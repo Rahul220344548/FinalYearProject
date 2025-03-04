@@ -198,6 +198,7 @@ class FirebaseDatabaseHelper {
                 val classColor = snapshot.child("classColor").value.toString()
                 val classRoom = snapshot.child("classLocation").value.toString()
                 val classInstructor = snapshot.child("classInstructor").value.toString()
+                val classMaxCapacity = snapshot.child("classMaxCapacity").value?.toString()?.toIntOrNull() ?: 0
 
                 val classModel =  ClassModel (
                     classId,
@@ -205,7 +206,8 @@ class FirebaseDatabaseHelper {
                     classDescription,
                     classColor,
                     classRoom,
-                    classInstructor
+                    classInstructor,
+                    classMaxCapacity,
                 )
 
                 callback(classModel)

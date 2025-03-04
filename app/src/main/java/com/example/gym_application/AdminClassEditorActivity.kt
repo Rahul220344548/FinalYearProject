@@ -15,6 +15,7 @@ import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectInstructorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
+import com.example.gym_application.utils.utilsSetUpStartTimeDropdown
 
 
 class AdminClassEditorActivity : AppCompatActivity() {
@@ -26,10 +27,11 @@ class AdminClassEditorActivity : AppCompatActivity() {
     private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
     private lateinit var autoCompleteInstructorTextView: AutoCompleteTextView
 
+    private lateinit var classLimit : EditText
 
-    private lateinit var txtClassScheduledDate : TextView
-    private lateinit var txtClassScheduledTime : TextView
-    private lateinit var txtclassLength : TextView
+    private lateinit var autoCompleteStartTime: AutoCompleteTextView
+    private lateinit var autoCompleteEndTime : AutoCompleteTextView
+
     private lateinit var txtclassAvailability: TextView
     private lateinit var txtClassRemainingSpot: TextView
     private lateinit var txtClassLocation : TextView
@@ -63,7 +65,7 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
         txtClassTitle = findViewById<EditText>(R.id.editTextClassTitle)
         txtClassDescription = findViewById<EditText>(R.id.editTextClassDescription)
-
+        classLimit = findViewById<EditText>(R.id.editTextClassLimit)
 
         initializeTextFields()
 
@@ -89,6 +91,9 @@ class AdminClassEditorActivity : AppCompatActivity() {
                 autoCompleteInstructorTextView.setText(classModel.classInstructor,false)
 
 
+                classLimit.setText(classModel.classMaxCapacity.toString())
+
+//                classLimit.setText(classModel.classMaxCapacity)
 
 
             }else{
@@ -126,6 +131,10 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
     }
 
+//    private fun setUpStartTimedropdown() {
+//        autoCompleteStartTime = findViewById(R.id.auto_complete_startTime)
+//        utilsSetUpStartTimeDropdown(this, autoCompleteStartTime)
+//    }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
