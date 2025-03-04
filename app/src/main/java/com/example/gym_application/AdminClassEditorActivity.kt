@@ -72,10 +72,10 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
     private fun initializeTextFields() {
 
-
         firebaseHelper.getClassInfobyId(classId) { classModel ->
 
             if (classModel != null) {
+
                 txtClassTitle.setText(classModel.classTitle)
                 txtClassDescription.setText(classModel.classDescription)
 
@@ -87,6 +87,8 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
                 setUpSelectInstructordropdown()
                 autoCompleteInstructorTextView.setText(classModel.classInstructor,false)
+
+
 
 
             }else{

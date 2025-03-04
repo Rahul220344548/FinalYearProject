@@ -21,6 +21,7 @@ import com.example.gym_application.utils.ValidationClassCreation
 import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectInstructorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
+import com.example.gym_application.utils.utilsSetUpStartTimeDropdown
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -172,30 +173,8 @@ class CreateAClass : AppCompatActivity() {
     }
 
     private fun setUpStartTimeDropdown() {
-
         autoCompleteStartTime = findViewById(R.id.auto_complete_startTime)
-
-        val timeSlots = mutableListOf<String>()
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 9)
-        calendar.set(Calendar.MINUTE, 0)
-
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-
-        while (calendar.get(Calendar.HOUR_OF_DAY) < 20 ||
-            (calendar.get(Calendar.HOUR_OF_DAY) == 20 && calendar.get(Calendar.MINUTE) == 30)) {
-            timeSlots.add(timeFormat.format(calendar.time))
-            calendar.add(Calendar.MINUTE, 30)
-        }
-
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, timeSlots)
-        autoCompleteStartTime.setAdapter(adapter)
-
-        autoCompleteStartTime.setOnItemClickListener { parent, _, position, _ ->
-            autoCompleteStartTime.setText(parent.getItemAtPosition(position) as String, false)
-        }
-
-
+        utilsSetUpStartTimeDropdown(this, autoCompleteStartTime)
     }
 
     private fun setUpEndTimeDropdown() {
