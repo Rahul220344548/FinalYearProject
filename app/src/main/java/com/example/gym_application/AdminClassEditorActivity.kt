@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
+import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
 
 
 class AdminClassEditorActivity : AppCompatActivity() {
@@ -20,6 +21,7 @@ class AdminClassEditorActivity : AppCompatActivity() {
     private lateinit var txtClassDescription : TextView
 
     private lateinit var autoCompleteColorTextView: AutoCompleteTextView
+    private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
 
     private lateinit var txtClassScheduledDate : TextView
     private lateinit var txtClassScheduledTime : TextView
@@ -30,9 +32,10 @@ class AdminClassEditorActivity : AppCompatActivity() {
     private lateinit var txtClassInstructor : TextView
 
     private var selectedColor: String = ""
+    private var selectedRoom: String = ""
+    private var selectedInstructor: String = ""
 
     private lateinit var classId: String
-
 
     private val firebaseHelper = FirebaseDatabaseHelper()
 
@@ -56,8 +59,6 @@ class AdminClassEditorActivity : AppCompatActivity() {
         txtClassTitle = findViewById<EditText>(R.id.editTextClassTitle)
         txtClassDescription = findViewById<EditText>(R.id.editTextClassDescription)
 
-        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
-
 
         initializeTextFields()
 
@@ -76,6 +77,11 @@ class AdminClassEditorActivity : AppCompatActivity() {
                 setUpSelectColordropdown()
                 autoCompleteColorTextView.setText(classModel.classColor,false)
 
+                setUpSelectRoomdropdown()
+                autoCompleteRoomTextView.setText(classModel.classLocation, false)
+
+
+
             }else{
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
             }
@@ -83,12 +89,19 @@ class AdminClassEditorActivity : AppCompatActivity() {
     }
 
     private fun setUpSelectColordropdown() {
-
-        val colors = resources.getStringArray(R.array.colors)
-
-        utilsSetUpSelectColorDropdown(this, colors , autoCompleteColorTextView ) { color ->
+        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
+        utilsSetUpSelectColorDropdown(this, autoCompleteColorTextView ) { color ->
             selectedColor = color
         }
+    }
+
+    private fun setUpSelectRoomdropdown() {
+        autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
+
+        utilsSetUpSelectRoomDropdown(this, autoCompleteRoomTextView) { room ->
+            selectedRoom = room
+        }
+
 
     }
 

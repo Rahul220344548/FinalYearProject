@@ -18,6 +18,7 @@ import com.example.gym_application.R
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.utils.ValidationClassCreation
 import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
+import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -64,7 +65,6 @@ class CreateAClass : AppCompatActivity() {
         classTitle =  findViewById<EditText>(R.id.editTextClassTitle)
         classDescription = findViewById<EditText>(R.id.editTextClassDescription)
 
-        autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
         classLimit = findViewById<EditText>(R.id.editTextClassLimit)
         classAvailabilityForRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_ClassAvailabilityFor)
         startDate = findViewById(R.id.auto_complete_starDate)
@@ -142,7 +142,7 @@ class CreateAClass : AppCompatActivity() {
 
         val colors = resources.getStringArray(R.array.colors)
 
-        utilsSetUpSelectColorDropdown(this, colors , autoCompleteColorTextView ) { color ->
+        utilsSetUpSelectColorDropdown(this, autoCompleteColorTextView ) { color ->
             selectedColor = color
         }
 
@@ -150,13 +150,10 @@ class CreateAClass : AppCompatActivity() {
 
     private fun setUpSelectRoomdropdown() {
 
-        val rooms = resources.getStringArray(R.array.rooms)
+        autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
 
-        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, rooms)
-        autoCompleteRoomTextView.setAdapter(arrayAdapter)
-
-        autoCompleteRoomTextView.setOnItemClickListener { parent, _, position, _ ->
-            selectedRoom = parent.getItemAtPosition(position) as String
+        utilsSetUpSelectRoomDropdown(this,autoCompleteRoomTextView) { room ->
+            selectedRoom = room
         }
 
     }

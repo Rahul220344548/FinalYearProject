@@ -8,11 +8,11 @@ import android.widget.AutoCompleteTextView
 
 fun utilsSetUpSelectColorDropdown(
     context: Context,
-    colors : Array<String>,
     autoCompleteColorTextView : AutoCompleteTextView,
     selectedColor : (String) -> Unit,
     ){
 
+    val colors = context.resources.getStringArray(com.example.gym_application.R.array.colors)
     val arrayAdapter = ArrayAdapter(context, R.layout.simple_dropdown_item_1line, colors)
     autoCompleteColorTextView.setAdapter(arrayAdapter)
 
@@ -21,4 +21,19 @@ fun utilsSetUpSelectColorDropdown(
         selectedColor(selected)
     }
 
+}
+
+fun utilsSetUpSelectRoomDropdown(
+    context: Context,
+    autoCompleteRoomTextView : AutoCompleteTextView,
+    selectedRoom : (String) -> Unit,
+    ) {
+    val rooms = context.resources.getStringArray(com.example.gym_application.R.array.rooms)
+    val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, rooms)
+    autoCompleteRoomTextView.setAdapter(arrayAdapter)
+
+    autoCompleteRoomTextView.setOnItemClickListener { parent, _, position, _ ->
+        val selected = parent.getItemAtPosition(position) as String
+        selectedRoom(selected)
+    }
 }

@@ -196,8 +196,15 @@ class FirebaseDatabaseHelper {
                 val classTitle = snapshot.child("classTitle").value.toString()
                 val classDescription = snapshot.child("classDescription").value.toString()
                 val classColor = snapshot.child("classColor").value.toString()
+                val classRoom = snapshot.child("classLocation").value.toString()
 
-                val classModel =  ClassModel (classId,classTitle,classDescription,classColor)
+                val classModel =  ClassModel (
+                    classId,
+                    classTitle,
+                    classDescription,
+                    classColor,
+                    classRoom
+                )
 
                 callback(classModel)
             }else {
