@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.utils.ValidationClassCreation
+import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -62,7 +63,7 @@ class CreateAClass : AppCompatActivity() {
 
         classTitle =  findViewById<EditText>(R.id.editTextClassTitle)
         classDescription = findViewById<EditText>(R.id.editTextClassDescription)
-        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
+
         autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
         classLimit = findViewById<EditText>(R.id.editTextClassLimit)
         classAvailabilityForRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_ClassAvailabilityFor)
@@ -137,13 +138,12 @@ class CreateAClass : AppCompatActivity() {
     }
 
     private fun setUpSelectColordropdown() {
+        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
+
         val colors = resources.getStringArray(R.array.colors)
 
-        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, colors)
-        autoCompleteColorTextView.setAdapter(arrayAdapter)
-
-        autoCompleteColorTextView.setOnItemClickListener { parent, _, position, _ ->
-            selectedColor = parent.getItemAtPosition(position) as String
+        utilsSetUpSelectColorDropdown(this, colors , autoCompleteColorTextView ) { color ->
+            selectedColor = color
         }
 
     }

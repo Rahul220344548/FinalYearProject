@@ -2,6 +2,7 @@ package com.example.gym_application
 
 import FirebaseDatabaseHelper
 import android.os.Bundle
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -10,11 +11,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
 
 
 class AdminClassEditorActivity : AppCompatActivity() {
 
     private lateinit var txtClassTitle : TextView
+    private lateinit var txtClassDescription : TextView
+
+    private lateinit var autoCompleteColorTextView: AutoCompleteTextView
+
     private lateinit var txtClassScheduledDate : TextView
     private lateinit var txtClassScheduledTime : TextView
     private lateinit var txtclassLength : TextView
@@ -22,7 +28,8 @@ class AdminClassEditorActivity : AppCompatActivity() {
     private lateinit var txtClassRemainingSpot: TextView
     private lateinit var txtClassLocation : TextView
     private lateinit var txtClassInstructor : TextView
-    private lateinit var txtClassDescription : TextView
+
+    private var selectedColor: String = ""
 
     private lateinit var classId: String
 
@@ -49,6 +56,9 @@ class AdminClassEditorActivity : AppCompatActivity() {
         txtClassTitle = findViewById<EditText>(R.id.editTextClassTitle)
         txtClassDescription = findViewById<EditText>(R.id.editTextClassDescription)
 
+        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
+
+
         initializeTextFields()
 
 
@@ -62,14 +72,25 @@ class AdminClassEditorActivity : AppCompatActivity() {
             if (classModel != null) {
                 txtClassTitle.setText(classModel.classTitle)
                 txtClassDescription.setText(classModel.classDescription)
+
+                setUpSelectColordropdown()
+                autoCompleteColorTextView.setText(classModel.classColor,false)
+
             }else{
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    private fun setUpSelectColordropdown() {
 
+        val colors = resources.getStringArray(R.array.colors)
 
+        utilsSetUpSelectColorDropdown(this, colors , autoCompleteColorTextView ) { color ->
+            selectedColor = color
+        }
+
+    }
 
 
     override fun onSupportNavigateUp(): Boolean {
