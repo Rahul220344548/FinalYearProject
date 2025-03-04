@@ -34,7 +34,17 @@ class AdminBookingListAdapter ( private  var classList : List<ClassModel>)  :
         holder.itemView.setOnClickListener {
             val intent =
                 Intent(holder.itemView.context, AdminClassEditorActivity::class.java).apply {
+                    putExtra("classId", bookingListItem.classId)
                     putExtra("classTitle", bookingListItem.classTitle)
+                    putExtra("classStartDate", bookingListItem.classStartDate)
+                    putExtra("classStartTime", bookingListItem.classStartTime)
+                    putExtra("classEndTime", bookingListItem.classEndTime)
+                    putExtra("classLocation", bookingListItem.classLocation)
+                    putExtra("classAvailabilityFor", bookingListItem.classAvailabilityFor)
+                    putExtra("classInstructor",bookingListItem.classInstructor)
+                    putExtra("classCurrentBookings", bookingListItem.classCurrentBookings)
+                    putExtra("classMaxCapacity", bookingListItem.classMaxCapacity)
+                    putExtra("classDescription", bookingListItem.classDescription)
 
                 }
             holder.itemView.context.startActivity(intent)

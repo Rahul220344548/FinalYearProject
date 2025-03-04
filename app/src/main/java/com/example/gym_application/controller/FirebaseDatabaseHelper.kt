@@ -184,4 +184,28 @@ class FirebaseDatabaseHelper {
 
     }
 
+    fun getClassInfobyId( classId: String , callback: (ClassModel?) -> Unit) {
+
+        val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
+            .child(classId)
+
+        classDatabase.get().addOnSuccessListener { snapshot ->
+
+            if (snapshot.exists()) {
+
+                val classTitle = snapshot.child("classTitle").value.toString()
+                val classDescription = snapshot.child("classDescription").value.toString()
+
+                val classModel =  ClassModel (classId,classTitle,classDescription)
+                callback(classModel)
+            }else {
+                callback(null)
+            }
+
+        }.addOnFailureListener {
+            callback(null)
+        }
+
+    }
+
 }
