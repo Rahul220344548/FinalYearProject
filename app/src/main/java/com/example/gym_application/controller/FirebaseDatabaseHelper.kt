@@ -228,4 +228,8 @@ class FirebaseDatabaseHelper {
 
     }
 
+    fun deleteClass () {
+
+    }
+
 }

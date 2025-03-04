@@ -78,13 +78,15 @@
                     android:layout_marginRight="5dp"
                     android:textSize="18sp"
                     android:layout_weight="1"
-                    android:text="Delete" />
+                    android:text="Delete"
+                    android:onClick="onDeleteBtn"/>
                 <Button
                     android:id="@+id/btnCancelClass"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="18sp"
+                    android:onClick="onCancelbtn"
                     android:backgroundTint="@color/peach2"
                     android:text="Cancel" />
 

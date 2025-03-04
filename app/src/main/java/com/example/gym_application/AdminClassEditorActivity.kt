@@ -1,7 +1,11 @@
 package com.example.gym_application
 
 import FirebaseDatabaseHelper
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.RadioButton
@@ -10,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,6 +25,7 @@ import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectInstructorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
 import com.example.gym_application.utils.utilsSetUpStartTimeDropdown
+import com.google.android.material.button.MaterialButton
 
 
 class AdminClassEditorActivity : AppCompatActivity() {
@@ -107,6 +113,48 @@ class AdminClassEditorActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    fun updateClassBtn( view: View) {
+
+    }
+
+    fun onDeleteBtn (view: View) {
+        showDeleteClassDialog()
+    }
+
+    fun onCancelbtn(view : View) {
+        finish()
+    }
+
+    private fun showDeleteClassDialog() {
+
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.delete_class_dialog_box, null)
+
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+        val btnCancelDialog = dialogView.findViewById<MaterialButton>(R.id.cancelbtn)
+        val btnConfirmDeletion = dialogView.findViewById<MaterialButton>(R.id.btnConfirmDelete)
+
+        btnCancelDialog.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        btnConfirmDeletion.setOnClickListener {
+            alertDialog.dismiss()
+            deleteClassFromDatabase()
+        }
+
+    }
+
+    private fun deleteClassFromDatabase() {
+
     }
 
     private fun setUpSelectColordropdown() {

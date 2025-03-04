@@ -62,6 +62,10 @@ object ValidationClassCreation {
         }
     }
 
+    fun isValidScheduledDate(startDate: String) : Boolean{
+        return startDate.isNotEmpty()
+    }
+
     fun isValidEndDate(startDate: String, endDate: String): Boolean {
         if (endDate.isEmpty()) {
             return false

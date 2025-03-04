@@ -18,6 +18,8 @@ import com.example.gym_application.R
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.ClassModel
 import com.example.gym_application.utils.ValidationClassCreation
+import com.example.gym_application.utils.ValidationClassFields
+import com.example.gym_application.utils.ValidationUtils
 import com.example.gym_application.utils.utilsSetUpClassScheduleDate
 import com.example.gym_application.utils.utilsSetUpEndTimeDropdown
 import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
@@ -86,8 +88,8 @@ class CreateAClass : AppCompatActivity() {
     }
 
     fun addClassbtn(view: View) {
+        val validationMessage = validationFields()
 
-        val validationMessage : String = validationFields()
         if (validationMessage.isNotEmpty()) {
             Toast.makeText(this, "Class Creation failed!: $validationMessage", Toast.LENGTH_SHORT).show()
             return
@@ -195,50 +197,17 @@ class CreateAClass : AppCompatActivity() {
 
     private fun validationFields() : String {
 
-        val title = classTitle.text.toString().trim()
-        val description = classDescription.text.toString().trim()
-        val capacity = classLimit.text.toString().trim()
-        val selectedGenderId = classAvailabilityForRadioGroup.checkedRadioButtonId
-        val startTime = autoCompleteStartTime.text.toString().trim()
-        val endTime = autoCompleteEndTime.text.toString().trim()
-        val startDate = this.startDate.text.toString().trim()
-
-        if (!ValidationClassCreation.isValidClassTitle(title)) {
-            return "Please enter a class Title (at least 3 characters)"
-        }
-
-        if (!ValidationClassCreation.isValidClassDescription(description)) {
-            return "Class description must be between 1 and 120 words"
-        }
-
-        if (!ValidationClassCreation.isValidClassColor(selectedColor)) {
-            return "Please select a class color"
-        }
-
-        if (!ValidationClassCreation.isValidSelectRoom(selectedRoom)) {
-            return "Please select a Room"
-        }
-
-        if (!ValidationClassCreation.isValidSelectInstructor(selectedInstructor)) {
-            return "Please select a Instructor"
-        }
-
-        if (!ValidationClassCreation.isValidCapacity(capacity)) {
-            return "Please enter a valid class limit ( must be < 20 )"
-        }
-
-        if (!ValidationClassCreation.isValidGenderSelection(selectedGenderId)) {
-            return "Please select a gender restriction"
-        }
-
-        if (!ValidationClassCreation.isValidTime(startTime, endTime)) {
-            return "Invalid time: Class duration must be 30 minutes or 1 hour"
-        }
-
-/*        if (!ValidationClassCreation.isValidEndDate(startAvailability, endAvailability)) {
-            return "End date must be after or on the start date"
-        }*/
-
-        return ""
+        return ValidationClassFields.validateClassFields(
+            title = classTitle.text.toString().trim(),
+            description = classDescription.text.toString().trim(),
+            capacity = classLimit.text.toString().trim(),
+            selectedGenderId = classAvailabilityForRadioGroup.checkedRadioButtonId,
+            startTime = autoCompleteStartTime.text.toString().trim(),
+            endTime = autoCompleteEndTime.text.toString().trim(),
+            startDate = startDate.text.toString().trim(),
+            selectedColor = selectedColor,  // Assuming this is declared in your Activity
+            selectedRoom = selectedRoom,  // Assuming this is declared in your Activity
+            selectedInstructor = selectedInstructor  // Assuming this is declared in your Activity
+        )
     }
 }
