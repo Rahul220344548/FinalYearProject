@@ -11,7 +11,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
+import com.example.gym_application.utils.utilsSetUpSelectInstructorDropdown
 import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
 
 
@@ -22,6 +24,8 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
     private lateinit var autoCompleteColorTextView: AutoCompleteTextView
     private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
+    private lateinit var autoCompleteInstructorTextView: AutoCompleteTextView
+
 
     private lateinit var txtClassScheduledDate : TextView
     private lateinit var txtClassScheduledTime : TextView
@@ -38,6 +42,7 @@ class AdminClassEditorActivity : AppCompatActivity() {
     private lateinit var classId: String
 
     private val firebaseHelper = FirebaseDatabaseHelper()
+    private val userFirebaseHelper = UserFirebaseDatabaseHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +85,8 @@ class AdminClassEditorActivity : AppCompatActivity() {
                 setUpSelectRoomdropdown()
                 autoCompleteRoomTextView.setText(classModel.classLocation, false)
 
+                setUpSelectInstructordropdown()
+                autoCompleteInstructorTextView.setText(classModel.classInstructor,false)
 
 
             }else{
@@ -97,11 +104,23 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
     private fun setUpSelectRoomdropdown() {
         autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
-
         utilsSetUpSelectRoomDropdown(this, autoCompleteRoomTextView) { room ->
             selectedRoom = room
         }
+    }
 
+    private fun setUpSelectInstructordropdown() {
+        autoCompleteInstructorTextView = findViewById(R.id.auto_complete_instructor)
+        userFirebaseHelper.fetchInstructors { instructorList ->
+            utilsSetUpSelectInstructorDropdown(
+                context = this, // Pass the context
+                instructorList = instructorList,
+                autoCompleteInstructorTextView = autoCompleteInstructorTextView,
+                selectedInstructor = { selected ->
+                    selectedInstructor = selected
+                }
+            )
+        }
 
     }
 
