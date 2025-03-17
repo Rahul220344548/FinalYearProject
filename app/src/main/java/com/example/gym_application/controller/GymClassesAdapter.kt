@@ -73,7 +73,7 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
 
 
     fun updateData(newList: List<ClassModel>) {
-        classList = newList
+        classList = newList.sortedBy { convertTimeToMinutes(it.classStartTime) }
         notifyDataSetChanged()
     }
 }

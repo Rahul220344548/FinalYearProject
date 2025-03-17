@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,8 +21,9 @@ class BookedClassesFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var classAdapter : BookedClassesAdapter
+    private lateinit var txtMessageNoBookings : TextView
 
-    private val firebaseHelper = UserFirebaseDatabaseHelper()
+    private val userFirebaseHelper = UserFirebaseDatabaseHelper()
     private val classFirebaseHelper = FirebaseDatabaseHelper()
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -39,29 +41,24 @@ class BookedClassesFragment : Fragment() {
         classAdapter = BookedClassesAdapter(emptyList())
         recyclerView.adapter = classAdapter
 
+        txtMessageNoBookings = view.findViewById<TextView>(R.id.txtNoBookings)
 
         fetchUserCurrentBookings()
-
-//        fetchClassDetails("-OKCm0jGOVLNWc_AYLKV")
 
         return view
     }
 
 
     private fun fetchUserCurrentBookings() {
-
-
-        firebaseHelper.getUserCurrentBookings(userId?:"") { fetchedClassId ->
-
+        userFirebaseHelper.fetchUserCurrentBookings(userId?:"") { fetchedClassId ->
             if (fetchedClassId != null) {
-                fetchClassDetails(listOf(fetchedClassId))
+                fetchClassDetails(fetchedClassId)
+                txtMessageNoBookings.visibility = View.GONE
             } else {
                 Log.d("FetchUserCurrentBookings", "No current class booking found")
-
+                recyclerView.visibility = View.GONE
             }
         }
-
-
     }
 
     private fun fetchClassDetails(classIds : List<String>) {
@@ -69,21 +66,14 @@ class BookedClassesFragment : Fragment() {
         val classDetailsList = mutableListOf<ClassModel>()
 
         classIds.forEach { classId ->
-
-
             classFirebaseHelper.getClassesFullDetails(classId) { classDetails ->
                 if (classDetails != null) {
+                    txtMessageNoBookings.visibility = View.GONE
                     classDetailsList.add(classDetails)
                     classAdapter.updateData(classDetailsList)
                 }
             }
-
-
         }
-
-
-
-
     }
 
 

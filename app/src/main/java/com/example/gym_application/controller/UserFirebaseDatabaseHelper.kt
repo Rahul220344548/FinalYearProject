@@ -1,16 +1,12 @@
 package com.example.gym_application.controller
-import android.R
-import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Toast
+
 import com.example.gym_application.model.UserClassBooking
 import com.google.firebase.database.*
 
 
 class UserFirebaseDatabaseHelper {
 
-    fun getUserCurrentBookings(userId : String, callback: (String?) -> Unit) {
+    fun fetchUserCurrentBookings(userId : String, callback: (List<String>?) -> Unit) {
 
         val userDatabase = FirebaseDatabase.getInstance().reference.child("users")
             .child(userId)
@@ -29,6 +25,7 @@ class UserFirebaseDatabaseHelper {
                         classIdList.add(fetchedclassId)
                     }
                 }
+                callback(classIdList)
             }
 
 

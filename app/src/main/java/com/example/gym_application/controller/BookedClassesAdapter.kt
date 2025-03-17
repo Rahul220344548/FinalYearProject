@@ -40,7 +40,7 @@ class BookedClassesAdapter (private var classList: List<ClassModel>) :
         val endMinutes =  ClassBookingUtils.convertTimeToMinutes(bookedClass.classEndTime)
         val durationMinutes = endMinutes - startMinutes
         
-        holder.bookedClassLength.text = "$durationMinutes"
+        holder.bookedClassLength.text = "$durationMinutes min"
         
         holder.bookedClassStartDate.text = "Start Date: ${bookedClass.classStartDate}"
         
@@ -67,8 +67,14 @@ class BookedClassesAdapter (private var classList: List<ClassModel>) :
     override fun getItemCount() = classList.size
 
     fun updateData( newList : List<ClassModel>) {
-        classList = newList
+        classList = newList.sortedBy { convertTimeToMinutes(it.classStartTime) }
         notifyDataSetChanged()
     }
 
+    private fun convertTimeToMinutes(time: String): Int {
+        val parts = time.split(":")
+        val hours = parts[0].toInt()
+        val minutes = parts[1].toInt()
+        return (hours * 60) + minutes
+    }
 }

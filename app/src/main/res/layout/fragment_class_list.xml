@@ -8,7 +8,7 @@
 
 
     <SearchView
-        android:id="@+id/searchView"
+        android:id="@+id/findClasseSearchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -18,13 +18,14 @@
         android:background="@drawable/edittext_border"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:focusable="false"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/adminClassesListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/searchView"
+        app:layout_constraintTop_toBottomOf="@id/findClasseSearchView"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/item_admin_class_list"/>
 
