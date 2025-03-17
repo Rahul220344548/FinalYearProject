@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.utils.ValidationClassCreation
 import com.example.gym_application.utils.ValidationClassFields
 import com.example.gym_application.utils.utilsSetUpClassScheduleDate
 import com.example.gym_application.utils.utilsSetUpEndTimeDropdown
@@ -75,6 +76,7 @@ class AdminClassEditorActivity : AppCompatActivity() {
         txtClassTitle = findViewById<EditText>(R.id.editTextClassTitle)
         txtClassDescription = findViewById<EditText>(R.id.editTextClassDescription)
         classLimit = findViewById<EditText>(R.id.editTextClassLimit)
+        startDate = findViewById(R.id.auto_complete_starDate)
 
         initializeTextFields()
         setUpClassScheduledropdown()
@@ -124,16 +126,42 @@ class AdminClassEditorActivity : AppCompatActivity() {
             Toast.makeText(this, "Class Update Failed: $validationMessage", Toast.LENGTH_SHORT).show()
             return
         }
-
+        val title = txtClassTitle.text.toString()
+        val description = txtClassDescription.text.toString().trim()
+        val color = autoCompleteColorTextView.text.toString().trim()
+        val room = autoCompleteRoomTextView.text.toString().trim()
+        val instructor = autoCompleteInstructorTextView.text.toString().trim()
         val capacity = classLimit.text.toString().toIntOrNull() ?: 0
 
+        val selectedRadioButtonId = classAvailabilityForRadioGroup.checkedRadioButtonId
+        val classAvailableFor = when (selectedRadioButtonId) {
+            R.id.radio_genderAll -> "All"
+            R.id.radio_genderMale -> "Male"
+            R.id.radio_genderFemale -> "Female"
+            else -> "unknown"
+        }
+
+        val startTime = autoCompleteStartTime.text.toString().trim()
+        val endTime = autoCompleteEndTime.text.toString().trim()
+        val classScheduleDate = startDate.text.toString().trim()
+
         val classUpdate = mapOf (
-            "classMaxCapacity" to capacity
+            "classTitle" to title,
+            "classDescription" to description,
+            "classColor" to color,
+            "classLocation" to room,
+            "classInstructor" to instructor,
+            "classMaxCapacity" to capacity,
+            "classAvailabilityFor" to classAvailableFor,
+            "classStartTime" to startTime,
+            "classEndTime" to endTime,
+            "classStartDate" to classScheduleDate
         )
 
         firebaseHelper.updateClassDetails(classId, classUpdate) { success ->
             if (success) {
                 Toast.makeText(this, "Class updated successfully", Toast.LENGTH_SHORT).show()
+                finish()
             } else {
                 Toast.makeText(this, "Failed to update class", Toast.LENGTH_SHORT).show()
             }
