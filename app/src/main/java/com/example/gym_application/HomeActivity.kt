@@ -16,13 +16,16 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(0, 0, 0, 0)
             insets
         }
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation)
+
 
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId) {
@@ -42,6 +45,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         replaceFragment(HomeFragment())
+        bottomNavigationView.requestLayout()
     }
 
     private fun replaceFragment(fragment: Fragment) {

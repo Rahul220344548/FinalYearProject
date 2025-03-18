@@ -1,35 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AccountFragment">
 
+
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnSignOut">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <include layout="@layout/account_header" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/imageView2"
                     android:layout_width="144dp"
                     android:layout_height="140dp"
-                    android:layout_marginTop="100dp"
+
                     android:src="@drawable/sharp_account_circle_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -38,21 +43,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="20dp" />
+                android:textSize="20sp"
+                android:text="Rahul Vasantlal"/>
 
             <TextView
                 android:id="@+id/EditUserEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="15dp" />
+                android:textSize="15sp"
+                android:text="test@gmail.com"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnEditProfile"
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:layout_marginStart="25dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:background="@drawable/btn_bacjground_1"
                 android:drawableStart="@drawable/baseline_edit_24"
@@ -60,64 +67,65 @@
                 android:onClick="goToEditProfile"
                 android:paddingStart="50dp"
                 android:text="Edit Profile"
-                android:textAlignment="viewStart"
-                android:textSize="25dp" />
+                android:textSize="18sp"
+                android:textAlignment="viewStart"/>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:layout_marginStart="25dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:background="@drawable/btn_bacjground_1"
                 android:drawableStart="@drawable/baseline_menu_book_24"
                 android:drawablePadding="20dp"
                 android:paddingStart="50dp"
                 android:text="My Bookings"
-                android:textAlignment="viewStart"
-                android:textSize="25dp" />
+                android:textSize="18sp"
+                android:textAlignment="viewStart"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnMembership"
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:layout_marginStart="25dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:background="@drawable/btn_bacjground_1"
                 android:drawableStart="@drawable/baseline_card_membership_24"
                 android:drawablePadding="20dp"
                 android:paddingStart="50dp"
                 android:text="Membership"
-                android:textAlignment="viewStart"
-                android:textSize="25dp" />
+                android:textSize="18sp"
+                android:textAlignment="viewStart"/>
+
             <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:layout_marginStart="25dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:background="@drawable/btn_bacjground_1"
                 android:drawableStart="@drawable/baseline_credit_card_24"
                 android:drawablePadding="20dp"
                 android:paddingStart="50dp"
                 android:text="FAQ"
-                android:textAlignment="viewStart"
-                android:textSize="25dp" />
-
-
-
-            <Button
-                android:id="@+id/btnSignOut"
-                android:layout_width="245dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40dp"
-                android:text="Sign out"
-                app:backgroundTint="@color/orange" />
+                android:textSize="18sp"
+                android:textAlignment="viewStart"/>
 
         </LinearLayout>
     </ScrollView>
 
+    <Button
+        android:id="@+id/btnSignOut"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Sign Out"
+        app:backgroundTint="@color/orange"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
