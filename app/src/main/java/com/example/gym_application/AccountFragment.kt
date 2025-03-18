@@ -1,15 +1,21 @@
 package com.example.gym_application
 
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -26,15 +32,15 @@ class AccountFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_account, container, false)
 
-        // Initialize Firebase
+
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().getReference("users")
 
-        // Find Views
+
         txtFullName = view.findViewById(R.id.EditFirstNameAndLastName)
         txtEmail = view.findViewById(R.id.EditUserEmailAddress)
 
-        // Fetch and set profile details
+
         setProfileDetails()
 
         val btnEditProfile: AppCompatButton = view.findViewById(R.id.btnEditProfile)
@@ -46,6 +52,12 @@ class AccountFragment : Fragment() {
         val btnMembership : AppCompatButton = view.findViewById(R.id.btnMembership)
         btnMembership.setOnClickListener{
             checkMembershipStatus()
+        }
+
+
+        val btnSignOut = view.findViewById<Button>(R.id.btnUserignOut)
+        btnSignOut.setOnClickListener {
+            showSignOutDialog()
         }
 
         return view
@@ -120,9 +132,44 @@ class AccountFragment : Fragment() {
         } else {
             Toast.makeText(requireContext(), "User not logged in!", Toast.LENGTH_SHORT).show()
         }
+    }
 
+    private fun signOutUser() {
+        FirebaseAuth.getInstance().signOut()
+        val sharedPreferences = requireActivity().getSharedPreferences("your_prefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
 
+        Toast.makeText(context, "Logged out successfully!", Toast.LENGTH_SHORT).show()
+        val intent = Intent(requireActivity(), MainActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
+    }
 
+    private fun showSignOutDialog() {
+
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_confirm_sign_out,null)
+
+        val dialogBuilder = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+        val btnCancelDialog = dialogView.findViewById<MaterialButton>(R.id.signOutCancel)
+        val btnConfirmSignOut = dialogView.findViewById<MaterialButton>(R.id.signOutConfirm)
+
+        btnCancelDialog.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        btnConfirmSignOut.setOnClickListener {
+            alertDialog.dismiss()
+            signOutUser()
+        }
 
     }
 
