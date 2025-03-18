@@ -2,12 +2,16 @@ package com.example.gym_application
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Patterns
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.ViewCompat
@@ -21,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
+    private lateinit var forgotPassword : TextView
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
@@ -42,6 +47,8 @@ class MainActivity : AppCompatActivity() {
 
         emailEditText = findViewById(R.id.editTextEmail)
         passwordEditText = findViewById(R.id.editTextPassword)
+        forgotPassword = findViewById(R.id.idForgotPassword)
+
 
         val btnJohnAutoLogin: Button = findViewById(R.id.btnJohnAutoLogin)
         btnJohnAutoLogin.setOnClickListener {
@@ -57,6 +64,30 @@ class MainActivity : AppCompatActivity() {
         btnAdminAutoLogin.setOnClickListener {
             autoAdminLogin()
         }
+
+        forgotPassword.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            val view = layoutInflater.inflate(R.layout.dialog_forgot_password, null)
+            val userEmail = view.findViewById<EditText>(R.id.editEmailBox)
+
+            builder.setView(view)
+            val dialog = builder.create()
+
+            view.findViewById<Button>(R.id.btnReset).setOnClickListener {
+                compareEmail(userEmail)
+                dialog.dismiss()
+            }
+            view.findViewById<Button>(R.id.btnCancel).setOnClickListener {
+                dialog.dismiss()
+            }
+
+            if (dialog.window != null) {
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(0))
+            }
+            dialog.show()
+
+        }
+
 
     }
 
@@ -142,4 +173,22 @@ class MainActivity : AppCompatActivity() {
     fun goToSignUpPage(view: View) {
         startActivity(Intent(this, SignUp::class.java))
     }
+
+    private fun compareEmail( emailEditText: EditText ) {
+
+        if (emailEditText.text.toString().isEmpty()) {
+            return
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(emailEditText.text.toString()).matches()) {
+            Toast.makeText(this, "Invalid Email address!", Toast.LENGTH_SHORT).show()
+            return
+        }
+        auth.sendPasswordResetEmail(emailEditText.text.toString()).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(this, "Check you Email!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
 }
