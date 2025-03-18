@@ -1,6 +1,10 @@
 package com.example.gym_application.controller
 
+import android.util.Log
+import android.widget.Toast
+import com.example.gym_application.model.ClassModel
 import com.example.gym_application.model.UserClassBooking
+import com.example.gym_application.model.UserDetails
 import com.google.firebase.database.*
 
 
@@ -60,5 +64,30 @@ class UserFirebaseDatabaseHelper {
         }
 
     }
+
+    fun listenForUserUpdates(onDataChanged: (List<UserDetails>) -> Unit) {
+        val userDatabase = FirebaseDatabase.getInstance().reference.child("users")
+
+        userDatabase.addValueEventListener( object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userList = mutableListOf<UserDetails>()
+                for (userSnapshot in snapshot.children) {
+                    val user = userSnapshot.getValue(UserDetails::class.java)
+                    if (user != null && user.role != "Admin") {
+                        Log.d("User Fetch", "Fetched user name: ${user.firstName} ${user.lastName}")
+                        userList.add(user)
+                    }
+                }
+                onDataChanged(userList)
+            }
+            override fun onCancelled(error: DatabaseError) {
+                println("Error Fetching Classes: ${error.message}")
+            }
+        })
+
+
+    }
+
+
 
 }
