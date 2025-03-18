@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".admin_view.AdminUserEditorActivity">
+
+        <include
+            android:id="@+id/admin_toolbar"
+            layout="@layout/admin_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" />
+
+        <Button
+            android:id="@+id/btnDeleteUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/red"
+            android:drawableLeft="@drawable/baseline_delete_24"
+            android:text="Delete"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/admin_toolbar" />
+
+        <include
+            android:id="@+id/membershipStatusContainer"
+            layout="@layout/membership_status_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintTop_toBottomOf="@id/btnDeleteUser"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+    <!--    android:visibility="gone"-->
+        <TextView
+            android:id="@+id/txtEditUserProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Edit User Profile"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/membershipStatusContainer" />
+
+        <EditText
+            android:id="@+id/userEditTextFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/edittext_border"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:hint="First Name"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditUserProfile"/>
+
+        <EditText
+            android:id="@+id/userEditTextLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/edittext_border"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:hint="Last Name"
+            app:layout_constraintTop_toBottomOf="@+id/userEditTextFirstName"/>
+
+        <TextView
+            android:id="@+id/txtDateofBirth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date of Birth"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userEditTextLastName" />
+
+        <EditText
+            android:id="@+id/userEditDay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:layout_marginStart="20dp"
+            android:hint="Day"
+            android:padding="8dp"
+            app:layout_constraintEnd_toStartOf="@id/userEditMonth"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtDateofBirth" />
+
+        <EditText
+            android:id="@+id/userEditMonth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border"
+            android:gravity="center"
+            android:hint="Month"
+            android:padding="8dp"
+            app:layout_constraintEnd_toStartOf="@id/userEditYear"
+            app:layout_constraintStart_toEndOf="@id/userEditDay"
+            app:layout_constraintTop_toBottomOf="@+id/txtDateofBirth" />
+
+        <EditText
+            android:id="@+id/userEditYear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+            android:background="@drawable/edittext_border"
+            android:gravity="center"
+            android:hint="Year"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/userEditMonth"
+            app:layout_constraintTop_toBottomOf="@+id/txtDateofBirth" />
+
+        <EditText
+            android:id="@+id/userEditTextPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/edittext_border"
+            android:gravity="center"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="20dp"
+            android:hint="Phone number"
+            app:layout_constraintTop_toBottomOf="@+id/userEditMonth" />
+
+        <TextView
+            android:id="@+id/txtSelectGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Select Gender"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userEditTextPhoneNumber" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:hint="@string/select"
+            app:layout_constraintTop_toBottomOf="@+id/txtSelectGender">
+
+            <AutoCompleteTextView
+                android:id="@+id/select_user_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dropdown_background"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/txtSelectRole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Select Role"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout2"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:hint="@string/select"
+            app:layout_constraintTop_toBottomOf="@+id/txtSelectRole"
+            tools:layout_editor_absoluteX="25dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/select_user_role"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dropdown_background"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btnUpdateUserInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/orange"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="20dp"
+            android:text="Save"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+
+        <Button
+            android:id="@+id/btnCancelUserInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/peach"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="10dp"
+            android:text="Cancel"
+            app:layout_constraintTop_toBottomOf="@+id/btnUpdateUserInfo" />
+
+        <!--<include layout="@layout/membership_status_container" />-->
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
+import com.example.gym_application.admin_view.AdminUserEditorActivity
 import com.example.gym_application.model.UserDetails
 
 class AdminUserListAdapter ( private  var userList : List<UserDetails>) :
@@ -32,6 +33,18 @@ class AdminUserListAdapter ( private  var userList : List<UserDetails>) :
         holder.userName.text = "${user.firstName} ${user.lastName}"
         holder.userRole.text = user .role
 
+        holder.itemView.setOnClickListener {
+            val intent =
+                Intent(holder.itemView.context, AdminUserEditorActivity::class.java).apply {
+                    putExtra("firstName", user.firstName)
+                    putExtra("lastName", user.lastName)
+                    putExtra("dateOfBirth", user.dateOfBirth)
+                    putExtra("gender", user.gender)
+                    putExtra("phoneNumber", user.phoneNumber)
+                    putExtra("role", user.role)
+                }
+            holder.itemView.context.startActivity(intent)
+        }
 
 
     }

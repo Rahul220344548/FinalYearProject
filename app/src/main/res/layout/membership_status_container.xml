@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/membershipStatusCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="15dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:background="@drawable/linear_layout_membership_container"
+    android:padding="20dp"
+    >
+
+    <TextView
+        android:id="@+id/MembershipStatusTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Membership Information"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/AdminMembershipStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/available_green"
+        android:text="Status" />
+
+    <TextView
+        android:id="@+id/AdminMembershipTypeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Name Plan - duration month plan" />
+
+    <TextView
+        android:id="@+id/ExpiresEndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Expires - Feb 06, 2025"
+        android:textColor="@color/red"
+        android:textSize="20sp"/>
+</LinearLayout>

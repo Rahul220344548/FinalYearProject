@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Full Name"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:shadowColor="#AA000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
@@ -43,12 +43,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="role"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:shadowColor="#AA000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="1"
-                android:textStyle="bold" />
+                android:textStyle="italic | bold" />
 
 
         </LinearLayout>
