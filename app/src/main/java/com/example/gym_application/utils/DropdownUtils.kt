@@ -153,6 +153,39 @@ fun utilsSetUpClassScheduleDate(
 
 }
 
+fun utilsSetUpSelectUserGender(
+    context: Context,
+    autoCompleteGenderTextView : AutoCompleteTextView,
+    selectedGender : (String) -> Unit,
+) {
+
+    val genders = context.resources.getStringArray(com.example.gym_application.R.array.genders)
+    val arrayAdapter = ArrayAdapter(context,android.R.layout.simple_dropdown_item_1line, genders)
+    autoCompleteGenderTextView.setAdapter(arrayAdapter)
+
+    autoCompleteGenderTextView.setOnItemClickListener { parent, _, position, _ ->
+        val selected = parent.getItemAtPosition(position) as String
+        selectedGender(selected)
+    }
+}
+
+fun utilsSetUpSelectUserRoles(
+    context: Context,
+    autoCompleteRoleTextView : AutoCompleteTextView,
+    selectedRoles : (String) -> Unit,
+) {
+
+    val roles = context.resources.getStringArray(com.example.gym_application.R.array.roles)
+    val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, roles)
+    autoCompleteRoleTextView.setAdapter(arrayAdapter)
+
+    autoCompleteRoleTextView.setOnItemClickListener { parent, _, position, _ ->
+        val selected = parent.getItemAtPosition(position) as String
+        selectedRoles(selected)
+    }
+
+
+}
 
 //fun setupRadioGroupListener() {
 //    val radioGroup = findViewById<RadioGroup>(com.example.gym_application.R.id.radioGroup_ClassAvailabilityFor)

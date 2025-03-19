@@ -54,4 +54,11 @@ object ValidationUtils {
     fun isValidGender(gender: Int): Boolean {
         return gender != -1
     }
+
+    fun isValidGenderdropdown(selectedGender : String?):Boolean {
+        return !selectedGender.isNullOrEmpty()
+    }
+    fun isValidRolesdropdown(selectedRoles : String?):Boolean {
+        return !selectedRoles.isNullOrEmpty()
+    }
 }

@@ -199,14 +199,15 @@
             android:layout_marginEnd="25dp"
             android:hint="@string/select"
             app:layout_constraintTop_toBottomOf="@+id/txtSelectRole"
-            tools:layout_editor_absoluteX="25dp">
+            >
 
             <AutoCompleteTextView
                 android:id="@+id/select_user_role"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/dropdown_background"
-                android:inputType="none" />
+                android:inputType="none"
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -219,6 +220,7 @@
             android:layout_marginEnd="25dp"
             android:layout_marginTop="20dp"
             android:text="Save"
+            android:onClick="onSaveUserBtn"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
 
         <Button
@@ -230,6 +232,7 @@
             android:layout_marginEnd="25dp"
             android:layout_marginTop="10dp"
             android:text="Cancel"
+            android:onClick="onCancelUserBtn"
             app:layout_constraintTop_toBottomOf="@+id/btnUpdateUserInfo" />
 
         <!--<include layout="@layout/membership_status_container" />-->

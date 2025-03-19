@@ -1,19 +1,50 @@
 package com.example.gym_application.admin_view
 
 import android.os.Bundle
+import android.view.View
+import android.widget.AutoCompleteTextView
+import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
+import com.example.gym_application.utils.ValidationUserFields
+import com.example.gym_application.utils.utilsSetUpSelectUserGender
+import com.example.gym_application.utils.utilsSetUpSelectUserRoles
 import org.w3c.dom.Text
 
 class AdminUserEditorActivity : AppCompatActivity() {
 
-    private lateinit var txtTitle : TextView
-    private lateinit var name: String
+    private lateinit var editFirstName : EditText
+    private lateinit var editLastName : EditText
+
+    private lateinit var editDobDay : EditText
+    private lateinit var editDobMonth : EditText
+    private lateinit var editDobYear : EditText
+
+    private lateinit var editPhoneNumber : EditText
+
+    private lateinit var autoCompleteGenderTextView: AutoCompleteTextView
+    private lateinit var autoCompleteRoleTextView : AutoCompleteTextView
+
+
+    private lateinit var inName: String
+    private lateinit var inLastName : String
+    private lateinit var inDateOfBirth : String
+    private lateinit var inPhoneNumber : String
+    private lateinit var inGender : String
+    private lateinit var inRole : String
+
+    private var selectedGender: String = ""
+    private var selectedRoles: String = ""
+    private lateinit var dobDay:String
+    private lateinit var dobMonth:String
+    private lateinit var dobYear:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,9 +60,107 @@ class AdminUserEditorActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GymEase"
 
-//        name = intent.getStringExtra("firstName")?:""
-//        txtTitle = findViewById(R.id.HELLOWORLD)
-//        txtTitle.setText(name)
+        initalizeTextFields()
+
+
+    }
+
+    private fun initalizeTextFields() {
+
+        inName = intent.getStringExtra("firstName")?:""
+        editFirstName = findViewById(R.id.userEditTextFirstName)
+        editFirstName.setText(inName)
+
+        inLastName = intent.getStringExtra("lastName")?:""
+        editLastName = findViewById(R.id.userEditTextLastName)
+        editLastName.setText(inLastName)
+
+        inDateOfBirth = intent.getStringExtra("dateOfBirth")?:""
+
+        setDateOfBirthFields(inDateOfBirth)
+
+        inPhoneNumber = intent.getStringExtra("phoneNumber")?:""
+        editPhoneNumber = findViewById(R.id.userEditTextPhoneNumber)
+        editPhoneNumber.setText(inPhoneNumber)
+
+        setUpSelectGenderdropdown()
+
+        setUpSelectRoledropdown()
+
+
+
+
+    }
+
+    fun onSaveUserBtn(view : View) {
+
+        val validationMessage = validationFields()
+
+        if (validationMessage.isNotEmpty()) {
+            Toast.makeText(this, "User Update Failed: $validationMessage", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Toast.makeText(this, "Works!", Toast.LENGTH_SHORT).show()
+
+    }
+
+    fun onCancelUserBtn(view: View) {
+        finish()
+    }
+
+
+    private fun setDateOfBirthFields(dateOfBirth: String) {
+
+        val dateParts = dateOfBirth.split("/")
+
+
+        if (dateParts.size == 3) {
+
+            editDobDay = findViewById<EditText>(R.id.userEditDay)
+            editDobMonth = findViewById<EditText>(R.id.userEditMonth)
+            editDobYear = findViewById<EditText>(R.id.userEditYear)
+
+
+            editDobDay.setText(dateParts[0])
+            editDobMonth.setText(dateParts[1])
+            editDobYear.setText(dateParts[2])
+        } else {
+            Toast.makeText(this, "Invalid date format", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun setUpSelectGenderdropdown() {
+        autoCompleteGenderTextView = findViewById(R.id.select_user_gender)
+        inGender = intent.getStringExtra("gender")?:""
+        autoCompleteGenderTextView.setText(inGender)
+        utilsSetUpSelectUserGender(this,autoCompleteGenderTextView) { gender ->
+            selectedGender = gender
+        }
+    }
+
+    private fun setUpSelectRoledropdown() {
+        autoCompleteRoleTextView = findViewById(R.id.select_user_role)
+        inRole = intent.getStringExtra("role")?:""
+        autoCompleteRoleTextView.setText(inRole)
+        utilsSetUpSelectUserRoles( this, autoCompleteRoleTextView) { role ->
+            selectedRoles = role
+        }
+    }
+
+    private fun validationFields() : String {
+
+       return ValidationUserFields.validateUserFields(
+           firstName = editFirstName.text.toString().trim(),
+           lastName = editLastName.text.toString().trim(),
+           inDay = editDobDay.text.toString().trim(),
+           inMonth = editDobMonth.text.toString().trim(),
+           inYear = editDobYear.text.toString().trim(),
+           phoneNumber = editPhoneNumber.text.toString().trim(),
+           selectedGender = autoCompleteGenderTextView.text.toString().trim(),
+           selectedRole = autoCompleteRoleTextView.text.toString().trim()
+       )
+
 
     }
 
