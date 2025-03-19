@@ -12,6 +12,8 @@
         android:layout_height="match_parent"
         tools:context=".admin_view.AdminUserEditorActivity">
 
+
+
         <include
             android:id="@+id/admin_toolbar"
             layout="@layout/admin_toolbar"
@@ -19,6 +21,22 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true" />
 
+
+        <Button
+            android:id="@+id/btnActivateUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:backgroundTint="@color/available_green"
+            android:drawableLeft="@drawable/baseline_done_24"
+            android:text="Activate User"
+            android:textColor="@color/black"
+            android:onClick="onActivateBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnDeleteUser"
+            android:visibility="gone"
+            />
+<!--android:visibility="gone"-->
         <Button
             android:id="@+id/btnDeleteUser"
             android:layout_width="wrap_content"

@@ -181,12 +181,11 @@ class MainActivity : AppCompatActivity() {
                 when (role) {
                     "Admin" -> startActivity(Intent(this, AdminDashboardActivity::class.java))
                     "Instructor" -> startActivity(Intent(this, SignUp::class.java))
-                    else -> startActivity(Intent(this, HomeActivity::class.java)) // Default for members
+                    else -> startActivity(Intent(this, HomeActivity::class.java))
                 }
                 finish()
             }
         }
-
 
     }
 

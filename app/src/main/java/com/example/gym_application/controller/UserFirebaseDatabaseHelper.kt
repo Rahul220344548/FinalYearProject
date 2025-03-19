@@ -167,4 +167,18 @@ class UserFirebaseDatabaseHelper {
 
     }
 
+    fun fetchUserStatus(userId: String, onComplete: (Boolean, String) -> Unit) {
+        val databaseRef = FirebaseDatabase.getInstance().getReference("users").child(userId)
+
+        databaseRef.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                val status = snapshot.child("status").value?.toString() ?: "active"
+                onComplete(true, status)
+            } else {
+                onComplete(false, "User not found")
+            }
+        }.addOnFailureListener {
+            onComplete(false, "Error fetching user status")
+        }
+    }
 }

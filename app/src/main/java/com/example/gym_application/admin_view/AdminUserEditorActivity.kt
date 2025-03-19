@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AutoCompleteTextView
+import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -40,7 +41,7 @@ class AdminUserEditorActivity : AppCompatActivity() {
     private lateinit var autoCompleteRoleTextView : AutoCompleteTextView
 
 
-    private lateinit var membershipStatusContainer : LinearLayout
+    private lateinit var activateBtn : Button
 
     private lateinit var txtMembershipStatus : TextView
     private lateinit var txtMembershipType: TextView
@@ -75,7 +76,7 @@ class AdminUserEditorActivity : AppCompatActivity() {
         supportActionBar?.title = "GymEase"
 
         showMembershipContainer()
-
+        showActivateButtonForInActiveUser()
         initalizeTextFields()
 
 
@@ -175,13 +176,14 @@ class AdminUserEditorActivity : AppCompatActivity() {
         firebaseHelper.softDeleteUser(userId) { success ->
             if (success) {
                 Toast.makeText(this, "User successfully soft deleted", Toast.LENGTH_SHORT).show()
+                finish()
             } else {
                 Toast.makeText(this, "Failed to soft delete user", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    fun showMembershipContainer() {
+    private fun showMembershipContainer() {
 
         inRole = intent.getStringExtra("role")?:""
 
@@ -221,6 +223,16 @@ class AdminUserEditorActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun showActivateButtonForInActiveUser() {
+        val userId = intent.getStringExtra("uid") ?: ""
+        firebaseHelper.fetchUserStatus(userId) { success, status ->
+            if (status == "inactive") {
+                activateBtn = findViewById(R.id.btnActivateUser)
+                activateBtn.visibility = View.VISIBLE
+            }
+        }
     }
 
     fun onCancelUserBtn(view: View) {
@@ -296,6 +308,31 @@ class AdminUserEditorActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    fun onActivateBtn( view :View) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.inactive_user_container, null)
+
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+        val btnCancelDialog = dialogView.findViewById<MaterialButton>(R.id.btnUserStatusCancel)
+        val btnConfirmDeletion = dialogView.findViewById<MaterialButton>(R.id.btnActivateUserConfirm)
+
+        btnCancelDialog.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        btnConfirmDeletion.setOnClickListener {
+            alertDialog.dismiss()
+
+        }
+
     }
 
 }
