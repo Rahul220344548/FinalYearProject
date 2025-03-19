@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
+import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import org.w3c.dom.Text
@@ -35,6 +36,8 @@ class HomeFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
+
+    private val firebaseHelper = UserFirebaseDatabaseHelper()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -97,39 +100,26 @@ class HomeFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun checkMembershipStatus() {
 
+    private fun checkMembershipStatus() {
         val userId = auth.currentUser?.uid
 
         if (userId != null) {
-            val membershipRef = database.child(userId).child("membershipDetails")
-
-            membershipRef.get().addOnSuccessListener { snapshot ->
-                if (snapshot.exists()) {
-
-                    val membershipTitle = snapshot.child("membershipTitle").value?.toString() ?: "No Plan"
-                    val membershipDuration = snapshot.child("membershipDuration").value?.toString() ?: "Unknown"
-                    val membershipStatus = snapshot.child("membershipStatus").value?.toString()?.lowercase() ?: "inactive"
-                    val expirationDate = snapshot.child("endDate").value?.toString() ?: "Unknown"
-                    val formattedExpirationDate = formatExpirationDate( expirationDate )
-
-                    if (membershipStatus == "active") {
-                        txtMembershipType.text = "$membershipTitle - $membershipDuration Plan"
+            firebaseHelper.fetchUserMembershipInfo(userId) { membershipInfo ->
+                if (membershipInfo != null) {
+                    if (membershipInfo.status == "active") {
+                        txtMembershipType.text = "${membershipInfo.title} - ${membershipInfo.duration} Plan"
+                        val formattedExpirationDate = formatExpirationDate(membershipInfo.expirationDate)
                         txtPlanExpiration.text = "Expires - $formattedExpirationDate"
                         membershipCard.visibility = View.VISIBLE
-
                     } else {
                         rejoinMembershipButton.visibility = View.VISIBLE
                     }
                 } else {
                     buyMembershipButton.visibility = View.VISIBLE
                 }
-            }.addOnFailureListener { error ->
-                Toast.makeText(requireContext(), "Error: ${error.message}", Toast.LENGTH_SHORT).show()
             }
-
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
