@@ -87,9 +87,18 @@ class UserFirebaseDatabaseHelper {
         })
     }
 
-    fun adminUpdateUserInfo() {
+    fun adminUpdateUserInfo(userId:String, userUpdate: Map<String,Any>, callback: (Boolean) -> Unit) {
 
+        val userDatabase = FirebaseDatabase.getInstance().reference.child("users")
+            .child(userId)
 
+        userDatabase.updateChildren(userUpdate)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
     }
 
 

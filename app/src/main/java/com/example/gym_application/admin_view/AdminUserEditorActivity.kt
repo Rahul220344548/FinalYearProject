@@ -101,31 +101,32 @@ class AdminUserEditorActivity : AppCompatActivity() {
             Toast.makeText(this, "User Update Failed: $validationMessage", Toast.LENGTH_SHORT).show()
             return
         }
+        val userId = intent.getStringExtra("uid") ?: ""
         val newUserFirstName = editFirstName.text.toString().trim()
         val newUserLastName = editLastName.text.toString().trim()
-        val newUserDay = editDobDay.text.toString().trim()
-        val newUserMonth = editDobMonth.text.toString().trim()
-        val newUserYear = editDobYear.text.toString().trim()
+        val formattedDateOfBirth = formatDateofBirth()
         val newUserPhoneNumber = editPhoneNumber.text.toString().trim()
         val newUserSelectedGender = autoCompleteGenderTextView.text.toString().trim()
         val newUserSelectedRole = autoCompleteRoleTextView.text.toString().trim()
 
-        val userId = intent.getStringExtra("uid") ?: ""
-        Toast.makeText(this, "user ID $userId", Toast.LENGTH_SHORT).show()
-
-
         val userUpdate = mapOf(
             "firstName" to newUserFirstName,
-//            "lastName" to newUserLastName ,
-//            "dateOfBirth" to ,
-//            "gender" to newUserSelectedGender,
-//            "phoneNumber" to newUserPhoneNumber,
-//            "role" to newUserSelectedRole,
+            "lastName" to newUserLastName ,
+            "dateOfBirth" to formattedDateOfBirth,
+            "gender" to newUserSelectedGender,
+            "phoneNumber" to newUserPhoneNumber,
+            "role" to newUserSelectedRole,
         )
 
-        firebaseHelper.adminUpdateUserInfo()
+        firebaseHelper.adminUpdateUserInfo( userId, userUpdate ) { success ->
+            if (success){
+                Toast.makeText(this,"User updated successfully!", Toast.LENGTH_SHORT).show()
+                finish()
+            }else {
+                Toast.makeText(this, "Failed to update class", Toast.LENGTH_SHORT).show()
+            }
+        }
 
-        Toast.makeText(this, "Works!", Toast.LENGTH_SHORT).show()
 
     }
 
@@ -137,14 +138,11 @@ class AdminUserEditorActivity : AppCompatActivity() {
     private fun setDateOfBirthFields(dateOfBirth: String) {
 
         val dateParts = dateOfBirth.split("/")
-
-
         if (dateParts.size == 3) {
 
             editDobDay = findViewById<EditText>(R.id.userEditDay)
             editDobMonth = findViewById<EditText>(R.id.userEditMonth)
             editDobYear = findViewById<EditText>(R.id.userEditYear)
-
 
             editDobDay.setText(dateParts[0])
             editDobMonth.setText(dateParts[1])
@@ -187,6 +185,20 @@ class AdminUserEditorActivity : AppCompatActivity() {
        )
 
 
+    }
+
+    private fun formatDateofBirth() : String {
+        val newUserDay = editDobDay.text.toString().trim()
+        val newUserMonth = editDobMonth.text.toString().trim()
+        val newUserYear = editDobYear.text.toString().trim()
+
+        inDateOfBirth = String.format(
+            "%s/%s/%s",
+            newUserDay,
+            newUserMonth,
+            newUserYear
+        )
+        return inDateOfBirth
     }
 
     override fun onSupportNavigateUp(): Boolean {
