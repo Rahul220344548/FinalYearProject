@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
+import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.utils.ValidationUserFields
 import com.example.gym_application.utils.utilsSetUpSelectUserGender
 import com.example.gym_application.utils.utilsSetUpSelectUserRoles
@@ -45,6 +46,8 @@ class AdminUserEditorActivity : AppCompatActivity() {
     private lateinit var dobMonth:String
     private lateinit var dobYear:String
 
+    private val firebaseHelper = UserFirebaseDatabaseHelper()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,6 +62,8 @@ class AdminUserEditorActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GymEase"
+
+
 
         initalizeTextFields()
 
@@ -84,11 +89,7 @@ class AdminUserEditorActivity : AppCompatActivity() {
         editPhoneNumber.setText(inPhoneNumber)
 
         setUpSelectGenderdropdown()
-
         setUpSelectRoledropdown()
-
-
-
 
     }
 
@@ -100,6 +101,30 @@ class AdminUserEditorActivity : AppCompatActivity() {
             Toast.makeText(this, "User Update Failed: $validationMessage", Toast.LENGTH_SHORT).show()
             return
         }
+        val newUserFirstName = editFirstName.text.toString().trim()
+        val newUserLastName = editLastName.text.toString().trim()
+        val newUserDay = editDobDay.text.toString().trim()
+        val newUserMonth = editDobMonth.text.toString().trim()
+        val newUserYear = editDobYear.text.toString().trim()
+        val newUserPhoneNumber = editPhoneNumber.text.toString().trim()
+        val newUserSelectedGender = autoCompleteGenderTextView.text.toString().trim()
+        val newUserSelectedRole = autoCompleteRoleTextView.text.toString().trim()
+
+        val userId = intent.getStringExtra("uid") ?: ""
+        Toast.makeText(this, "user ID $userId", Toast.LENGTH_SHORT).show()
+
+
+        val userUpdate = mapOf(
+            "firstName" to newUserFirstName,
+//            "lastName" to newUserLastName ,
+//            "dateOfBirth" to ,
+//            "gender" to newUserSelectedGender,
+//            "phoneNumber" to newUserPhoneNumber,
+//            "role" to newUserSelectedRole,
+        )
+
+        firebaseHelper.adminUpdateUserInfo()
+
         Toast.makeText(this, "Works!", Toast.LENGTH_SHORT).show()
 
     }

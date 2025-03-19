@@ -35,7 +35,7 @@ class AdminUserFragment : Fragment() {
         recyclerView = view.findViewById(R.id.adminUsersListRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        adapter = AdminUserListAdapter(emptyList())
+        adapter = AdminUserListAdapter(mutableListOf(), mutableMapOf())
         recyclerView.adapter = adapter
 
         fetchUsersList()
@@ -45,12 +45,13 @@ class AdminUserFragment : Fragment() {
 
     private fun fetchUsersList() {
 
-        userFirebaseHelper.listenForUserUpdates { fetchedUserList ->
-            if (fetchedUserList.isNotEmpty()) {
-                userList = fetchedUserList
-                adapter.updateData(userList)
+        userFirebaseHelper.listenForUserUpdates { fetchedUserMap ->
+            if (fetchedUserMap.isNotEmpty()) {
+                val userList = fetchedUserMap.keys.toList()
+                val userIdMap = fetchedUserMap
+                adapter.updateData(userList, userIdMap)
             }else {
-                Toast.makeText(context ,"Error fetching classes", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context ,"No Users found", Toast.LENGTH_SHORT).show()
             }
         }
 

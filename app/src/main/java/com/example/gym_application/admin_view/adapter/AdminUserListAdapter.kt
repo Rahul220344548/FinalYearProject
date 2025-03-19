@@ -11,7 +11,10 @@ import com.example.gym_application.R
 import com.example.gym_application.admin_view.AdminUserEditorActivity
 import com.example.gym_application.model.UserDetails
 
-class AdminUserListAdapter ( private  var userList : List<UserDetails>) :
+class AdminUserListAdapter (
+    private  var userList : List<UserDetails>,
+    private val userIdMap: MutableMap<UserDetails, String>
+) :
 
     RecyclerView.Adapter<AdminUserListAdapter.ViewHolder>() {
 
@@ -30,12 +33,14 @@ class AdminUserListAdapter ( private  var userList : List<UserDetails>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = userList[position]
+        val userId = userIdMap[user] ?: ""
         holder.userName.text = "${user.firstName} ${user.lastName}"
         holder.userRole.text = user .role
 
         holder.itemView.setOnClickListener {
             val intent =
                 Intent(holder.itemView.context, AdminUserEditorActivity::class.java).apply {
+                    putExtra("uid", userId)
                     putExtra("firstName", user.firstName)
                     putExtra("lastName", user.lastName)
                     putExtra("dateOfBirth", user.dateOfBirth)
@@ -51,8 +56,10 @@ class AdminUserListAdapter ( private  var userList : List<UserDetails>) :
 
     override fun getItemCount(): Int = userList.size
 
-    fun updateData( newList: List<UserDetails>) {
+    fun updateData(newList: List<UserDetails>, newUserIdMap: Map<UserDetails, String>) {
         userList = newList
+        userIdMap.clear()
+        userIdMap.putAll(newUserIdMap)
         notifyDataSetChanged()
     }
 

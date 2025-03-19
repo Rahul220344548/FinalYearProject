@@ -65,25 +65,29 @@ class UserFirebaseDatabaseHelper {
 
     }
 
-    fun listenForUserUpdates(onDataChanged: (List<UserDetails>) -> Unit) {
+    fun listenForUserUpdates(onDataChanged: (Map<UserDetails, String>) -> Unit) {
         val userDatabase = FirebaseDatabase.getInstance().reference.child("users")
-
-        userDatabase.addValueEventListener( object : ValueEventListener {
+        userDatabase.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val userList = mutableListOf<UserDetails>()
+                val userMap = mutableMapOf<UserDetails, String>()
                 for (userSnapshot in snapshot.children) {
                     val user = userSnapshot.getValue(UserDetails::class.java)
-                    if (user != null && user.role != "Admin") {
+                    val userId = userSnapshot.key
+                    if (user != null && userId != null && user.role != "Admin") {
                         Log.d("User Fetch", "Fetched user name: ${user.firstName} ${user.lastName}")
-                        userList.add(user)
+                        userMap[user] = userId
                     }
                 }
-                onDataChanged(userList)
+                onDataChanged(userMap)
             }
+
             override fun onCancelled(error: DatabaseError) {
-                println("Error Fetching Classes: ${error.message}")
+                println("Error Fetching Users: ${error.message}")
             }
         })
+    }
+
+    fun adminUpdateUserInfo() {
 
 
     }
