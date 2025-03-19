@@ -183,33 +183,41 @@ class AdminUserEditorActivity : AppCompatActivity() {
     fun showMembershipContainer() {
 
         inRole = intent.getStringExtra("role")?:""
+
         if (inRole!="Member") {
             val membershipContainer = findViewById<View>(R.id.membershipStatusContainer)
             membershipContainer?.visibility = View.GONE
             return
         }
 
-        // Fetches User Membership Status and Displays Status Card
+        txtMembershipStatus = findViewById(R.id.AdminMembershipStatus)
+        txtMembershipType = findViewById(R.id.AdminMembershipTypeTitle)
+        txtPlanExpiration = findViewById(R.id.AdminMembershipExpiresEndDate)
 
         val userId = intent.getStringExtra("uid") ?: ""
-        firebaseHelper.fetchUserMembershipInfo(userId) { membershipInfo ->
-            txtMembershipStatus = findViewById(R.id.AdminMembershipStatus)
-            txtMembershipType = findViewById(R.id.AdminMembershipTypeTitle)
-            txtPlanExpiration = findViewById(R.id.AdminMembershipExpiresEndDate)
-            if (membershipInfo != null) {
-                if (membershipInfo.status == "active") {
 
-                    txtMembershipStatus.text = "${membershipInfo.status}".toUpperCase()
+        // Fetches User Membership Status and Displays Status Card
+        firebaseHelper.fetchUserMembershipInfo(userId) { membershipInfo ->
+            when {
+                membershipInfo == null -> {
+                    txtPlanExpiration.text = "Membership Not Purchased"
+                    txtMembershipType.visibility = View.GONE
+                    txtMembershipStatus.visibility = View.GONE
+                }
+                membershipInfo.status == "active" -> {
+
+                    txtMembershipStatus.text = membershipInfo.status.uppercase()
                     txtMembershipType.text = "${membershipInfo.title} - ${membershipInfo.duration} Plan"
-                    txtPlanExpiration.text = "${membershipInfo.expirationDate}"
-                    return@fetchUserMembershipInfo
-                }else {
-                    txtMembershipStatus.text = "Inactive"
+                    txtPlanExpiration.text = membershipInfo.expirationDate
+                    txtMembershipType.visibility = View.VISIBLE
+                    txtPlanExpiration.visibility = View.VISIBLE
+                }
+                else -> {
+                    txtPlanExpiration.text = "Inactive"
+                    txtMembershipType.visibility = View.GONE
+                    txtMembershipStatus.visibility = View.GONE
                 }
             }
-            txtMembershipStatus.visibility = View.GONE
-            txtMembershipType.visibility = View.GONE
-            txtPlanExpiration.text = "Inactive"
         }
 
     }
