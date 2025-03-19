@@ -1,12 +1,18 @@
 package com.example.gym_application.admin_view
 
+import FirebaseDatabaseHelper
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
@@ -16,6 +22,7 @@ import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.utils.ValidationUserFields
 import com.example.gym_application.utils.utilsSetUpSelectUserGender
 import com.example.gym_application.utils.utilsSetUpSelectUserRoles
+import com.google.android.material.button.MaterialButton
 import org.w3c.dom.Text
 
 class AdminUserEditorActivity : AppCompatActivity() {
@@ -33,6 +40,12 @@ class AdminUserEditorActivity : AppCompatActivity() {
     private lateinit var autoCompleteRoleTextView : AutoCompleteTextView
 
 
+    private lateinit var membershipStatusContainer : LinearLayout
+
+    private lateinit var txtMembershipStatus : TextView
+    private lateinit var txtMembershipType: TextView
+    private lateinit var txtPlanExpiration: TextView
+
     private lateinit var inName: String
     private lateinit var inLastName : String
     private lateinit var inDateOfBirth : String
@@ -47,6 +60,7 @@ class AdminUserEditorActivity : AppCompatActivity() {
     private lateinit var dobYear:String
 
     private val firebaseHelper = UserFirebaseDatabaseHelper()
+    private val classFirebareHelper = FirebaseDatabaseHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +77,7 @@ class AdminUserEditorActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GymEase"
 
-
+        showMembershipContainer()
 
         initalizeTextFields()
 
@@ -130,10 +144,79 @@ class AdminUserEditorActivity : AppCompatActivity() {
 
     }
 
+    fun onDeleteUserBtn(view : View) {
+        showDeleteUserDialog()
+    }
+
+    private fun showDeleteUserDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.delete_class_dialog_box, null)
+
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+        val btnCancelDialog = dialogView.findViewById<MaterialButton>(R.id.cancelbtn)
+        val btnConfirmDeletion = dialogView.findViewById<MaterialButton>(R.id.btnConfirmDelete)
+
+        btnCancelDialog.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        btnConfirmDeletion.setOnClickListener {
+            alertDialog.dismiss()
+
+        }
+    }
+
+    private fun deleteUserFromDatabase() {
+        val userId = intent.getStringExtra("uid") ?: ""
+        firebaseHelper.deleteUserAuthetication()
+
+        firebaseHelper.deleteUserData()
+
+    }
+
+    fun showMembershipContainer() {
+
+        inRole = intent.getStringExtra("role")?:""
+        if (inRole!="Member") {
+            val membershipContainer = findViewById<View>(R.id.membershipStatusContainer)
+            membershipContainer?.visibility = View.GONE
+            return
+        }
+
+        // Fetches User Membership Status and Displays Status Card
+
+        val userId = intent.getStringExtra("uid") ?: ""
+        firebaseHelper.fetchUserMembershipInfo(userId) { membershipInfo ->
+            txtMembershipStatus = findViewById(R.id.AdminMembershipStatus)
+            txtMembershipType = findViewById(R.id.AdminMembershipTypeTitle)
+            txtPlanExpiration = findViewById(R.id.AdminMembershipExpiresEndDate)
+            if (membershipInfo != null) {
+                if (membershipInfo.status == "active") {
+
+                    txtMembershipStatus.text = "${membershipInfo.status}".toUpperCase()
+                    txtMembershipType.text = "${membershipInfo.title} - ${membershipInfo.duration} Plan"
+                    txtPlanExpiration.text = "${membershipInfo.expirationDate}"
+                    return@fetchUserMembershipInfo
+                }else {
+                    txtMembershipStatus.text = "Inactive"
+                }
+            }
+            txtMembershipStatus.visibility = View.GONE
+            txtMembershipType.visibility = View.GONE
+            txtPlanExpiration.text = "Inactive"
+        }
+
+    }
+
     fun onCancelUserBtn(view: View) {
         finish()
     }
-
 
     private fun setDateOfBirthFields(dateOfBirth: String) {
 

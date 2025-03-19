@@ -3,6 +3,7 @@ package com.example.gym_application.controller
 import android.util.Log
 import android.widget.Toast
 import com.example.gym_application.model.ClassModel
+import com.example.gym_application.model.MembershipInfo
 import com.example.gym_application.model.UserClassBooking
 import com.example.gym_application.model.UserDetails
 import com.google.firebase.database.*
@@ -101,6 +102,41 @@ class UserFirebaseDatabaseHelper {
             }
     }
 
+    fun fetchUserMembershipInfo(userId: String, callback: (MembershipInfo?) -> Unit) {
 
+        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+
+        val membershipRef = databaseReference.child(userId).child("membershipDetails")
+
+        membershipRef.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                val membershipTitle = snapshot.child("membershipTitle").value?.toString() ?: "No Plan"
+                val membershipDuration = snapshot.child("membershipDuration").value?.toString() ?: "Unknown"
+                val membershipStatus = snapshot.child("membershipStatus").value?.toString()?.lowercase() ?: "inactive"
+                val expirationDate = snapshot.child("endDate").value?.toString() ?: "Unknown"
+
+                val membershipInfo = MembershipInfo(
+                    membershipTitle,
+                    membershipDuration,
+                    membershipStatus,
+                    expirationDate
+                )
+                callback(membershipInfo)
+            }else {
+                callback(null)
+            }
+        }.addOnFailureListener { error ->
+            callback(null)
+        }
+
+    }
+
+    fun deleteUserAuthetication() {
+
+    }
+
+    fun deleteUserData() {
+
+    }
 
 }
