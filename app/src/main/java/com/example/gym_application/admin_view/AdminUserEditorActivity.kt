@@ -55,9 +55,6 @@ class AdminUserEditorActivity : AppCompatActivity() {
 
     private var selectedGender: String = ""
     private var selectedRoles: String = ""
-    private lateinit var dobDay:String
-    private lateinit var dobMonth:String
-    private lateinit var dobYear:String
 
     private val firebaseHelper = UserFirebaseDatabaseHelper()
     private val classFirebareHelper = FirebaseDatabaseHelper()
@@ -168,16 +165,20 @@ class AdminUserEditorActivity : AppCompatActivity() {
 
         btnConfirmDeletion.setOnClickListener {
             alertDialog.dismiss()
-
+            deleteUserFromDatabase()
         }
     }
 
     private fun deleteUserFromDatabase() {
         val userId = intent.getStringExtra("uid") ?: ""
-        firebaseHelper.deleteUserAuthetication()
 
-        firebaseHelper.deleteUserData()
-
+        firebaseHelper.softDeleteUser(userId) { success ->
+            if (success) {
+                Toast.makeText(this, "User successfully soft deleted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Failed to soft delete user", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     fun showMembershipContainer() {

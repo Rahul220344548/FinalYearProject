@@ -17,6 +17,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.admin_view.AdminDashboardActivity
+import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -160,14 +161,33 @@ class MainActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-                    // Navigate to another activity (e.g., Dashboard) 
-                    startActivity(Intent(this, HomeActivity::class.java))
-                    finish()
+                    val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
+                    checkUserRoleAndStatus(userId)
                 } else {
                     Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    fun checkUserRoleAndStatus( userId : String) {
+
+        val firebaseHelper = UserFirebaseDatabaseHelper()
+
+        firebaseHelper.fetchAuthentication(userId) { isActive, role ->
+            if (!isActive) {
+                Toast.makeText(this, "Your account has been deactivated. Contact support.", Toast.LENGTH_LONG).show()
+            } else {
+
+                when (role) {
+                    "Admin" -> startActivity(Intent(this, AdminDashboardActivity::class.java))
+                    "Instructor" -> startActivity(Intent(this, SignUp::class.java))
+                    else -> startActivity(Intent(this, HomeActivity::class.java)) // Default for members
+                }
+                finish()
+            }
+        }
+
+
     }
 
     fun goToSignUpPage(view: View) {

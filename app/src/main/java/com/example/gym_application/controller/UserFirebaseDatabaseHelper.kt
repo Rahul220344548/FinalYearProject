@@ -6,10 +6,32 @@ import com.example.gym_application.model.ClassModel
 import com.example.gym_application.model.MembershipInfo
 import com.example.gym_application.model.UserClassBooking
 import com.example.gym_application.model.UserDetails
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 
 class UserFirebaseDatabaseHelper {
+
+    fun fetchAuthentication(userId: String, onComplete: (Boolean, String) -> Unit) {
+        val databaseRef = FirebaseDatabase.getInstance().getReference("users")
+        val auth = FirebaseAuth.getInstance()
+
+        databaseRef.child(userId).get().addOnSuccessListener { snapshot ->
+            val status = snapshot.child("status").value?.toString() ?: "active"
+            val role = snapshot.child("role").value?.toString() ?: "Member"
+
+            if (status == "inactive") {
+
+                auth.signOut()
+                onComplete(false, "inactive")
+            } else {
+                onComplete(true, role)
+            }
+        }.addOnFailureListener {
+            onComplete(false, "error")
+        }
+
+    }
 
     fun fetchUserCurrentBookings(userId : String, callback: (List<String>?) -> Unit) {
 
@@ -131,11 +153,17 @@ class UserFirebaseDatabaseHelper {
 
     }
 
-    fun deleteUserAuthetication() {
+    fun softDeleteUser(userId: String, onComplete: (Boolean) -> Unit) {
+        val userDatabase = FirebaseDatabase.getInstance().getReference("users")
+            .child(userId)
 
-    }
-
-    fun deleteUserData() {
+        userDatabase.child("status").setValue("inactive")
+            .addOnSuccessListener {
+                onComplete(true)
+            }
+            .addOnFailureListener { e ->
+                onComplete(false)
+            }
 
     }
 

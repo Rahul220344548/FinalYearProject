@@ -6,8 +6,9 @@ data class UserDetails(
     val dateOfBirth: String,
     val gender: String,
     val phoneNumber: String,
-    val role: String
+    val role: String,
+    val status: String = "active"
 ){
-    constructor() : this("","","","","","")
+    constructor() : this("","","","","","","active")
 }
 
