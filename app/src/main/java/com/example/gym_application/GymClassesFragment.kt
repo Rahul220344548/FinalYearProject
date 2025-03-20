@@ -27,7 +27,7 @@ class GymClassesFragment : Fragment() {
     private lateinit var classAdapter: GymClassesAdapter
 
     private var currentMonth: LocalDate = LocalDate.now()
-
+    //
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
