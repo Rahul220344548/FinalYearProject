@@ -21,6 +21,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.utils.ValidationUserFields
+import com.example.gym_application.utils.utilsSetUpSelectActivateUser
 import com.example.gym_application.utils.utilsSetUpSelectUserGender
 import com.example.gym_application.utils.utilsSetUpSelectUserRoles
 import com.google.android.material.button.MaterialButton
@@ -40,7 +41,7 @@ class AdminUserEditorActivity : AppCompatActivity() {
     private lateinit var autoCompleteGenderTextView: AutoCompleteTextView
     private lateinit var autoCompleteRoleTextView : AutoCompleteTextView
 
-
+    private lateinit var autoCompleteActivationTextView: AutoCompleteTextView
     private lateinit var activateBtn : Button
 
     private lateinit var txtMembershipStatus : TextView
@@ -56,6 +57,7 @@ class AdminUserEditorActivity : AppCompatActivity() {
 
     private var selectedGender: String = ""
     private var selectedRoles: String = ""
+    private var selectedStatus: String = ""
 
     private val firebaseHelper = UserFirebaseDatabaseHelper()
     private val classFirebareHelper = FirebaseDatabaseHelper()
@@ -78,7 +80,6 @@ class AdminUserEditorActivity : AppCompatActivity() {
         showMembershipContainer()
         showActivateButtonForInActiveUser()
         initalizeTextFields()
-
 
     }
 
@@ -275,6 +276,13 @@ class AdminUserEditorActivity : AppCompatActivity() {
         }
     }
 
+    private fun setUpSelectUserActivationdropdown(dialogView: View) {
+        autoCompleteActivationTextView = dialogView.findViewById(R.id.select_user_status_to_activate)
+        utilsSetUpSelectActivateUser(this, autoCompleteActivationTextView) { status ->
+            selectedStatus = status
+        }
+    }
+
     private fun validationFields() : String {
 
        return ValidationUserFields.validateUserFields(
@@ -311,6 +319,7 @@ class AdminUserEditorActivity : AppCompatActivity() {
     }
 
     fun onActivateBtn( view :View) {
+
         val dialogView = LayoutInflater.from(this).inflate(R.layout.inactive_user_container, null)
 
         val dialogBuilder = AlertDialog.Builder(this)
@@ -321,18 +330,46 @@ class AdminUserEditorActivity : AppCompatActivity() {
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         alertDialog.show()
 
+
+        setUpSelectUserActivationdropdown(dialogView)
+
         val btnCancelDialog = dialogView.findViewById<MaterialButton>(R.id.btnUserStatusCancel)
-        val btnConfirmDeletion = dialogView.findViewById<MaterialButton>(R.id.btnActivateUserConfirm)
+        val btnConfirm = dialogView.findViewById<MaterialButton>(R.id.btnActivateUserConfirm)
+
+        val autoCompleteActivationTextView = dialogView.findViewById<AutoCompleteTextView>(R.id.select_user_status_to_activate)
+
 
         btnCancelDialog.setOnClickListener {
             alertDialog.dismiss()
         }
 
-        btnConfirmDeletion.setOnClickListener {
-            alertDialog.dismiss()
+        btnConfirm.setOnClickListener {
+            val selectedStatus = autoCompleteActivationTextView.text.toString().trim()
 
+            if (selectedStatus.isEmpty()) {
+                Toast.makeText(this, "Please select a status before confirming!", Toast.LENGTH_SHORT).show()
+            } else {
+                alertDialog.dismiss()
+                updateUserActivationStatus(selectedStatus)
+            }
         }
 
     }
+
+    private fun updateUserActivationStatus(selectedStatus: String) {
+        val userId = intent.getStringExtra("uid") ?: ""
+
+        firebaseHelper.updateUserStatus(userId) { success ->
+            if (success) {
+                Toast.makeText(this, "User successfully activated", Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
+                Toast.makeText(this, "Failed to activate User!", Toast.LENGTH_SHORT).show()
+            }
+            }
+
+    }
+
+
 
 }

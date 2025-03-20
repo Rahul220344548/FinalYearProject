@@ -187,16 +187,17 @@ fun utilsSetUpSelectUserRoles(
 
 }
 
-//fun setupRadioGroupListener() {
-//    val radioGroup = findViewById<RadioGroup>(com.example.gym_application.R.id.radioGroup_ClassAvailabilityFor)
-//
-//    radioGroup.setOnCheckedChangeListener { _, checkedId ->
-//        val selectedValue = when (checkedId) {
-//            com.example.gym_application.R.id.radio_genderAll -> "all"
-//            com.example.gym_application.R.id.radio_genderMale -> "male"
-//            com.example.gym_application.R.id.radio_genderFemale -> "female"
-//            else -> ""
-//        }
-//
-//    }
-//}
+fun utilsSetUpSelectActivateUser(
+    context: Context,
+    autoCompleteActivationTextView : AutoCompleteTextView,
+    selectedStatus : (String) -> Unit,
+){
+    val status = context.resources.getStringArray(com.example.gym_application.R.array.statuses)
+    val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, status)
+    autoCompleteActivationTextView.setAdapter(arrayAdapter)
+
+    autoCompleteActivationTextView.setOnItemClickListener { parent, _, position, _ ->
+        val selected = parent.getItemAtPosition(position) as String
+        selectedStatus(selected)
+    }
+}

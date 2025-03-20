@@ -181,4 +181,18 @@ class UserFirebaseDatabaseHelper {
             onComplete(false, "Error fetching user status")
         }
     }
+
+    fun updateUserStatus(userId: String, onComplete: (Boolean) -> Unit) {
+        val userDatabase = FirebaseDatabase.getInstance().getReference("users")
+            .child(userId)
+
+        userDatabase.child("status").setValue("active")
+            .addOnSuccessListener {
+                onComplete(true)
+            }
+            .addOnFailureListener { e->
+                onComplete(false)
+            }
+
+    }
 }

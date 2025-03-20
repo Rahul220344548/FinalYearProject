@@ -32,6 +32,10 @@
         <item>Receptionist</item>
     </string-array>
 
+    <string-array name="statuses">
+        <item>active</item>
+    </string-array>
+
     <string-array name="startTimes">
         <item>9:00AM</item>
         <item>9:00AM</item>
