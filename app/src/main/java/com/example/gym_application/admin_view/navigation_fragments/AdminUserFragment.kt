@@ -27,7 +27,9 @@ class AdminUserFragment : Fragment() {
     private lateinit var searchView: SearchView
 
     private val userFirebaseHelper = UserFirebaseDatabaseHelper()
+
     private var userList : List<UserDetails> = emptyList()
+    private val userIdMap: MutableMap<UserDetails, String> = mutableMapOf()
 
     private lateinit var goToCreateStaffBtn : Button
 
@@ -41,6 +43,8 @@ class AdminUserFragment : Fragment() {
         goToCreateStaffBtn = view.findViewById(R.id.btnAddStaff)
 
         recyclerView = view.findViewById(R.id.adminUsersListRecyclerView)
+        searchView = view.findViewById(R.id.findUsersSearchView)
+
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         adapter = AdminUserListAdapter(mutableListOf(), mutableMapOf())
@@ -52,6 +56,19 @@ class AdminUserFragment : Fragment() {
             btnToNavigateToStaffCreation()
         }
 
+        searchView.clearFocus()
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterList(newText)
+                return true
+            }
+        })
+
+
         return view
     }
 
@@ -59,8 +76,9 @@ class AdminUserFragment : Fragment() {
 
         userFirebaseHelper.listenForUserUpdates { fetchedUserMap ->
             if (fetchedUserMap.isNotEmpty()) {
-                val userList = fetchedUserMap.keys.toList()
-                val userIdMap = fetchedUserMap
+                userList = fetchedUserMap.keys.toList()
+                userIdMap.clear()
+                userIdMap.putAll(fetchedUserMap)
                 adapter.updateData(userList, userIdMap)
             }else {
                 Toast.makeText(context ,"No Users found", Toast.LENGTH_SHORT).show()
@@ -72,6 +90,21 @@ class AdminUserFragment : Fragment() {
     fun btnToNavigateToStaffCreation() {
         val intent = Intent(requireActivity(), AdminAddStaff::class.java)
         startActivity(intent)
+    }
+
+    private fun filterList(query: String?) {
+        if (query.isNullOrEmpty()) {
+            adapter.updateData(userList, userIdMap)
+        }else {
+
+            val filteredList = userList.filter {
+                "${it.firstName} ${it.lastName}".contains(query.trim(), ignoreCase = true)
+            }
+            val filteredUserIdMap = userIdMap.filterKeys { it in filteredList }
+
+            adapter.updateData(filteredList, filteredUserIdMap)
+
+        }
     }
 
 }
