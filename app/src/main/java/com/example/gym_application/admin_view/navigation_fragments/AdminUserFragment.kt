@@ -1,15 +1,19 @@
 package com.example.gym_application.admin_view.navigation_fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
+import com.example.gym_application.admin_view.AdminAddStaff
+import com.example.gym_application.admin_view.CreateAClass
 import com.example.gym_application.admin_view.adapter.AdminUserListAdapter
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.UserDetails
@@ -25,12 +29,16 @@ class AdminUserFragment : Fragment() {
     private val userFirebaseHelper = UserFirebaseDatabaseHelper()
     private var userList : List<UserDetails> = emptyList()
 
+    private lateinit var goToCreateStaffBtn : Button
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_user, container, false)
+        val view = inflater.inflate(R.layout.fragment_admin_users, container, false)
+
+        goToCreateStaffBtn = view.findViewById(R.id.btnAddStaff)
 
         recyclerView = view.findViewById(R.id.adminUsersListRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -39,6 +47,10 @@ class AdminUserFragment : Fragment() {
         recyclerView.adapter = adapter
 
         fetchUsersList()
+
+        goToCreateStaffBtn.setOnClickListener {
+            btnToNavigateToStaffCreation()
+        }
 
         return view
     }
@@ -55,6 +67,11 @@ class AdminUserFragment : Fragment() {
             }
         }
 
-
     }
+
+    fun btnToNavigateToStaffCreation() {
+        val intent = Intent(requireActivity(), AdminAddStaff::class.java)
+        startActivity(intent)
+    }
+
 }

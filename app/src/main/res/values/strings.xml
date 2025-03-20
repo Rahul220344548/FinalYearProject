@@ -29,7 +29,6 @@
     <string-array name="roles">
         <item>Member</item>
         <item>Instructor</item>
-        <item>Receptionist</item>
     </string-array>
 
     <string-array name="statuses">

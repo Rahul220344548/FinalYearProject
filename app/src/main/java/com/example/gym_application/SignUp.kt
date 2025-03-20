@@ -198,7 +198,7 @@ class SignUp : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Failed to save user data: ${exception.message}", Toast.LENGTH_LONG).show()
-                exception.printStackTrace() // Print error log in Logcat
+                exception.printStackTrace()
             }
     }
 

@@ -12,6 +12,35 @@ import com.google.firebase.database.*
 
 class UserFirebaseDatabaseHelper {
 
+    fun createAccountInAuthentication(email: String, password: String, callback: (Boolean, String?) -> Unit) {
+
+        val auth = FirebaseAuth.getInstance()
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userId = auth.currentUser?.uid
+                    callback(true, userId)
+                } else {
+                    callback(false, task.exception?.message)
+                }
+            }
+    }
+
+    fun addAccountInUserDatabase(userId: String, userDetails: UserDetails, callback: (Boolean, String?) -> Unit) {
+
+        val userDatabase = FirebaseDatabase.getInstance().getReference("users")
+
+        userDatabase.child(userId).setValue(userDetails)
+            .addOnFailureListener {
+                callback(true,null)
+            }
+            .addOnFailureListener { exception ->
+                callback(false,exception.message)
+            }
+
+    }
+
     fun fetchAuthentication(userId: String, onComplete: (Boolean, String) -> Unit) {
         val databaseRef = FirebaseDatabase.getInstance().getReference("users")
         val auth = FirebaseAuth.getInstance()
