@@ -26,15 +26,19 @@ import com.example.gym_application.admin_view.navigation_fragments.AdminPaymentF
 import com.example.gym_application.admin_view.navigation_fragments.AdminUserFragment
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
+import com.google.firebase.auth.FirebaseAuth
 
 class AdminDashboardActivity : AppCompatActivity(), OnNavigationItemSelectedListener{
 
     private lateinit var drawerLayout : DrawerLayout
 
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_admin_dashboard)
+        auth = FirebaseAuth.getInstance()
 
         drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
@@ -63,15 +67,11 @@ class AdminDashboardActivity : AppCompatActivity(), OnNavigationItemSelectedList
             R.id.nav_membership -> replaceFragment(AdminMembershipFragment())
             R.id.nav_payment-> replaceFragment(AdminPaymentFragment())
                 R.id.nav_logout-> {
-                    val sharedPreferences = getSharedPreferences("your_prefs", Context.MODE_PRIVATE)
-                    val editor = sharedPreferences.edit()
-                    editor.clear()
-                    editor.apply()
+                    FirebaseAuth.getInstance().signOut()
                     Toast.makeText(this, "Logged out successfully!", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
-
                 }
         }
         drawerLayout.closeDrawer(GravityCompat.START)

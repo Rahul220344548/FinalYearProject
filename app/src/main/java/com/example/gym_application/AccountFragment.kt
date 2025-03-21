@@ -136,11 +136,6 @@ class AccountFragment : Fragment() {
 
     private fun signOutUser() {
         FirebaseAuth.getInstance().signOut()
-        val sharedPreferences = requireActivity().getSharedPreferences("your_prefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.clear()
-        editor.apply()
-
         Toast.makeText(context, "Logged out successfully!", Toast.LENGTH_SHORT).show()
         val intent = Intent(requireActivity(), MainActivity::class.java)
         startActivity(intent)
