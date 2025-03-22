@@ -1,12 +1,39 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:fillViewport="true">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".admin_view.AdminUserEditorActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Schedule List Fragment"
-        android:textSize="18sp"/>
-</LinearLayout>
+
+        <Button
+            android:id="@+id/btnAddNewSchedule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/peach"
+            android:drawableLeft="@drawable/baseline_add_24"
+            android:onClick="onCreateNewScheduleBtn"
+            android:text="Add Schedule"
+            android:textColor="@color/black"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/adminClassesListRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/btnAddNewSchedule"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/item_scheduled_classes"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

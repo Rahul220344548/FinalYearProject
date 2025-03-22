@@ -76,14 +76,15 @@ class CreateAClass : AppCompatActivity() {
 
         classLimit = findViewById<EditText>(R.id.editTextClassLimit)
         classAvailabilityForRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_ClassAvailabilityFor)
-        startDate = findViewById(R.id.auto_complete_starDate)
+//        startDate = findViewById(R.id.auto_complete_starDate)
 
         setUpSelectColordropdown()
         setUpSelectRoomdropdown()
         setUpSelectInstructordropdown()
-        setUpStartTimeDropdown()
-        setUpEndTimeDropdown()
-        setUpStartDate()
+
+//        setUpStartTimeDropdown()
+//        setUpEndTimeDropdown()
+//        setUpStartDate()
 
     }
 
@@ -103,20 +104,17 @@ class CreateAClass : AppCompatActivity() {
         val selectedGenderRadioButton = findViewById<RadioButton>(selectedGenderId)
         val genderRestriction = selectedGenderRadioButton.text.toString()
 
-        val startTime = autoCompleteStartTime.text.toString().trim()
-        val endTime = autoCompleteEndTime.text.toString().trim()
-
-        val startDate = startDate.text.toString().trim()
+//        val startTime = autoCompleteStartTime.text.toString().trim()
+//        val endTime = autoCompleteEndTime.text.toString().trim()
+//
+//        val startDate = startDate.text.toString().trim()
 
         val classId = database.push().key
         if (classId != null) {
             val newClass = ClassModel(classId,
                 title, description, selectedColor,
                 selectedRoom, selectedInstructor, capacity, 0, genderRestriction,
-                startTime, endTime,
-                startDate
             )
-
             database.child(classId).setValue(newClass)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Added Class Successfully", Toast.LENGTH_SHORT).show()
@@ -126,10 +124,11 @@ class CreateAClass : AppCompatActivity() {
                     autoCompleteRoomTextView.text.clear()
                     autoCompleteInstructorTextView.text.clear()
                     classAvailabilityForRadioGroup.clearCheck()
-                    autoCompleteStartTime.text.clear()
-                    autoCompleteEndTime.text.clear()
-                   this.startDate.text.clear()
                     finish()
+//                    autoCompleteStartTime.text.clear()
+//                    autoCompleteEndTime.text.clear()
+//                   this.startDate.text.clear()
+
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Error adding class: ${it.message}", Toast.LENGTH_SHORT).show()
@@ -202,12 +201,12 @@ class CreateAClass : AppCompatActivity() {
             description = classDescription.text.toString().trim(),
             capacity = classLimit.text.toString().trim(),
             selectedGenderId = classAvailabilityForRadioGroup.checkedRadioButtonId,
-            startTime = autoCompleteStartTime.text.toString().trim(),
-            endTime = autoCompleteEndTime.text.toString().trim(),
-            startDate = startDate.text.toString().trim(),
             selectedColor = selectedColor,
             selectedRoom = selectedRoom,
             selectedInstructor = selectedInstructor
+//                    startTime = autoCompleteStartTime.text.toString().trim(),
+//            endTime = autoCompleteEndTime.text.toString().trim(),
+//            startDate = startDate.text.toString().trim(),
         )
     }
 }

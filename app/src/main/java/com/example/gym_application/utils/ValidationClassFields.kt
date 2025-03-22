@@ -7,9 +7,6 @@ object ValidationClassFields {
         description: String,
         capacity: String,
         selectedGenderId: Int,
-        startTime: String,
-        endTime: String,
-        startDate: String,
         selectedColor: String,
         selectedRoom: String,
         selectedInstructor: String
@@ -42,13 +39,13 @@ object ValidationClassFields {
             return "Please select a gender restriction"
         }
 
-        if (!ValidationClassCreation.isValidTime(startTime, endTime)) {
-            return "Invalid time: Class duration must be 30 minutes or 1 hour"
-        }
-
-        if (!ValidationClassCreation.isValidScheduledDate(startDate)) {
-            return "Please pick a schedule date"
-        }
+//        if (!ValidationClassCreation.isValidTime(startTime, endTime)) {
+//            return "Invalid time: Class duration must be 30 minutes or 1 hour"
+//        }
+//
+//        if (!ValidationClassCreation.isValidScheduledDate(startDate)) {
+//            return "Please pick a schedule date"
+//        }
 
         return ""
     }

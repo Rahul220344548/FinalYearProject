@@ -79,7 +79,7 @@ class AdminClassEditorActivity : AppCompatActivity() {
         startDate = findViewById(R.id.auto_complete_starDate)
 
         initializeTextFields()
-        setUpClassScheduledropdown()
+//        setUpClassScheduledropdown()
 
     }
 
@@ -106,11 +106,11 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
                 setUpClassAvailabilityFor(classModel.classAvailabilityFor)
 
-                setUpStartTimedropdown()
-                autoCompleteStartTime.setText(classModel.classStartTime,false)
-
-                setUpEndTimedropdown()
-                autoCompleteEndTime.setText(classModel.classEndTime,false)
+//                setUpStartTimedropdown()
+//                autoCompleteStartTime.setText(classModel.classStartTime,false)
+//
+//                setUpEndTimedropdown()
+//                autoCompleteEndTime.setText(classModel.classEndTime,false)
 
             }else{
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
@@ -245,7 +245,6 @@ class AdminClassEditorActivity : AppCompatActivity() {
     private fun setUpClassAvailabilityFor(classAvailabilityFor: String) {
         classAvailabilityForRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_ClassAvailabilityFor)
 
-        val radioGroup = findViewById<RadioGroup>(R.id.radioGroup_ClassAvailabilityFor)
         val radioGenderAll = findViewById<RadioButton>(R.id.radio_genderAll)
         val radioGenderMale = findViewById<RadioButton>(R.id.radio_genderMale)
         val radioGenderFemale = findViewById<RadioButton>(R.id.radio_genderFemale)
@@ -258,20 +257,20 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
     }
 
-    private fun setUpStartTimedropdown() {
-        autoCompleteStartTime = findViewById(R.id.auto_complete_startTime)
-        utilsSetUpStartTimeDropdown(this, autoCompleteStartTime)
-    }
-
-    private fun setUpEndTimedropdown() {
-        autoCompleteEndTime = findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
-        utilsSetUpEndTimeDropdown(this,autoCompleteEndTime)
-    }
-
-    private fun setUpClassScheduledropdown() {
-        startDate = findViewById(R.id.auto_complete_starDate)
-        utilsSetUpClassScheduleDate(this,startDate)
-    }
+//    private fun setUpStartTimedropdown() {
+//        autoCompleteStartTime = findViewById(R.id.auto_complete_startTime)
+//        utilsSetUpStartTimeDropdown(this, autoCompleteStartTime)
+//    }
+//
+//    private fun setUpEndTimedropdown() {
+//        autoCompleteEndTime = findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
+//        utilsSetUpEndTimeDropdown(this,autoCompleteEndTime)
+//    }
+//
+//    private fun setUpClassScheduledropdown() {
+//        startDate = findViewById(R.id.auto_complete_starDate)
+//        utilsSetUpClassScheduleDate(this,startDate)
+//    }
 
     private fun validationFields() : String {
 
@@ -280,9 +279,6 @@ class AdminClassEditorActivity : AppCompatActivity() {
             description = txtClassDescription.text.toString().trim(),
             capacity = classLimit.text.toString().trim(),
             selectedGenderId = classAvailabilityForRadioGroup.checkedRadioButtonId,
-            startTime = autoCompleteStartTime.text.toString().trim(),
-            endTime = autoCompleteEndTime.text.toString().trim(),
-            startDate = startDate.text.toString().trim(),
             selectedColor = autoCompleteColorTextView.text.toString().trim(),
             selectedRoom = autoCompleteRoomTextView.text.toString().trim(),
             selectedInstructor = autoCompleteInstructorTextView.text.toString().trim()
