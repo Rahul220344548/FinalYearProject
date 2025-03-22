@@ -201,3 +201,20 @@ fun utilsSetUpSelectActivateUser(
         selectedStatus(selected)
     }
 }
+
+
+
+fun utilsSetUpSelectClassesOptionsDropdown(
+    context: Context,
+    classList: List<String>,
+    classOption : AutoCompleteTextView,
+    selectedClasses: (String) -> Unit
+) {
+    val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, classList)
+    classOption.setAdapter(arrayAdapter)
+
+    classOption.setOnItemClickListener { parent, _, position, _ ->
+        val selected = parent.getItemAtPosition(position) as String
+        selectedClasses(selected)
+    }
+}

@@ -6,6 +6,26 @@ import com.google.firebase.database.*
 
 class FirebaseDatabaseHelper {
 
+    fun fetchClassName(callback : (List<String>) -> Unit) {
+        val classDatabase = FirebaseDatabase.getInstance().getReference("classes")
+        val classOptionList = mutableListOf<String>()
+
+        classDatabase.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                for (classSnapshot in snapshot.children) {
+                    val classTitle = classSnapshot.child("classTitle").getValue(String::class.java) ?: ""
+                    classOptionList.add(classTitle)
+                }
+                callback(classOptionList)
+            }else {
+                callback(emptyList())
+            }
+        }.addOnFailureListener {
+            callback(emptyList())
+        }
+
+    }
+
     fun getClassesForDate(selectedDate: String, callback: (List<ClassModel>) -> Unit) {
         val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
         classDatabase.addListenerForSingleValueEvent(object : ValueEventListener {

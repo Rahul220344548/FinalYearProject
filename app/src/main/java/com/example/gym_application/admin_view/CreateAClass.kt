@@ -165,7 +165,7 @@ class CreateAClass : AppCompatActivity() {
         autoCompleteInstructorTextView = findViewById(R.id.auto_complete_instructor)
         userFirebaseHelper.fetchInstructors { instructorList ->
             utilsSetUpSelectInstructorDropdown(
-                context = this, // Pass the context
+                context = this,
                 instructorList = instructorList,
                 autoCompleteInstructorTextView = autoCompleteInstructorTextView,
                 selectedInstructor = { selected ->

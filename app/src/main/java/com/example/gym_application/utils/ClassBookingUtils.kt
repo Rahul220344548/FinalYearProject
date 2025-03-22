@@ -1,8 +1,12 @@
 package com.example.gym_application.utils
 
+import FirebaseDatabaseHelper
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.gym_application.R
@@ -33,7 +37,35 @@ object ClassBookingUtils {
         return (hours * 60) + minutes
     }
 
+    fun setUpStartTimeDropdown(context: Context, dialogView: View) {
+        val autoCompleteStartTime = dialogView.findViewById<AutoCompleteTextView>(R.id.auto_complete_startTime)
+        utilsSetUpStartTimeDropdown(context, autoCompleteStartTime)
+    }
 
+    fun setUpEndTimeDropdown(context: Context, dialogView: View) {
+        val autoCompleteEndTime = dialogView.findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
+        utilsSetUpEndTimeDropdown(context, autoCompleteEndTime)
+    }
+
+    fun setUpStartDate(context: Context, dialogView: View) {
+        val startDate = dialogView.findViewById<AutoCompleteTextView>(R.id.auto_complete_starDate)
+        utilsSetUpClassScheduleDate(context, startDate)
+    }
+
+    fun setUpSelectClassesOptionsDropdown(context: Context, dialogView: View) {
+        val classOption = dialogView.findViewById<AutoCompleteTextView>(R.id.select_class_for_schedule)
+        val classFirebaseHelper = FirebaseDatabaseHelper()
+
+        classFirebaseHelper.fetchClassName { classList ->
+            utilsSetUpSelectClassesOptionsDropdown(
+                context = context,
+                classList = classList,
+                classOption = classOption,
+                selectedClasses = { selected ->
+                }
+            )
+        }
+    }
 
 
 }

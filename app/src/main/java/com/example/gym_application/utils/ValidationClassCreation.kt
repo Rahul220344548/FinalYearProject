@@ -85,6 +85,10 @@ object ValidationClassCreation {
         }
     }
 
+    fun isValidSelectClassOptionName(selectedClassName : String?):Boolean {
+        return !selectedClassName.isNullOrEmpty()
+    }
+
     fun isValidOccurrences(occurrences: List<String>): Boolean {
         return occurrences.isNotEmpty()
     }
