@@ -8,6 +8,8 @@ object ValidationClassScheduleFields {
     @RequiresApi(Build.VERSION_CODES.O)
     fun validationClassScheduleFields(
         selectedClassName : String,
+        selectedRoom : String,
+        selectedInstructor : String,
         startTime: String,
         endTime: String,
         startDate: String
@@ -16,7 +18,12 @@ object ValidationClassScheduleFields {
         if (!ValidationClassCreation.isValidSelectClassOptionName(selectedClassName)) {
             return "Please select an Class Option"
         }
-
+        if (!ValidationClassCreation.isValidSelectRoom(selectedRoom)) {
+            return "Please select a Room"
+        }
+        if (!ValidationClassCreation.isValidSelectInstructor(selectedInstructor)) {
+            return "Please select an Instructor"
+        }
         if (!ValidationClassCreation.isValidTime(startTime, endTime)) {
             return "Invalid time: Class duration must be 30 minutes or 1 hour"
         }

@@ -2,15 +2,10 @@ package com.example.gym_application.utils
 
 import FirebaseDatabaseHelper
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.AutoCompleteTextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import com.example.gym_application.R
-import com.google.android.material.button.MaterialButton
+import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 
 object ClassBookingUtils {
 
@@ -76,5 +71,31 @@ object ClassBookingUtils {
         }
     }
 
+    fun setUpSelectRoomdropdown(
+        context: Context,
+        dialogView: View,
+        onRoomSelected: (String) -> Unit
+    ) {
+        val autoCompleteRoomView = dialogView.findViewById<AutoCompleteTextView>(R.id.auto_complete_schedule_room)
+        utilsSetUpSelectRoomDropdown(context,autoCompleteRoomView, onRoomSelected)
+    }
+
+    fun setUpSelectInstructordropdown(
+        context: Context,
+        dialogView: View,
+        selectedInstructor: (String) -> Unit
+    ){
+        val userFirebaseHelper = UserFirebaseDatabaseHelper()
+        val autoCompleteInstructorView = dialogView.findViewById<AutoCompleteTextView>(R.id.auto_complete_schedule_instructor)
+
+        userFirebaseHelper.fetchInstructors { instructorList ->
+            utilsSetUpSelectInstructorDropdown(
+                context = context,
+                instructorList = instructorList,
+                autoCompleteInstructorView,
+                selectedInstructor
+            )
+        }
+    }
 
 }

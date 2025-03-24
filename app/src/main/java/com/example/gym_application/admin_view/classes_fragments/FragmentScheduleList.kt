@@ -1,6 +1,6 @@
 package com.example.gym_application.admin_view.classes_fragments
 
-import FirebaseDatabaseHelper
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -21,19 +21,23 @@ import com.example.gym_application.utils.ClassBookingUtils
 import com.example.gym_application.utils.ValidationClassScheduleFields
 import com.google.android.material.button.MaterialButton
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 class FragmentScheduleList : Fragment() {
 
 
     private lateinit var btnAddNewSchedule : Button
 
     private lateinit var autoCompleteClassName : AutoCompleteTextView
+    private lateinit var autoCompleteClassLocation : AutoCompleteTextView
+    private lateinit var autoCompleteClassInstructor: AutoCompleteTextView
+
     private lateinit var autoCompleteStartTime: AutoCompleteTextView
     private lateinit var autoCompleteEndTime : AutoCompleteTextView
 
     private lateinit var startDate: AutoCompleteTextView
 
-    private var selectedClasses : String = ""
+    private var selectedRoom: String = ""
+    private var selectedInstructor: String = ""
 
     private val classTitleToIdMap = mutableMapOf<String, String>()
 
@@ -45,6 +49,8 @@ class FragmentScheduleList : Fragment() {
     ): View? {
 
         val view =  inflater.inflate(R.layout.fragment_schedule_list, container, false)
+
+
 
         btnAddNewSchedule = view.findViewById<Button>(R.id.btnAddNewSchedule)
 
@@ -74,19 +80,9 @@ class FragmentScheduleList : Fragment() {
         /*
         Setup dropdowns
          */
-        autoCompleteClassName = dialogView.findViewById(R.id.select_class_for_schedule)
-        autoCompleteStartTime = dialogView.findViewById(R.id.auto_complete_startTime)
-        autoCompleteEndTime = dialogView.findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
-        startDate = dialogView.findViewById(R.id.auto_complete_starDate)
 
-        ClassBookingUtils.setUpSelectClassesOptionsDropdown(requireContext(),dialogView,) { classMap ->
-            classTitleToIdMap.clear()
-            classTitleToIdMap.putAll(classMap)
-        }
 
-        ClassBookingUtils.setUpStartTimeDropdown(requireContext(),dialogView)
-        ClassBookingUtils.setUpEndTimeDropdown(requireContext(), dialogView)
-        ClassBookingUtils.setUpStartDate(requireContext(), dialogView)
+        setUpAllDropDownFields(dialogView)
 
         btnCancelDialog.setOnClickListener {
             alertDialog.dismiss()
@@ -107,8 +103,10 @@ class FragmentScheduleList : Fragment() {
             return
         }
 
-        val selectedClassTitle = autoCompleteClassName.text.toString()
+        val selectedClassTitle = autoCompleteClassName.text.toString().trim()
         val selectedClassId = classTitleToIdMap[selectedClassTitle]
+        val selectedClassLocation = autoCompleteClassLocation.text.toString().trim()
+        val selectedClassInstructor = autoCompleteClassInstructor.text.toString().trim()
 
         if (selectedClassId.isNullOrEmpty()) {
             Toast.makeText(context, "Invalid class selected.", Toast.LENGTH_SHORT).show()
@@ -122,6 +120,8 @@ class FragmentScheduleList : Fragment() {
 
         val newSchedule = Schedule(
             classId = selectedClassId,
+            classLocation = selectedClassLocation,
+            classInstructor = selectedClassInstructor,
             classStartTime = classStarTime,
             classEndTime = classEndTime,
             classStartDate = classStartDate,
@@ -154,10 +154,31 @@ class FragmentScheduleList : Fragment() {
     private fun validationFields():String{
         return ValidationClassScheduleFields.validationClassScheduleFields(
             selectedClassName = autoCompleteClassName.text.toString().trim(),
+            selectedRoom = autoCompleteClassLocation.text.toString().trim(),
+            selectedInstructor = autoCompleteClassInstructor.text.toString().trim(),
             startTime = autoCompleteStartTime.text.toString().trim(),
             endTime = autoCompleteEndTime.text.toString().trim(),
             startDate = startDate.text.toString().trim(),
         )
+    }
+
+    private fun setUpAllDropDownFields(dialogView: View) {
+        autoCompleteClassName = dialogView.findViewById(R.id.select_class_for_schedule)
+        autoCompleteClassLocation = dialogView.findViewById(R.id.auto_complete_schedule_room)
+        autoCompleteClassInstructor = dialogView.findViewById(R.id.auto_complete_schedule_instructor)
+        autoCompleteStartTime = dialogView.findViewById(R.id.auto_complete_startTime)
+        autoCompleteEndTime = dialogView.findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
+        startDate = dialogView.findViewById(R.id.auto_complete_starDate)
+
+        ClassBookingUtils.setUpSelectClassesOptionsDropdown(requireContext(),dialogView) { classMap ->
+            classTitleToIdMap.clear()
+            classTitleToIdMap.putAll(classMap)
+        }
+        ClassBookingUtils.setUpSelectRoomdropdown(requireContext(),dialogView) { selectedRoom -> }
+        ClassBookingUtils.setUpSelectInstructordropdown(requireContext(),dialogView) { selectedInstructor -> }
+        ClassBookingUtils.setUpStartTimeDropdown(requireContext(),dialogView)
+        ClassBookingUtils.setUpEndTimeDropdown(requireContext(), dialogView)
+        ClassBookingUtils.setUpStartDate(requireContext(), dialogView)
     }
 
 }
