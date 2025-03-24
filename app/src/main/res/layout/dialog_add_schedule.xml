@@ -44,19 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <EditText
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/editEmailBox"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:layout_marginStart="20sp"
-            android:backgroundTint="@color/indigo"
-            android:layout_marginBottom="30dp"
-            android:maxLines="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/forgotTitle" />
+
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -77,13 +65,79 @@
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/descRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            android:shadowColor="#AA000000"
+            android:text="ROOM"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutClass" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/select"
+            app:layout_constraintTop_toBottomOf="@+id/descRoom"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+            <AutoCompleteTextView
+                android:id="@+id/auto_complete_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:background="@drawable/dropdown_background"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/descInstructor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            android:shadowColor="#AA000000"
+            android:text="INSTRUCTOR"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutLocation" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutInstructor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/select"
+            app:layout_constraintTop_toBottomOf="@+id/descInstructor"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+            <AutoCompleteTextView
+                android:id="@+id/auto_complete_schedule_instructor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:background="@drawable/dropdown_background"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <include
             layout="@layout/class_schedule_information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/class_schedule_info"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayoutClass"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayoutInstructor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
