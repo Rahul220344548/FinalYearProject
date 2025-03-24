@@ -1,7 +1,11 @@
 package com.example.gym_application.utils
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+
 object ValidationClassScheduleFields {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun validationClassScheduleFields(
         selectedClassName : String,
         startTime: String,
@@ -20,6 +24,11 @@ object ValidationClassScheduleFields {
         if (!ValidationClassCreation.isValidScheduledDate(startDate)) {
             return "Please pick a schedule date"
         }
+
+        if (!ValidationClassCreation.isScheduleTimeInFuture(startDate, startTime)) {
+            return "Cannot schedule a class in the past!"
+        }
+
         return ""
     }
 

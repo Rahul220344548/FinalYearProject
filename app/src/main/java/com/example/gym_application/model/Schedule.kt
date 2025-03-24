@@ -6,5 +6,6 @@ data class Schedule(
     val classStartTime: String = "",
     val classEndTime: String = "",
     val classStartDate: String = "",
+    val classCurrentBookings : Int = 0,
     val status : String = "active",
 )

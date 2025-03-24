@@ -100,7 +100,8 @@ class UserFirebaseDatabaseHelper {
             if (snapshot.exists()) {
                 for (userSnapshot in snapshot.children) {
                     val role = userSnapshot.child("role").getValue(String::class.java)
-                    if (role == "Instructor") {
+                    val status = userSnapshot.child("status").getValue(String::class.java)?: ""
+                    if (role == "Instructor" && status == "active") {
                         val firstName = userSnapshot.child("firstName").getValue(String::class.java) ?: ""
                         val lastName = userSnapshot.child("lastName").getValue(String::class.java) ?: ""
                         val fullName = "$firstName $lastName"

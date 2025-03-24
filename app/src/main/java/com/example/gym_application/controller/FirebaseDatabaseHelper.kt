@@ -6,22 +6,25 @@ import com.google.firebase.database.*
 
 class FirebaseDatabaseHelper {
 
-    fun fetchClassName(callback : (List<String>) -> Unit) {
+    fun fetchClassName(callback: (Map<String, String>) -> Unit) {
         val classDatabase = FirebaseDatabase.getInstance().getReference("classes")
-        val classOptionList = mutableListOf<String>()
+        val classMap = mutableMapOf<String, String>()
 
         classDatabase.get().addOnSuccessListener { snapshot ->
             if (snapshot.exists()) {
                 for (classSnapshot in snapshot.children) {
+                    val classId = classSnapshot.child("classId").getValue(String::class.java) ?: ""
                     val classTitle = classSnapshot.child("classTitle").getValue(String::class.java) ?: ""
-                    classOptionList.add(classTitle)
+                    if (classId.isNotEmpty() && classTitle.isNotEmpty()) {
+                        classMap[classTitle] = classId
+                    }
                 }
-                callback(classOptionList)
+                callback(classMap)
             }else {
-                callback(emptyList())
+                callback(emptyMap())
             }
         }.addOnFailureListener {
-            callback(emptyList())
+            callback(emptyMap())
         }
 
     }

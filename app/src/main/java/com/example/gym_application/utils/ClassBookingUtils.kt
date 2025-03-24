@@ -52,18 +52,27 @@ object ClassBookingUtils {
         utilsSetUpClassScheduleDate(context, startDate)
     }
 
-    fun setUpSelectClassesOptionsDropdown(context: Context, dialogView: View) {
+    fun setUpSelectClassesOptionsDropdown(
+        context: Context,
+        dialogView: View,
+        onMapReady: (Map<String, String>) -> Unit
+        ) {
         val classOption = dialogView.findViewById<AutoCompleteTextView>(R.id.select_class_for_schedule)
         val classFirebaseHelper = FirebaseDatabaseHelper()
 
-        classFirebaseHelper.fetchClassName { classList ->
+        classFirebaseHelper.fetchClassName { classMap  ->
+
+            val classTitles = classMap.keys.toList()
+
             utilsSetUpSelectClassesOptionsDropdown(
                 context = context,
-                classList = classList,
+                classList = classTitles,
                 classOption = classOption,
                 selectedClasses = { selected ->
                 }
             )
+            onMapReady(classMap)
+
         }
     }
 

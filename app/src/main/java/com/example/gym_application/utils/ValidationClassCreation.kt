@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Calendar
@@ -113,6 +114,20 @@ object ValidationClassCreation {
         } catch (e: DateTimeParseException) {
 
             "Invalid date format"
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun isScheduleTimeInFuture(classDate: String, classTime: String): Boolean {
+
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+            val classDateTime = LocalDateTime.parse("$classDate $classTime", formatter)
+            val now = LocalDateTime.now()
+
+            classDateTime.isAfter(now)
+        } catch (e: Exception) {
+            false
         }
     }
 
