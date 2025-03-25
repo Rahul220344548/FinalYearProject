@@ -1,6 +1,4 @@
-import android.renderscript.Sampler.Value
-import android.util.Log
-import com.example.gym_application.model.ClassModel
+import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.model.ClassTemplate
 import com.example.gym_application.model.UserClassBooking
 import com.google.firebase.database.*
@@ -30,15 +28,15 @@ class FirebaseDatabaseHelper {
 
     }
 
-    fun getClassesForDate(selectedDate: String, callback: (List<ClassModel>) -> Unit) {
+    fun getClassesForDate(selectedDate: String, callback: (List<ClassWithScheduleModel>) -> Unit) {
         val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
         classDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val classList = mutableListOf<ClassModel>()
+                val classList = mutableListOf<ClassWithScheduleModel>()
                 for (classSnapshot in snapshot.children) {
-                    val classData = classSnapshot.getValue(ClassModel::class.java)
+                    val classData = classSnapshot.getValue(ClassWithScheduleModel::class.java)
                     classData?.let {
-                        if (it.classStartDate.contains(selectedDate)) { // Match with selected day
+                        if (it.classStartDate.contains(selectedDate)) {
                             classList.add(it)
                         }
                     }
@@ -174,7 +172,7 @@ class FirebaseDatabaseHelper {
             }
     }
 
-    fun getClassesFullDetails(classId: String , callback: (ClassModel?) -> Unit) {
+    fun getClassesFullDetails(classId: String , callback: (ClassWithScheduleModel?) -> Unit) {
 
         val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
             .child(classId)
@@ -182,7 +180,7 @@ class FirebaseDatabaseHelper {
         classDatabase.get().addOnSuccessListener { snapshot ->
 
             if (snapshot.exists()) {
-                val classDetails = snapshot.getValue(ClassModel::class.java)
+                val classDetails = snapshot.getValue(ClassWithScheduleModel::class.java)
                 callback(classDetails)
             }else {
                 callback(null)
@@ -216,49 +214,6 @@ class FirebaseDatabaseHelper {
     }
 
 
-    fun getClassInfobyId( classId: String , callback: (ClassModel?) -> Unit) {
-
-        val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
-            .child(classId)
-
-        classDatabase.get().addOnSuccessListener { snapshot ->
-
-            if (snapshot.exists()) {
-
-                val classTitle = snapshot.child("classTitle").value.toString()
-                val classDescription = snapshot.child("classDescription").value.toString()
-                val classColor = snapshot.child("classColor").value.toString()
-                val classRoom = snapshot.child("classLocation").value.toString()
-                val classInstructor = snapshot.child("classInstructor").value.toString()
-                val classMaxCapacity = snapshot.child("classMaxCapacity").value?.toString()?.toIntOrNull() ?: 0
-                val classAvailabilityFor = snapshot.child("classAvailabilityFor").value.toString()
-                val classStartTime = snapshot.child("classStartTime").value.toString()
-                val classEndTime =  snapshot.child("classEndTime").value.toString()
-
-                val classModel =  ClassModel (
-                    classId,
-                    classTitle,
-                    classDescription,
-                    classColor,
-                    classRoom,
-                    classInstructor,
-                    classMaxCapacity,
-                    0,
-                    classAvailabilityFor,
-                    classStartTime,
-                    classEndTime
-                )
-
-                callback(classModel)
-            }else {
-                callback(null)
-            }
-
-        }.addOnFailureListener {
-            callback(null)
-        }
-
-    }
 
     fun deleteClass (classId: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
 

@@ -111,7 +111,7 @@ class AdminClassEditorActivity : AppCompatActivity() {
             Toast.makeText(this, "Class Update Failed: $validationMessage", Toast.LENGTH_SHORT).show()
             return
         }
-        val title = txtClassTitle.text.toString()
+        val title = txtClassTitle.text.toString().trim()
         val description = txtClassDescription.text.toString().trim()
         val color = autoCompleteColorTextView.text.toString().trim()
         val capacity = classLimit.text.toString().toIntOrNull() ?: 0

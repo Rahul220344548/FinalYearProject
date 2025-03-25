@@ -3,14 +3,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.ClassDetailViewActivity
-import com.example.gym_application.MainActivity
 import com.example.gym_application.R
-import com.example.gym_application.model.ClassModel
+import com.example.gym_application.model.ClassWithScheduleModel
 
-class GymClassesAdapter(private var classList: List<ClassModel>) :
+class GymClassesAdapter(private var classList: List<ClassWithScheduleModel>) :
     RecyclerView.Adapter<GymClassesAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -29,6 +27,7 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val gymClass = classList[position]
+        holder.classTitle.text = gymClass.classLocation
         holder.classTitle.text = gymClass.classTitle
         holder.classStartTime.text = "${gymClass.classStartTime} - ${gymClass.classEndTime}"
 
@@ -46,6 +45,7 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
         // Set click listener
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ClassDetailViewActivity::class.java).apply {
+                putExtra("scheduleId",gymClass.scheduleId)
                 putExtra("classId", gymClass.classId)
                 putExtra("classTitle", gymClass.classTitle)
                 putExtra("classStartDate", gymClass.classStartDate)
@@ -72,7 +72,7 @@ class GymClassesAdapter(private var classList: List<ClassModel>) :
     }
 
 
-    fun updateData(newList: List<ClassModel>) {
+    fun updateData(newList: List<ClassWithScheduleModel>) {
         classList = newList.sortedBy { convertTimeToMinutes(it.classStartTime) }
         notifyDataSetChanged()
     }

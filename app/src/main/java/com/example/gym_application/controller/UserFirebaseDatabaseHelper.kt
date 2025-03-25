@@ -1,8 +1,6 @@
 package com.example.gym_application.controller
 
 import android.util.Log
-import android.widget.Toast
-import com.example.gym_application.model.ClassModel
 import com.example.gym_application.model.MembershipInfo
 import com.example.gym_application.model.UserClassBooking
 import com.example.gym_application.model.UserDetails
@@ -59,6 +57,29 @@ class UserFirebaseDatabaseHelper {
         }.addOnFailureListener {
             onComplete(false, "error")
         }
+
+    }
+
+    fun addUserBookedClassToCurrentBookings(
+        userId: String,
+        classId: String,
+        callback: (Boolean) -> Unit
+    ) {
+
+        val userDatabaseRef = FirebaseDatabase.getInstance().reference.child("users")
+            .child(userId)
+            .child("bookings")
+            .child("current")
+            .push()
+
+        val booking = UserClassBooking(classId)
+
+        userDatabaseRef.setValue(booking)
+            .addOnSuccessListener { callback(true) }
+            .addOnFailureListener { exception ->
+                exception.printStackTrace()
+                callback(false)
+            }
 
     }
 

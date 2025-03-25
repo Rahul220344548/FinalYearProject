@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.gym_application.controller.ScheduleFirebaseHelper
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.YearMonth
@@ -26,8 +27,9 @@ class GymClassesFragment : Fragment() {
     private lateinit var adapter: CalendarAdapter
     private lateinit var classAdapter: GymClassesAdapter
 
+    private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
     private var currentMonth: LocalDate = LocalDate.now()
-    //
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,8 +48,8 @@ class GymClassesFragment : Fragment() {
         adapter = CalendarAdapter { selectedDate ->
             val formattedDate = formatDate(selectedDate.toString());
 
-            FirebaseDatabaseHelper().getClassesForDate(formattedDate) { classList ->
-                classAdapter.updateData(classList) // Update RecyclerView
+            scheduleFirebaseHelper.fetchClassesForADate(formattedDate) { classList ->
+                classAdapter.updateData(classList)
             }
 
         }

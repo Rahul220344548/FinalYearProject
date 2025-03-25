@@ -8,12 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.controller.BookedClassesAdapter
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
-import com.example.gym_application.model.ClassModel
+import com.example.gym_application.model.ClassWithScheduleModel
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -63,7 +62,7 @@ class BookedClassesFragment : Fragment() {
 
     private fun fetchClassDetails(classIds : List<String>) {
 
-        val classDetailsList = mutableListOf<ClassModel>()
+        val classDetailsList = mutableListOf<ClassWithScheduleModel>()
 
         classIds.forEach { classId ->
             classFirebaseHelper.getClassesFullDetails(classId) { classDetails ->

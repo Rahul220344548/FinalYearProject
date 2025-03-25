@@ -1,4 +1,8 @@
 package com.example.gym_application.controller
+import android.content.Intent
+import com.example.gym_application.HomeActivity
+import com.example.gym_application.model.ClassTemplate
+import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.model.Schedule
 import com.google.firebase.database.*
 import kotlin.time.measureTime
@@ -47,6 +51,105 @@ class ScheduleFirebaseHelper {
         }
 
     }
+
+    fun fetchClassesForADate(selectedDate: String, callback: (List<ClassWithScheduleModel>) -> Unit) {
+
+        val database = FirebaseDatabase.getInstance().reference
+        val scheduleRef = database.child("schedules")
+        val classRef = database.child("classes")
+
+        fetchSchedulesForDate(scheduleRef, selectedDate) { schedules ->
+            fetchClassTemplates(classRef) { templates ->
+                val mergedClasses = mergeSchedulesWithTemplates(schedules, templates)
+                callback(mergedClasses)
+            }
+        }
+
+    }
+
+    private fun fetchSchedulesForDate(
+        scheduleRef: DatabaseReference,
+        selectedDate: String,
+        callback: (List<Schedule>) -> Unit
+    ) {
+        scheduleRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val schedules = snapshot.children.mapNotNull { it.getValue(Schedule::class.java) }
+                    .filter { it.classStartDate.contains(selectedDate) }
+                callback(schedules)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Error fetching schedules: ${error.message}")
+                callback(emptyList())
+            }
+        })
+    }
+
+    private fun fetchClassTemplates(
+        templateRef: DatabaseReference,
+        callback: (Map<String, ClassTemplate>) -> Unit
+    ) {
+        templateRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val templateMap = snapshot.children.mapNotNull {
+                    it.getValue(ClassTemplate::class.java)
+                }.associateBy { it.classId }
+
+                callback(templateMap)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Error fetching class templates: ${error.message}")
+                callback(emptyMap())
+            }
+        })
+    }
+
+
+    private fun mergeSchedulesWithTemplates(
+        schedules: List<Schedule>,
+        templates: Map<String, ClassTemplate>
+    ): List<ClassWithScheduleModel> {
+        return schedules.mapNotNull { schedule ->
+            val template = templates[schedule.classId]
+            template?.let {
+                ClassWithScheduleModel(
+                    scheduleId = schedule.scheduleId,
+                    classId = schedule.classId,
+                    classTitle = it.classTitle,
+                    classDescription = it.classDescription,
+                    classColor = it.classColor,
+                    classMaxCapacity = it.classMaxCapacity,
+                    classAvailabilityFor = it.classAvailabilityFor,
+                    classLocation = schedule.classLocation,
+                    classInstructor = schedule.classInstructor,
+                    classStartTime = schedule.classStartTime,
+                    classEndTime = schedule.classEndTime,
+                    classStartDate = schedule.classStartDate,
+                    classCurrentBookings = schedule.classCurrentBookings,
+                    status = schedule.status
+                )
+            }
+        }
+    }
+
+    fun incrementClassCurrentBookingInSchedules(
+        scheduleId: String,
+        currentBookingCount: Map<String, Any>,
+        callback: (Boolean) -> Unit) {
+
+        val schedulesRef = FirebaseDatabase.getInstance().getReference("schedules")
+            .child(scheduleId)
+        schedulesRef.updateChildren(currentBookingCount)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
 
 
 }

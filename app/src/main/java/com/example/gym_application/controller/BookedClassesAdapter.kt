@@ -9,10 +9,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.ClassDetailViewActivity
 import com.example.gym_application.R
-import com.example.gym_application.model.ClassModel
+import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.utils.ClassBookingUtils
 
-class BookedClassesAdapter (private var classList: List<ClassModel>) :
+class BookedClassesAdapter (private var classList: List<ClassWithScheduleModel>) :
     RecyclerView.Adapter<BookedClassesAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -66,7 +66,7 @@ class BookedClassesAdapter (private var classList: List<ClassModel>) :
 
     override fun getItemCount() = classList.size
 
-    fun updateData( newList : List<ClassModel>) {
+    fun updateData( newList : List<ClassWithScheduleModel>) {
         classList = newList.sortedBy { convertTimeToMinutes(it.classStartTime) }
         notifyDataSetChanged()
     }

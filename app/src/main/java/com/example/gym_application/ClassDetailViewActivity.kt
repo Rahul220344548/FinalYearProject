@@ -17,10 +17,21 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.UserClassBooking
 import com.example.gym_application.utils.ClassBookingUtils
-import com.example.gym_application.utils.ValidationClassCreation
+import com.example.gym_application.utils.utilsSetUpBookAndCancelButton
+import com.example.gym_application.utils.utilsSetUpClassAvailableFor
+import com.example.gym_application.utils.utilsSetUpClassDescription
+import com.example.gym_application.utils.utilsSetUpClassDuration
+import com.example.gym_application.utils.utilsSetUpClassInstructor
+import com.example.gym_application.utils.utilsSetUpClassLocation
+import com.example.gym_application.utils.utilsSetUpClassStartDate
+import com.example.gym_application.utils.utilsSetUpClassStartTime
+import com.example.gym_application.utils.utilsSetUpClassStatus
+import com.example.gym_application.utils.utilsSetUpClassTitle
+import com.example.gym_application.utils.utilsUpdateClassCurrentBookings
+import com.example.gym_application.utils.utilsValidateUserMembershipAndGender
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -31,22 +42,14 @@ import com.google.firebase.database.FirebaseDatabase
 @RequiresApi(Build.VERSION_CODES.O)
 class ClassDetailViewActivity : AppCompatActivity() {
 
-    private lateinit var txtClassTitle : TextView
-    private lateinit var txtClassScheduledDate : TextView
-    private lateinit var txtClassScheduledTime : TextView
-    private lateinit var txtclassLength : TextView
-    private lateinit var txtclassAvailability: TextView
-    private lateinit var txtClassRemainingSpot: TextView
-    private lateinit var txtClassLocation : TextView
-    private lateinit var txtClassInstructor : TextView
-    private lateinit var txtClassDescription : TextView
-
     private lateinit var database: FirebaseDatabase
     private lateinit var classRef: DatabaseReference
 
     private val userId = getCurrentUserId().toString()
     private val firebaseHelper = FirebaseDatabaseHelper()
+    private val userFirebaseHelper = UserFirebaseDatabaseHelper()
     private lateinit var classId: String
+    private lateinit var scheduleId : String
     private var currBookings: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,19 +61,56 @@ class ClassDetailViewActivity : AppCompatActivity() {
         backButton.setOnClickListener {
             onBackPressed()
         }
-
+        scheduleId = intent.getStringExtra("scheduleId")?:""
         classId = intent.getStringExtra("classId")?:""
         currBookings = intent.getIntExtra("classCurrentBookings",0)
 
         database = FirebaseDatabase.getInstance()
-        classRef = database.getReference("classes")
+        classRef = database.getReference("schedules")
 
-        setClassDetailInfo()
+        setUpScheduleInfo()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setUpScheduleInfo() {
+        val inClassTitle = intent.getStringExtra("classTitle")
+        val inClassStartDate = intent.getStringExtra("classStartDate") ?: "01/01/2000"
+        val inClassStartTime = intent.getStringExtra("classStartTime") ?: "00:00"
+        val inClassEndTime = intent.getStringExtra("classEndTime") ?: "00:00"
+        val classAvailabilityFor = intent.getStringExtra("classAvailabilityFor") ?: ""
+        val maxCapacity = intent.getIntExtra("classMaxCapacity",0)
+        val currBookings = intent.getIntExtra("classCurrentBookings",0)
+        val inClassLocation = intent.getStringExtra("classLocation") ?: ""
+        val inClassInstructor = intent.getStringExtra("classInstructor") ?: ""
+        val inClassDescription = intent.getStringExtra("classDescription") ?: ""
+
+        utilsSetUpClassTitle(this, inClassTitle)
+        utilsSetUpClassStartDate(this,inClassStartDate)
+        utilsSetUpClassStartTime(this,inClassStartTime,inClassEndTime)
+        utilsSetUpClassDuration(this,inClassStartTime,inClassEndTime)
+        utilsSetUpClassAvailableFor(this,classAvailabilityFor)
+        utilsSetUpClassStatus(this,maxCapacity,currBookings)
+        utilsSetUpClassLocation(this,inClassLocation)
+        utilsSetUpClassInstructor(this,inClassInstructor)
+        utilsSetUpClassDescription(this,inClassDescription)
+        utilsSetUpBookAndCancelButton(this,userId,classId)
+
     }
 
     fun btnBookClass(view: View) {
-        validateUserAndBookClass()
+        /**
+         * Dispalys error if user membership is not active
+         * Displays error if user is restricted to book class
+         */
 
+        val classAvailabilityFor = intent.getStringExtra("classAvailabilityFor") ?: ""
+        utilsValidateUserMembershipAndGender(
+            this,
+            classAvailabilityFor,
+            userId
+        ){
+            showBookClassDialog()
+        }
     }
 
     fun btnCancelBooking(view: View) {
@@ -101,31 +141,6 @@ class ClassDetailViewActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun validateUserAndBookClass() {
-        firebaseHelper.getUserMembershipStatus(userId) { membershipStatus ->
-            if ( membershipStatus != "active") {
-                Toast.makeText(this, "Activate your membership to book this class!"
-                    , Toast.LENGTH_LONG).show()
-                return@getUserMembershipStatus
-            }
-            val classAvailabilityFor = intent.getStringExtra("classAvailabilityFor").toString();
-            firebaseHelper.getUserGender(userId) { userGender ->
-                if (userGender != null) {
-                    if (ClassBookingUtils.canUserBookClass(classAvailabilityFor,userGender)) {
-                        showBookClassDialog()
-                    } else {
-                        Toast.makeText(this, "This class is only available for $classAvailabilityFor participants."
-                            , Toast.LENGTH_LONG).show()
-                        return@getUserGender
-                    }
-                } else {
-                    println("Unable to fetch user gender. Please try again.")
-                }
-            }
-        }
-
-    }
 
     private fun showBookClassDialog() {
 
@@ -164,163 +179,32 @@ class ClassDetailViewActivity : AppCompatActivity() {
         createClassBookingForUser()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setClassDetailInfo() {
-        setUpScheduleInfo()
-        setUpClassAvailableFor()
-        setUpClassStatus()
-        setUpClassLocation()
-        setUpClassInstructor()
-        setUpClassInstructor()
-        setUpClassDescription()
-        setUpBookAndCancelButton()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setUpScheduleInfo() {
-        setUpClassTitle()
-        setUpClassStartDate()
-        setUpClassTimes()
-        setUpClassDuration()
-    }
-
-    private fun setUpClassAvailableFor() {
-        val classAvailabilityFor = intent.getStringExtra("classAvailabilityFor")
-        txtclassAvailability = findViewById<TextView>(R.id.classAvailabilityFor)
-        if (classAvailabilityFor == "All") {
-            txtclassAvailability.text = classAvailabilityFor?.toUpperCase()
-        }else {
-            txtclassAvailability.text = "$classAvailabilityFor only"?.toUpperCase()
-        }
-    }
-
-    private fun setUpClassStatus() {
-
-        val maxCapacity = intent.getIntExtra("classMaxCapacity",0)
-        val remainingSpots = maxCapacity - currBookings
-        txtClassRemainingSpot =findViewById<TextView>(R.id.classRemainingSpots)
-        val btnBookClass = findViewById<Button>(R.id.btnBookClass)
-        // if class is full
-        if (currBookings >= maxCapacity) {
-            txtClassRemainingSpot.setTextColor(ContextCompat.getColor(this,R.color.red))
-            txtClassRemainingSpot.text = "Class Full"
-            btnBookClass.isEnabled = false
-            // hide button btnBookClass.visibility = View.INVISIBLE
-            return
-        }
-        txtClassRemainingSpot.text = "Available ($remainingSpots spots left)"
-        txtClassRemainingSpot.setTextColor(ContextCompat.getColor(this, R.color.available_green))
-        btnBookClass.isEnabled = true
-
-    }
-
-    private fun setUpClassLocation() {
-        val inClassLocation = intent.getStringExtra("classLocation")
-        txtClassLocation = findViewById<TextView>(R.id.classLocation)
-        txtClassLocation.text = inClassLocation
-
-    }
-
-    private fun setUpClassInstructor() {
-
-        val inClassInstructor = intent.getStringExtra("classInstructor")
-        txtClassInstructor =findViewById<TextView>(R.id.classInstructor)
-        txtClassInstructor.text = inClassInstructor
-
-    }
-
-    private fun setUpClassDescription() {
-        val inClassDescription = intent.getStringExtra("classDescription")
-        txtClassDescription = findViewById<TextView>(R.id.classDescription)
-        txtClassDescription.text = inClassDescription
-    }
-
-    private fun setUpClassTitle(){
-
-        val inClassTitle = intent.getStringExtra("classTitle")
-        txtClassTitle = findViewById<TextView>(R.id.classTitle)
-        txtClassTitle.text = inClassTitle?.toUpperCase()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setUpClassStartDate() {
-        val inClassStartDate = intent.getStringExtra("classStartDate") ?: "01/01/2000"
-        txtClassScheduledDate = findViewById<TextView>(R.id.classScheduledDate)
-        val formatDate = ValidationClassCreation.formatDate(inClassStartDate)
-        txtClassScheduledDate.text = formatDate
-    }
-    private fun setUpClassTimes() {
-        val inClassStartTime = intent.getStringExtra("classStartTime") ?: "00:00"
-        val inClassEndTime = intent.getStringExtra("classEndTime") ?: "00:00"
-
-        txtClassScheduledTime = findViewById<TextView>(R.id.classScheduledTime)
-        txtClassScheduledTime.text = "$inClassStartTime - $inClassEndTime"
-
-    }
-    private fun setUpClassDuration() {
-
-        val inClassStartTime = intent.getStringExtra("classStartTime") ?: "00:00"
-        val inClassEndTime = intent.getStringExtra("classEndTime") ?: "00:00"
-
-        val startMinutes = ValidationClassCreation.convertTimeToMinutes(inClassStartTime)
-        val endMinutes = ValidationClassCreation.convertTimeToMinutes(inClassEndTime)
-        val duration = endMinutes - startMinutes
-
-        txtclassLength = findViewById<TextView>(R.id.classLength)
-        txtclassLength.text = "$duration min"
-
-
-    }
-
     private fun getCurrentUserId(): String? {
         val user = FirebaseAuth.getInstance().currentUser
         return user?.uid
     }
 
-    private fun updateClassCurrentBooking(classId: String?){
-        val currentBookingCount = mapOf("classCurrentBookings" to currBookings+1)
-
-        classRef.child(classId?:"").updateChildren(currentBookingCount)
-            .addOnSuccessListener {
-                val intent = Intent(this, HomeActivity::class.java)
-                startActivity(intent)
-                finish()
-
-            }
-            .addOnFailureListener { error ->
-                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
 
     private fun createClassBookingForUser(){
-        database.reference.child("users").child(userId?:"").child("bookings").child("current").push().setValue(UserClassBooking(classId?:""))
-            .addOnSuccessListener {
-                updateClassCurrentBooking(classId)
-                Toast.makeText(this, "Successfully booked the class", Toast.LENGTH_LONG).show()
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "Failed to book the class: ${exception.message}", Toast.LENGTH_LONG).show()
-                exception.printStackTrace()
-            }
-    }
+        val validUserId = userId ?: return
+        val validClassId = classId ?: return
+        val validScheduleId = scheduleId
 
-    private fun setUpBookAndCancelButton() {
-        val btnBookClass = findViewById<Button>(R.id.btnBookClass)
-        val bookingConfirmTextView = findViewById<TextView>(R.id.bookingConfirmationText)
-        val btnCancelClass = findViewById<Button>(R.id.btnCancelClassBooking)
-
-        firebaseHelper.hasUserAlreadyBookedThisClass(userId,classId ?: "") { isBooked ->
-            if (isBooked) {
-                bookingConfirmTextView.visibility = View.VISIBLE
-                btnBookClass.visibility = View.GONE
-                btnCancelClass.visibility = View.VISIBLE
-            } else {
-                btnBookClass.isClickable = true
-                btnBookClass.isEnabled = true
-                btnBookClass.text = "Book Class"
+        userFirebaseHelper.addUserBookedClassToCurrentBookings( validUserId, validClassId) { success ->
+            if (success) {
+                val currentBookingCount = mapOf("classCurrentBookings" to currBookings+1)
+                utilsUpdateClassCurrentBookings(validScheduleId, currentBookingCount) { success ->
+                    if (success){
+                        Toast.makeText(this, "Successfully booked the class", Toast.LENGTH_LONG).show()
+                        finish()
+                    }
+                }
+            }else {
+                Toast.makeText(this, "Failed to book the class", Toast.LENGTH_LONG).show()
             }
         }
     }
+
 
     private fun showCancelClassDialog() {
 

@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.AdminClassEditorActivity
-import com.example.gym_application.ClassDetailViewActivity
 import com.example.gym_application.R
-import com.example.gym_application.model.ClassModel
 import com.example.gym_application.model.ClassTemplate
 
 
