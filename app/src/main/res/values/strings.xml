@@ -35,6 +35,12 @@
         <item>active</item>
     </string-array>
 
+    <string-array name="availabilityFor">
+        <item>All</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
     <string-array name="startTimes">
         <item>9:00AM</item>
         <item>9:00AM</item>

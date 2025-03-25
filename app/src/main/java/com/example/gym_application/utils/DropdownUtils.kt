@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.RadioGroup
 import android.widget.Toast
+import com.google.android.gms.common.GoogleApiAvailability
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -26,6 +27,24 @@ fun utilsSetUpSelectColorDropdown(
         val selected = parent.getItemAtPosition(position) as String
         selectedColor(selected)
     }
+
+}
+
+fun utilsSetUpSelectAvailabilityForDropdown(
+    context: Context,
+    autoCompleteAvailabilityFor : AutoCompleteTextView,
+    selectedAvailability: (String) -> Unit,
+){
+    val options = context.resources.getStringArray(com.example.gym_application.R.array.availabilityFor)
+    val arrayAdapter = ArrayAdapter(context, R.layout.simple_dropdown_item_1line, options)
+    autoCompleteAvailabilityFor.setAdapter(arrayAdapter)
+
+    autoCompleteAvailabilityFor.setOnItemClickListener { parent, _, position, _ ->
+        val selected = parent.getItemAtPosition(position) as String
+        selectedAvailability(selected)
+    }
+
+
 
 }
 

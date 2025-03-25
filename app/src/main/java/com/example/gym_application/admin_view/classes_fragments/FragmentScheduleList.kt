@@ -50,8 +50,6 @@ class FragmentScheduleList : Fragment() {
 
         val view =  inflater.inflate(R.layout.fragment_schedule_list, container, false)
 
-
-
         btnAddNewSchedule = view.findViewById<Button>(R.id.btnAddNewSchedule)
 
         btnAddNewSchedule.setOnClickListener {
@@ -76,11 +74,6 @@ class FragmentScheduleList : Fragment() {
 
         val btnCancelDialog = dialogView.findViewById<MaterialButton>(R.id.btnCancelScheduleDialog)
         val btnConfirm = dialogView.findViewById<MaterialButton>(R.id.btnAddScheduleDialog)
-
-        /*
-        Setup dropdowns
-         */
-
 
         setUpAllDropDownFields(dialogView)
 
@@ -148,8 +141,7 @@ class FragmentScheduleList : Fragment() {
         }
 
     }
-    // Duplication check
-    // Do Checks if schedule already exists at a specfic time
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun validationFields():String{
         return ValidationClassScheduleFields.validationClassScheduleFields(

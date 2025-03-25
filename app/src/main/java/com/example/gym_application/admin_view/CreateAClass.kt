@@ -1,5 +1,6 @@
 package com.example.gym_application.admin_view
 
+import FirebaseDatabaseHelper
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
@@ -12,12 +13,16 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.ClassModel
+import com.example.gym_application.model.ClassTemplate
+import com.example.gym_application.utils.ClassBookingUtils
 import com.example.gym_application.utils.ValidationClassCreation
+import com.example.gym_application.utils.ValidationClassCreationFields
 import com.example.gym_application.utils.ValidationClassFields
 import com.example.gym_application.utils.ValidationUtils
 import com.example.gym_application.utils.utilsSetUpClassScheduleDate
@@ -37,24 +42,17 @@ class CreateAClass : AppCompatActivity() {
     private lateinit var classDescription: EditText
     private lateinit var autoCompleteColorTextView: AutoCompleteTextView
 
-    private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
-    private lateinit var autoCompleteInstructorTextView: AutoCompleteTextView
+
     private lateinit var classLimit : EditText
-    private lateinit var classAvailabilityForRadioGroup : RadioGroup
+    private lateinit var autoCompleteclassAvailabilityFor : AutoCompleteTextView
 
-    private lateinit var autoCompleteStartTime: AutoCompleteTextView
-    private lateinit var autoCompleteEndTime : AutoCompleteTextView
-
-    private lateinit var startDate: AutoCompleteTextView
 
     private var selectedColor: String = ""
-    private var selectedRoom: String = ""
-    private var selectedInstructor: String = ""
+
+    private var selectedAvailability : String = ""
 
     private val database = FirebaseDatabase.getInstance().getReference("classes")
-    private val instructorDatabase = FirebaseDatabase.getInstance().getReference("users")
-
-    private val userFirebaseHelper = UserFirebaseDatabaseHelper()
+    private val classFirebaseHelper = FirebaseDatabaseHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,18 +71,19 @@ class CreateAClass : AppCompatActivity() {
 
         classTitle =  findViewById<EditText>(R.id.editTextClassTitle)
         classDescription = findViewById<EditText>(R.id.editTextClassDescription)
+        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
+        autoCompleteclassAvailabilityFor = findViewById(R.id.auto_complete_template_availability_for)
+        classLimit = findViewById<EditText>(R.id.class_template_limit)
 
-        classLimit = findViewById<EditText>(R.id.editTextClassLimit)
-        classAvailabilityForRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_ClassAvailabilityFor)
-//        startDate = findViewById(R.id.auto_complete_starDate)
+        ClassBookingUtils.setUpSelectClassColordropdown(this, autoCompleteColorTextView) { color ->
+            selectedColor = color
+        }
 
-        setUpSelectColordropdown()
-        setUpSelectRoomdropdown()
-        setUpSelectInstructordropdown()
+        ClassBookingUtils.setUpSelectAvailabilityFordropdown(this, autoCompleteclassAvailabilityFor) { availability ->
+            selectedAvailability = availability
+        }
 
-//        setUpStartTimeDropdown()
-//        setUpEndTimeDropdown()
-//        setUpStartDate()
+
 
     }
 
@@ -92,103 +91,48 @@ class CreateAClass : AppCompatActivity() {
         val validationMessage = validationFields()
 
         if (validationMessage.isNotEmpty()) {
-            Toast.makeText(this, "Class Creation failed!: $validationMessage", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Class Creation failed!: $validationMessage", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
         val title = classTitle.text.toString().trim()
         val description = classDescription.text.toString().trim()
+        val color = autoCompleteColorTextView.text.toString().trim()
         val capacity = classLimit.text.toString().trim().toIntOrNull() ?: 0
+        val availabilityFor = autoCompleteclassAvailabilityFor.text.toString().trim()
 
-        val selectedGenderId = classAvailabilityForRadioGroup.checkedRadioButtonId
-        val selectedGenderRadioButton = findViewById<RadioButton>(selectedGenderId)
-        val genderRestriction = selectedGenderRadioButton.text.toString()
+        Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show()
 
-//        val startTime = autoCompleteStartTime.text.toString().trim()
-//        val endTime = autoCompleteEndTime.text.toString().trim()
-//
-//        val startDate = startDate.text.toString().trim()
+        val classId = database.push().key ?: return
 
-        val classId = database.push().key
-        if (classId != null) {
-            val newClass = ClassModel(classId,
-                title, description, selectedColor,
-                selectedRoom, selectedInstructor, capacity, 0, genderRestriction,
-            )
-            database.child(classId).setValue(newClass)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Added Class Successfully", Toast.LENGTH_SHORT).show()
-                    classTitle.text.clear()
-                    classDescription.text.clear()
-                    autoCompleteColorTextView.text.clear()
-                    autoCompleteRoomTextView.text.clear()
-                    autoCompleteInstructorTextView.text.clear()
-                    classAvailabilityForRadioGroup.clearCheck()
-                    finish()
-//                    autoCompleteStartTime.text.clear()
-//                    autoCompleteEndTime.text.clear()
-//                   this.startDate.text.clear()
+        val newClassTemplate = ClassTemplate(
+            classId,
+            title,
+            description,
+            color,
+            capacity,
+            availabilityFor
+        )
 
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Error adding class: ${it.message}", Toast.LENGTH_SHORT).show()
-                }
-        }
-
-        Toast.makeText(this,"Added Class Successfully",Toast.LENGTH_SHORT).show()
-
+        classFirebaseHelper.createClassTemplate(
+            classId,
+            classTemplate = newClassTemplate,
+            onSuccess = {
+                Toast.makeText(this ,"Class created successfully!", Toast.LENGTH_SHORT).show()
+                finish()
+            },
+            onFailure = { exception ->
+                Toast.makeText(this, "Failed to create class: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+        )
     }
-
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
 
-    private fun setUpSelectColordropdown() {
-        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
-        utilsSetUpSelectColorDropdown(this, autoCompleteColorTextView ) { color ->
-            selectedColor = color
-        }
-    }
-
-    private fun setUpSelectRoomdropdown() {
-        autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
-        utilsSetUpSelectRoomDropdown(this,autoCompleteRoomTextView) { room ->
-            selectedRoom = room
-        }
-
-    }
-
-    private fun setUpSelectInstructordropdown() {
-
-        autoCompleteInstructorTextView = findViewById(R.id.auto_complete_instructor)
-        userFirebaseHelper.fetchInstructors { instructorList ->
-            utilsSetUpSelectInstructorDropdown(
-                context = this,
-                instructorList = instructorList,
-                autoCompleteInstructorTextView = autoCompleteInstructorTextView,
-                selectedInstructor = { selected ->
-                    selectedInstructor = selected
-                }
-            )
-        }
-    }
-
-    private fun setUpStartTimeDropdown() {
-        autoCompleteStartTime = findViewById(R.id.auto_complete_startTime)
-        utilsSetUpStartTimeDropdown(this, autoCompleteStartTime)
-    }
-
-    private fun setUpEndTimeDropdown() {
-        autoCompleteEndTime = findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
-        utilsSetUpEndTimeDropdown(this,autoCompleteEndTime)
-    }
-
-    private fun setUpStartDate() {
-        startDate = findViewById(R.id.auto_complete_starDate)
-        utilsSetUpClassScheduleDate(this,startDate)
-    }
 
     fun onCancelbtn(view: View){
         finish()
@@ -196,17 +140,12 @@ class CreateAClass : AppCompatActivity() {
 
     private fun validationFields() : String {
 
-        return ValidationClassFields.validateClassFields(
+        return ValidationClassCreationFields.validationClassCreationFields(
             title = classTitle.text.toString().trim(),
             description = classDescription.text.toString().trim(),
-            capacity = classLimit.text.toString().trim(),
-            selectedGenderId = classAvailabilityForRadioGroup.checkedRadioButtonId,
             selectedColor = selectedColor,
-            selectedRoom = selectedRoom,
-            selectedInstructor = selectedInstructor
-//                    startTime = autoCompleteStartTime.text.toString().trim(),
-//            endTime = autoCompleteEndTime.text.toString().trim(),
-//            startDate = startDate.text.toString().trim(),
+            capacity = classLimit.text.toString().trim(),
+            availabilityFor = selectedAvailability,
         )
     }
 }

@@ -13,7 +13,7 @@ import java.util.Locale
 object ValidationClassCreation {
 
     fun isValidClassTitle(title : String) : Boolean{
-        return title.length >2
+        return title.length >2  && !title.any { it.isDigit() }
     }
 
     fun isValidClassDescription(description: String): Boolean {

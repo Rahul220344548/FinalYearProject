@@ -1,15 +1,13 @@
 package com.example.gym_application.utils
 
-object ValidationClassFields {
+object ValidationClassCreationFields {
 
-    fun validateClassFields(
+    fun validationClassCreationFields(
         title: String,
         description: String,
-        capacity: String,
-        selectedGenderId: Int,
         selectedColor: String,
-        selectedRoom: String,
-        selectedInstructor: String
+        capacity: String,
+        availabilityFor: String
     ): String {
         if (!ValidationClassCreation.isValidClassTitle(title)) {
             return "Please enter a class Title (at least 3 characters)"
@@ -22,21 +20,12 @@ object ValidationClassFields {
         if (!ValidationClassCreation.isValidClassColor(selectedColor)) {
             return "Please select a class color"
         }
-
-        if (!ValidationClassCreation.isValidSelectRoom(selectedRoom)) {
-            return "Please select a Room"
-        }
-
-        if (!ValidationClassCreation.isValidSelectInstructor(selectedInstructor)) {
-            return "Please select an Instructor"
-        }
-
         if (!ValidationClassCreation.isValidCapacity(capacity)) {
             return "Please enter a valid class limit ( must be < 20 )"
         }
 
-        if (!ValidationClassCreation.isValidGenderSelection(selectedGenderId)) {
-            return "Please select a gender restriction"
+        if (!ValidationClassCreation.isValidClassColor(availabilityFor)) {
+            return "Please select a class avaliability option "
         }
 
         return ""

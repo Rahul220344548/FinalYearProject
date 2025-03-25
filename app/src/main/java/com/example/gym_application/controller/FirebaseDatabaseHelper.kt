@@ -1,6 +1,7 @@
 import android.renderscript.Sampler.Value
 import android.util.Log
 import com.example.gym_application.model.ClassModel
+import com.example.gym_application.model.ClassTemplate
 import com.example.gym_application.model.UserClassBooking
 import com.google.firebase.database.*
 
@@ -50,6 +51,16 @@ class FirebaseDatabaseHelper {
                 callback(emptyList()) // Return an empty list in case of failure
             }
         })
+    }
+
+    fun createClassTemplate( classId: String, classTemplate: ClassTemplate, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+
+        val databaseRef = FirebaseDatabase.getInstance().getReference("newClasses")
+
+        databaseRef.child(classId).setValue(classTemplate)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { exception -> onFailure (exception) }
+
     }
 
     fun hasUserAlreadyBookedThisClass(userId: String, classId: String, callback: (Boolean) -> Unit) {
