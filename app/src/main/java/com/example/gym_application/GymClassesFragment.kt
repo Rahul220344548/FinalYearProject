@@ -30,6 +30,11 @@ class GymClassesFragment : Fragment() {
     private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
     private var currentMonth: LocalDate = LocalDate.now()
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        scheduleFirebaseHelper.removeScheduleListener()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,13 +51,12 @@ class GymClassesFragment : Fragment() {
         classesRecyclerView.adapter = classAdapter
 
         adapter = CalendarAdapter { selectedDate ->
-            val formattedDate = formatDate(selectedDate.toString());
-
+            val formattedDate = formatDate(selectedDate.toString())
             scheduleFirebaseHelper.fetchClassesForADate(formattedDate) { classList ->
                 classAdapter.updateData(classList)
             }
-
         }
+
         recyclerView.adapter = adapter
 
         val ivCalendarPrevious: ImageView = view.findViewById(R.id.iv_calendar_previous)
@@ -60,10 +64,16 @@ class GymClassesFragment : Fragment() {
         val textDateMonth: TextView = view.findViewById(R.id.text_date_month)
 
         ivCalendarPrevious.setOnClickListener {
-            currentMonth = currentMonth.minusMonths(1)
-            updateMonthDisplay(textDateMonth)
-            updateRecyclerView()
+            val previousMonth = currentMonth.minusMonths(1)
+            val now = LocalDate.now().withDayOfMonth(1)
+
+            if (!previousMonth.isBefore(now)) {
+                currentMonth = previousMonth
+                updateMonthDisplay(textDateMonth)
+                updateRecyclerView()
+            }
         }
+
 
         ivCalendarNext.setOnClickListener {
             currentMonth = currentMonth.plusMonths(1)

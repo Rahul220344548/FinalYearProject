@@ -155,19 +155,16 @@ class FirebaseDatabaseHelper {
         }
     }
 
-    fun decrementClassCurrentBookings(classId: String, currentBookingCount: Map<String, Int>, callback: (Boolean) -> Unit) {
-        val classDatabase = FirebaseDatabase.getInstance().reference.child("classes").child(classId)
+    fun decrementClassCurrentBookings(scheduleId: String, currentBookingCount: Map<String, Int>, callback: (Boolean) -> Unit) {
+        val classDatabase = FirebaseDatabase.getInstance().reference.child("schedules").child(scheduleId)
 
-        // Convert Int values to Any? to match Firebase expectations
-        val updateData = currentBookingCount.mapValues { it.value as Any? } // ✅ Convert values properly
-
+        val updateData = currentBookingCount.mapValues { it.value as Any? }
         classDatabase.updateChildren(updateData)
             .addOnSuccessListener {
-                println("Successfully decremented bookings for class $classId")
                 callback(true)
             }
             .addOnFailureListener { error ->
-                println("Error decrementing bookings: ${error.message}") // ✅ Debugging output
+                println("Error decrementing bookings: ${error.message}")
                 callback(false)
             }
     }

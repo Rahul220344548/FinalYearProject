@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.FragmentManager
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -36,7 +37,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
-
+    val userId = auth.currentUser?.uid
     private val firebaseHelper = UserFirebaseDatabaseHelper()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -61,17 +62,23 @@ class HomeFragment : Fragment() {
 
         setUserName()
         checkMembershipStatus()
+        displayUpcomingBookings()
 
 
         val btnReJoin = view.findViewById<AppCompatButton>(R.id.btnReJoin)
         val btnPurchaseMembership = view.findViewById<AppCompatButton>(R.id.btnPurchaseMembership)
-
+        val btngoToBookClassPage = view.findViewById<Button>(R.id.buttonGoToClasses)
         btnReJoin.setOnClickListener {
             goToMembershipPage()
         }
         btnPurchaseMembership.setOnClickListener {
             goToMembershipPage()
         }
+
+        btngoToBookClassPage.setOnClickListener {
+            (activity as? HomeActivity)?.navigateToClassesTab()
+        }
+
         return view
     }
 
@@ -102,8 +109,6 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
 
     private fun checkMembershipStatus() {
-        val userId = auth.currentUser?.uid
-
         if (userId != null) {
             firebaseHelper.fetchUserMembershipInfo(userId) { membershipInfo ->
                 if (membershipInfo != null) {
@@ -122,6 +127,13 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun displayUpcomingBookings() {
+
+
+
+
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun formatExpirationDate(expirationDate : String): String {
         val inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.US)
@@ -131,6 +143,9 @@ class HomeFragment : Fragment() {
         return date.format(outputFormatter)
 
     }
+
+
+
 }
 
 

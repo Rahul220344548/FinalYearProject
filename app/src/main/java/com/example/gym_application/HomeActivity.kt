@@ -52,5 +52,9 @@ class HomeActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()
     }
 
+    fun navigateToClassesTab() {
+        bottomNavigationView.selectedItemId = R.id.bottom_class
+    }
+
 
 }

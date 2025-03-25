@@ -11,10 +11,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.example.gym_application.R
 import com.example.gym_application.controller.ScheduleFirebaseHelper
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 
 val classFirebaseHelper = FirebaseDatabaseHelper()
-val userFirebaseDatabaseHelper = UserFirebaseDatabaseHelper()
 val scheduleFirebaseHelper = ScheduleFirebaseHelper()
 
 fun utilsSetUpClassTitle(activity: Activity, classTitle: String?) {
@@ -66,7 +64,7 @@ fun utilsSetUpClassStatus(activity: Activity, maxCapacity: Int,currBookings : In
     if (currBookings >= maxCapacity) {
         txtClassRemainingSpot.setTextColor(ContextCompat.getColor(activity,R.color.red))
         txtClassRemainingSpot.text = "Class Full"
-        btnBookClass.isEnabled = false
+        btnBookClass.visibility = View.GONE
         return
     }
     txtClassRemainingSpot.text = "Available ($remainingSpots spots left)"

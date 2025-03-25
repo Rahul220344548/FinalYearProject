@@ -52,13 +52,14 @@ class ScheduleFirebaseHelper {
 
     }
 
-    fun fetchClassesForADate(selectedDate: String, callback: (List<ClassWithScheduleModel>) -> Unit) {
+    fun fetchClassesForADate(
+        selectedDate: String, callback: (List<ClassWithScheduleModel>) -> Unit) {
 
         val database = FirebaseDatabase.getInstance().reference
         val scheduleRef = database.child("schedules")
         val classRef = database.child("classes")
 
-        fetchSchedulesForDate(scheduleRef, selectedDate) { schedules ->
+        fetchSchedulesForDateLive(scheduleRef, selectedDate) { schedules ->
             fetchClassTemplates(classRef) { templates ->
                 val mergedClasses = mergeSchedulesWithTemplates(schedules, templates)
                 callback(mergedClasses)
@@ -67,12 +68,17 @@ class ScheduleFirebaseHelper {
 
     }
 
-    private fun fetchSchedulesForDate(
+    private var scheduleListener: ValueEventListener? = null
+    private lateinit var savedScheduleRef: DatabaseReference
+
+    fun fetchSchedulesForDateLive(
         scheduleRef: DatabaseReference,
         selectedDate: String,
         callback: (List<Schedule>) -> Unit
     ) {
-        scheduleRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        savedScheduleRef = scheduleRef
+
+        scheduleListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val schedules = snapshot.children.mapNotNull { it.getValue(Schedule::class.java) }
                     .filter { it.classStartDate.contains(selectedDate) }
@@ -83,8 +89,12 @@ class ScheduleFirebaseHelper {
                 println("Error fetching schedules: ${error.message}")
                 callback(emptyList())
             }
-        })
+        }
+
+        scheduleRef.addValueEventListener(scheduleListener!!)
     }
+
+
 
     private fun fetchClassTemplates(
         templateRef: DatabaseReference,
@@ -150,6 +160,11 @@ class ScheduleFirebaseHelper {
             }
     }
 
-
+    fun removeScheduleListener() {
+        scheduleListener?.let {
+            savedScheduleRef.removeEventListener(it)
+            scheduleListener = null
+        }
+    }
 
 }

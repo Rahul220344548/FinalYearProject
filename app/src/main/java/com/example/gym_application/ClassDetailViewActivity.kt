@@ -101,6 +101,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
         /**
          * Dispalys error if user membership is not active
          * Displays error if user is restricted to book class
+         * if valid then show dialog
          */
 
         val classAvailabilityFor = intent.getStringExtra("classAvailabilityFor") ?: ""
@@ -116,31 +117,6 @@ class ClassDetailViewActivity : AppCompatActivity() {
     fun btnCancelBooking(view: View) {
         showCancelClassDialog()
     }
-
-    private fun cancelUserCurrentBooking() {
-        val currentBookingCount = mapOf("classCurrentBookings" to currBookings-1)
-
-        firebaseHelper.deleteUserCurrentBookingById(userId, classId?:"") { success ->
-            if (success) {
-                Toast.makeText(this, "Your booking has been successfully canceled.", Toast.LENGTH_LONG).show()
-                firebaseHelper.decrementClassCurrentBookings(classId?:"", currentBookingCount) { decrementSuccess ->
-                    if (decrementSuccess) {
-
-                        val intent = Intent(this, HomeActivity::class.java)
-                        intent.putExtra("navigateToClassesFragment", true)
-                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        println("An Error cause: pLEASE CALL ADMIn")
-                    }
-                }
-            } else {
-                println("Failed to delete booking or booking not found.")
-            }
-        }
-    }
-
 
     private fun showBookClassDialog() {
 
@@ -170,20 +146,10 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
         btnConfirmBooking.setOnClickListener {
             alertDialog.dismiss()
-            confirmClassBooking()
+            createClassBookingForUser()
         }
 
     }
-
-    private fun confirmClassBooking() {
-        createClassBookingForUser()
-    }
-
-    private fun getCurrentUserId(): String? {
-        val user = FirebaseAuth.getInstance().currentUser
-        return user?.uid
-    }
-
 
     private fun createClassBookingForUser(){
         val validUserId = userId ?: return
@@ -201,6 +167,28 @@ class ClassDetailViewActivity : AppCompatActivity() {
                 }
             }else {
                 Toast.makeText(this, "Failed to book the class", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun cancelUserCurrentBooking() {
+        val validUserId = userId ?: return
+        val validClassId = classId ?: return
+        val validScheduleId = scheduleId
+
+        firebaseHelper.deleteUserCurrentBookingById(validUserId, validClassId) { success ->
+            if (success) {
+                val currentBookingCount = mapOf("classCurrentBookings" to currBookings-1)
+                firebaseHelper.decrementClassCurrentBookings(scheduleId, currentBookingCount) { decrementSuccess ->
+                    if (decrementSuccess) {
+                        Toast.makeText(this, "Your booking has been successfully canceled.", Toast.LENGTH_LONG).show()
+                        finish()
+                    } else {
+                        Toast.makeText(this, "An error occured: Please contact support!", Toast.LENGTH_LONG).show()
+                    }
+                }
+            } else {
+                println("Failed to delete booking or booking not found.")
             }
         }
     }
@@ -231,6 +219,11 @@ class ClassDetailViewActivity : AppCompatActivity() {
             alertDialog.dismiss()
             cancelUserCurrentBooking()
         }
+    }
+
+    private fun getCurrentUserId(): String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        return user?.uid
     }
 
     override fun onSupportNavigateUp(): Boolean {
