@@ -43,15 +43,6 @@
                 android:layout_height="wrap_content"
                 layout="@layout/class_basic_details" />
 
-            <include
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                layout="@layout/class_details_information"/>
-
-            <include
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                layout="@layout/class_schedule_information" />
 
             <LinearLayout
                 android:layout_width="match_parent"

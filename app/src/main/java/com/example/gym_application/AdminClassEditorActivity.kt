@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -18,16 +16,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
-import com.example.gym_application.utils.ValidationClassCreation
-import com.example.gym_application.utils.ValidationClassFields
-import com.example.gym_application.utils.utilsSetUpClassScheduleDate
-import com.example.gym_application.utils.utilsSetUpEndTimeDropdown
-import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
-import com.example.gym_application.utils.utilsSetUpSelectInstructorDropdown
-import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
-import com.example.gym_application.utils.utilsSetUpStartTimeDropdown
+import com.example.gym_application.utils.ClassBookingUtils
+import com.example.gym_application.utils.ValidationClassCreationFields
 import com.google.android.material.button.MaterialButton
+
 
 
 class AdminClassEditorActivity : AppCompatActivity() {
@@ -36,25 +28,20 @@ class AdminClassEditorActivity : AppCompatActivity() {
     private lateinit var txtClassDescription : TextView
 
     private lateinit var autoCompleteColorTextView: AutoCompleteTextView
-    private lateinit var autoCompleteRoomTextView : AutoCompleteTextView
-    private lateinit var autoCompleteInstructorTextView: AutoCompleteTextView
-
     private lateinit var classLimit : EditText
-    private lateinit var classAvailabilityForRadioGroup : RadioGroup
+    private lateinit var autoCompleteclassAvailabilityFor : AutoCompleteTextView
 
-    private lateinit var autoCompleteStartTime: AutoCompleteTextView
-    private lateinit var autoCompleteEndTime : AutoCompleteTextView
+    private lateinit var inClassTitle: String
+    private lateinit var inClassDescription : String
+    private lateinit var inColorTextView : String
+    private lateinit var inClassAvailabilityFor : String
 
-    private lateinit var startDate: AutoCompleteTextView
 
     private var selectedColor: String = ""
-    private var selectedRoom: String = ""
-    private var selectedInstructor: String = ""
-
+    private var selectedAvailability : String = ""
     private lateinit var classId: String
 
     private val firebaseHelper = FirebaseDatabaseHelper()
-    private val userFirebaseHelper = UserFirebaseDatabaseHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,50 +59,48 @@ class AdminClassEditorActivity : AppCompatActivity() {
         supportActionBar?.title = "GymEase"
 
         classId = intent.getStringExtra("classId")?:""
-
         txtClassTitle = findViewById<EditText>(R.id.editTextClassTitle)
         txtClassDescription = findViewById<EditText>(R.id.editTextClassDescription)
-        classLimit = findViewById<EditText>(R.id.editTextClassLimit)
-        startDate = findViewById(R.id.auto_complete_starDate)
+        classLimit = findViewById<EditText>(R.id.class_template_limit)
+        autoCompleteclassAvailabilityFor = findViewById(R.id.auto_complete_template_availability_for)
 
         initializeTextFields()
-//        setUpClassScheduledropdown()
 
     }
 
     private fun initializeTextFields() {
 
-        firebaseHelper.getClassInfobyId(classId) { classModel ->
-
-            if (classModel != null) {
-
-                txtClassTitle.setText(classModel.classTitle)
-                txtClassDescription.setText(classModel.classDescription)
-
-                setUpSelectColordropdown()
-                autoCompleteColorTextView.setText(classModel.classColor,false)
-
-                setUpSelectRoomdropdown()
-                autoCompleteRoomTextView.setText(classModel.classLocation, false)
-
-                setUpSelectInstructordropdown()
-                autoCompleteInstructorTextView.setText(classModel.classInstructor,false)
+        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
+        autoCompleteclassAvailabilityFor =
+            findViewById(R.id.auto_complete_template_availability_for)
 
 
-                classLimit.setText(classModel.classMaxCapacity.toString())
-
-                setUpClassAvailabilityFor(classModel.classAvailabilityFor)
-
-//                setUpStartTimedropdown()
-//                autoCompleteStartTime.setText(classModel.classStartTime,false)
-//
-//                setUpEndTimedropdown()
-//                autoCompleteEndTime.setText(classModel.classEndTime,false)
-
-            }else{
-                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
-            }
+        inColorTextView = intent.getStringExtra("classColor") ?: ""
+        autoCompleteColorTextView.setText(inColorTextView)
+        ClassBookingUtils.setUpSelectClassColordropdown(this, autoCompleteColorTextView) { color ->
+            selectedColor = color
         }
+
+        inClassAvailabilityFor = intent.getStringExtra("classAvailabilityFor") ?: ""
+        autoCompleteclassAvailabilityFor.setText(inClassAvailabilityFor)
+        ClassBookingUtils.setUpSelectAvailabilityFordropdown(
+            this,
+            autoCompleteclassAvailabilityFor
+        ) { availability ->
+            selectedAvailability = availability
+        }
+
+        inClassTitle = intent.getStringExtra("classTitle") ?: ""
+        txtClassTitle.setText(inClassTitle)
+
+        inClassDescription = intent.getStringExtra("classDescription") ?: ""
+        txtClassDescription.setText(inClassDescription)
+
+
+        val inClassLimit = intent.getIntExtra("classMaxCapacity", 0)
+        classLimit.setText(inClassLimit.toString())
+
+
     }
 
     fun onUpdateBtn( view: View) {
@@ -129,33 +114,15 @@ class AdminClassEditorActivity : AppCompatActivity() {
         val title = txtClassTitle.text.toString()
         val description = txtClassDescription.text.toString().trim()
         val color = autoCompleteColorTextView.text.toString().trim()
-        val room = autoCompleteRoomTextView.text.toString().trim()
-        val instructor = autoCompleteInstructorTextView.text.toString().trim()
         val capacity = classLimit.text.toString().toIntOrNull() ?: 0
-
-        val selectedRadioButtonId = classAvailabilityForRadioGroup.checkedRadioButtonId
-        val classAvailableFor = when (selectedRadioButtonId) {
-            R.id.radio_genderAll -> "All"
-            R.id.radio_genderMale -> "Male"
-            R.id.radio_genderFemale -> "Female"
-            else -> "unknown"
-        }
-
-        val startTime = autoCompleteStartTime.text.toString().trim()
-        val endTime = autoCompleteEndTime.text.toString().trim()
-        val classScheduleDate = startDate.text.toString().trim()
+        val classAvailableFor = autoCompleteclassAvailabilityFor.text.toString().trim()
 
         val classUpdate = mapOf (
             "classTitle" to title,
             "classDescription" to description,
             "classColor" to color,
-            "classLocation" to room,
-            "classInstructor" to instructor,
             "classMaxCapacity" to capacity,
             "classAvailabilityFor" to classAvailableFor,
-            "classStartTime" to startTime,
-            "classEndTime" to endTime,
-            "classStartDate" to classScheduleDate
         )
 
         firebaseHelper.updateClassDetails(classId, classUpdate) { success ->
@@ -213,75 +180,14 @@ class AdminClassEditorActivity : AppCompatActivity() {
             })
     }
 
-    private fun setUpSelectColordropdown() {
-        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
-        utilsSetUpSelectColorDropdown(this, autoCompleteColorTextView ) { color ->
-            selectedColor = color
-        }
-    }
-
-    private fun setUpSelectRoomdropdown() {
-        autoCompleteRoomTextView = findViewById(R.id.auto_complete_room)
-        utilsSetUpSelectRoomDropdown(this, autoCompleteRoomTextView) { room ->
-            selectedRoom = room
-        }
-    }
-
-    private fun setUpSelectInstructordropdown() {
-        autoCompleteInstructorTextView = findViewById(R.id.auto_complete_instructor)
-        userFirebaseHelper.fetchInstructors { instructorList ->
-            utilsSetUpSelectInstructorDropdown(
-                context = this, // Pass the context
-                instructorList = instructorList,
-                autoCompleteInstructorTextView = autoCompleteInstructorTextView,
-                selectedInstructor = { selected ->
-                    selectedInstructor = selected
-                }
-            )
-        }
-
-    }
-
-    private fun setUpClassAvailabilityFor(classAvailabilityFor: String) {
-        classAvailabilityForRadioGroup = findViewById<RadioGroup>(R.id.radioGroup_ClassAvailabilityFor)
-
-        val radioGenderAll = findViewById<RadioButton>(R.id.radio_genderAll)
-        val radioGenderMale = findViewById<RadioButton>(R.id.radio_genderMale)
-        val radioGenderFemale = findViewById<RadioButton>(R.id.radio_genderFemale)
-
-        when (classAvailabilityFor.lowercase()) {
-            "all" -> radioGenderAll.isChecked = true
-            "male" -> radioGenderMale.isChecked = true
-            "female" -> radioGenderFemale.isChecked = true
-        }
-
-    }
-
-//    private fun setUpStartTimedropdown() {
-//        autoCompleteStartTime = findViewById(R.id.auto_complete_startTime)
-//        utilsSetUpStartTimeDropdown(this, autoCompleteStartTime)
-//    }
-//
-//    private fun setUpEndTimedropdown() {
-//        autoCompleteEndTime = findViewById<AutoCompleteTextView>(R.id.auto_complete_endTime)
-//        utilsSetUpEndTimeDropdown(this,autoCompleteEndTime)
-//    }
-//
-//    private fun setUpClassScheduledropdown() {
-//        startDate = findViewById(R.id.auto_complete_starDate)
-//        utilsSetUpClassScheduleDate(this,startDate)
-//    }
-
     private fun validationFields() : String {
 
-        return ValidationClassFields.validateClassFields(
+        return ValidationClassCreationFields.validationClassCreationFields(
             title = txtClassTitle.text.toString().trim(),
             description = txtClassDescription.text.toString().trim(),
-            capacity = classLimit.text.toString().trim(),
-            selectedGenderId = classAvailabilityForRadioGroup.checkedRadioButtonId,
             selectedColor = autoCompleteColorTextView.text.toString().trim(),
-            selectedRoom = autoCompleteRoomTextView.text.toString().trim(),
-            selectedInstructor = autoCompleteInstructorTextView.text.toString().trim()
+            capacity = classLimit.text.toString().trim(),
+            availabilityFor = autoCompleteclassAvailabilityFor.text.toString().trim()
         )
     }
 

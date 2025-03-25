@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminBookingListAdapter
 import com.example.gym_application.model.ClassModel
+import com.example.gym_application.model.ClassTemplate
 
 
 class FragmentClassList : Fragment() {
@@ -24,7 +25,7 @@ class FragmentClassList : Fragment() {
     private lateinit var searchView : SearchView
 
     private val classFirebaseHelper = FirebaseDatabaseHelper()
-    private var classList : List<ClassModel> = emptyList()
+    private var classList : List<ClassTemplate> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

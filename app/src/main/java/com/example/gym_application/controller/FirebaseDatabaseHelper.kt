@@ -55,7 +55,7 @@ class FirebaseDatabaseHelper {
 
     fun createClassTemplate( classId: String, classTemplate: ClassTemplate, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
 
-        val databaseRef = FirebaseDatabase.getInstance().getReference("newClasses")
+        val databaseRef = FirebaseDatabase.getInstance().getReference("classes")
 
         databaseRef.child(classId).setValue(classTemplate)
             .addOnSuccessListener { onSuccess() }
@@ -196,14 +196,14 @@ class FirebaseDatabaseHelper {
 
     }
 
-    fun listenForClassUpdates(onDataChanged: (List<ClassModel>) -> Unit) {
+    fun listenForClassUpdates(onDataChanged: (List<ClassTemplate>) -> Unit) {
         val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
 
         classDatabase.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val classList = mutableListOf<ClassModel>()
+                val classList = mutableListOf<ClassTemplate>()
                 for (classSnapshot in snapshot.children) {
-                    val classData = classSnapshot.getValue(ClassModel::class.java)
+                    val classData = classSnapshot.getValue(ClassTemplate::class.java)
                     classData?.let { classList.add(it) }
                 }
                 onDataChanged(classList)

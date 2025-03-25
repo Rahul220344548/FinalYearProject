@@ -1,40 +1,21 @@
 package com.example.gym_application.admin_view
 
 import FirebaseDatabaseHelper
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
-import com.example.gym_application.model.ClassModel
 import com.example.gym_application.model.ClassTemplate
 import com.example.gym_application.utils.ClassBookingUtils
-import com.example.gym_application.utils.ValidationClassCreation
 import com.example.gym_application.utils.ValidationClassCreationFields
-import com.example.gym_application.utils.ValidationClassFields
-import com.example.gym_application.utils.ValidationUtils
-import com.example.gym_application.utils.utilsSetUpClassScheduleDate
-import com.example.gym_application.utils.utilsSetUpEndTimeDropdown
-import com.example.gym_application.utils.utilsSetUpSelectColorDropdown
-import com.example.gym_application.utils.utilsSetUpSelectInstructorDropdown
-import com.example.gym_application.utils.utilsSetUpSelectRoomDropdown
-import com.example.gym_application.utils.utilsSetUpStartTimeDropdown
 import com.google.firebase.database.FirebaseDatabase
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 class CreateAClass : AppCompatActivity() {
 
@@ -69,21 +50,8 @@ class CreateAClass : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GymEase"
 
-        classTitle =  findViewById<EditText>(R.id.editTextClassTitle)
-        classDescription = findViewById<EditText>(R.id.editTextClassDescription)
-        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
-        autoCompleteclassAvailabilityFor = findViewById(R.id.auto_complete_template_availability_for)
-        classLimit = findViewById<EditText>(R.id.class_template_limit)
 
-        ClassBookingUtils.setUpSelectClassColordropdown(this, autoCompleteColorTextView) { color ->
-            selectedColor = color
-        }
-
-        ClassBookingUtils.setUpSelectAvailabilityFordropdown(this, autoCompleteclassAvailabilityFor) { availability ->
-            selectedAvailability = availability
-        }
-
-
+        setUpAlldropdown()
 
     }
 
@@ -101,8 +69,6 @@ class CreateAClass : AppCompatActivity() {
         val color = autoCompleteColorTextView.text.toString().trim()
         val capacity = classLimit.text.toString().trim().toIntOrNull() ?: 0
         val availabilityFor = autoCompleteclassAvailabilityFor.text.toString().trim()
-
-        Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show()
 
         val classId = database.push().key ?: return
 
@@ -148,4 +114,22 @@ class CreateAClass : AppCompatActivity() {
             availabilityFor = selectedAvailability,
         )
     }
+
+    private fun setUpAlldropdown() {
+        classTitle =  findViewById<EditText>(R.id.editTextClassTitle)
+        classDescription = findViewById<EditText>(R.id.editTextClassDescription)
+        autoCompleteColorTextView = findViewById(R.id.auto_complete_txt)
+        autoCompleteclassAvailabilityFor = findViewById(R.id.auto_complete_template_availability_for)
+        classLimit = findViewById<EditText>(R.id.class_template_limit)
+
+        ClassBookingUtils.setUpSelectClassColordropdown(this, autoCompleteColorTextView) { color ->
+            selectedColor = color
+        }
+
+        ClassBookingUtils.setUpSelectAvailabilityFordropdown(this, autoCompleteclassAvailabilityFor) { availability ->
+            selectedAvailability = availability
+        }
+
+    }
+
 }

@@ -10,9 +10,10 @@ import com.example.gym_application.AdminClassEditorActivity
 import com.example.gym_application.ClassDetailViewActivity
 import com.example.gym_application.R
 import com.example.gym_application.model.ClassModel
+import com.example.gym_application.model.ClassTemplate
 
 
-class AdminBookingListAdapter ( private  var classList : List<ClassModel>)  :
+class AdminBookingListAdapter ( private  var classList : List<ClassTemplate>)  :
     RecyclerView.Adapter<AdminBookingListAdapter.ViewHolder>() {
 
     class ViewHolder ( view: View) : RecyclerView.ViewHolder(view) {
@@ -36,16 +37,10 @@ class AdminBookingListAdapter ( private  var classList : List<ClassModel>)  :
                 Intent(holder.itemView.context, AdminClassEditorActivity::class.java).apply {
                     putExtra("classId", bookingListItem.classId)
                     putExtra("classTitle", bookingListItem.classTitle)
-                    putExtra("classStartDate", bookingListItem.classStartDate)
-                    putExtra("classStartTime", bookingListItem.classStartTime)
-                    putExtra("classEndTime", bookingListItem.classEndTime)
-                    putExtra("classLocation", bookingListItem.classLocation)
-                    putExtra("classAvailabilityFor", bookingListItem.classAvailabilityFor)
-                    putExtra("classInstructor",bookingListItem.classInstructor)
-                    putExtra("classCurrentBookings", bookingListItem.classCurrentBookings)
-                    putExtra("classMaxCapacity", bookingListItem.classMaxCapacity)
                     putExtra("classDescription", bookingListItem.classDescription)
-
+                    putExtra("classColor", bookingListItem.classColor)
+                    putExtra("classMaxCapacity", bookingListItem.classMaxCapacity)
+                    putExtra("classAvailabilityFor", bookingListItem.classAvailabilityFor)
                 }
             holder.itemView.context.startActivity(intent)
         }
@@ -53,7 +48,7 @@ class AdminBookingListAdapter ( private  var classList : List<ClassModel>)  :
 
     override fun getItemCount(): Int = classList.size
 
-    fun updateData( newList: List<ClassModel>) {
+    fun updateData( newList: List<ClassTemplate>) {
         classList = newList
         notifyDataSetChanged()
     }
