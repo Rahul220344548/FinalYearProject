@@ -10,9 +10,9 @@
         android:layout_marginTop="15dp"
         android:background="@drawable/linear_layout_class_upcoming"
         android:padding="10dp"
-        >
-<!--        android:visibility="gone"-->
+        android:visibility="gone">
 
+<!--        android:visibility="gone"-->
         <ImageView
             android:id="@+id/imgUpcomingClassArrow"
             android:layout_width="50dp"
@@ -33,7 +33,7 @@
             android:orientation="vertical"
             android:padding="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/imageView2"
+            app:layout_constraintEnd_toStartOf="@id/imgUpcomingClassArrow"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/baseline_access_time_24"
-                android:text="Strength surge"
+                android:text="title"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -51,20 +51,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="Feb 12th" />
+                android:text="date" />
 
             <TextView
                 android:id="@+id/txtUpcomingClassTimes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="18:00 - 19:00"
+                android:text="times"
                 android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/txtUpcomingClassLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Studio A"
+                android:text="location"
                 android:textSize="20sp"/>
         </LinearLayout>
 
