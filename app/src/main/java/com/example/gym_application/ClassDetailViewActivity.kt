@@ -93,7 +93,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
         utilsSetUpClassLocation(this,inClassLocation)
         utilsSetUpClassInstructor(this,inClassInstructor)
         utilsSetUpClassDescription(this,inClassDescription)
-        utilsSetUpBookAndCancelButton(this,userId,classId)
+        utilsSetUpBookAndCancelButton(this,userId,scheduleId)
 
     }
 
@@ -156,7 +156,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
         val validClassId = classId ?: return
         val validScheduleId = scheduleId
 
-        userFirebaseHelper.addUserBookedClassToCurrentBookings( validUserId, validClassId) { success ->
+        userFirebaseHelper.addUserBookedClassToCurrentBookings( validUserId, validClassId,validScheduleId) { success ->
             if (success) {
                 val currentBookingCount = mapOf("classCurrentBookings" to currBookings+1)
                 utilsUpdateClassCurrentBookings(validScheduleId, currentBookingCount) { success ->

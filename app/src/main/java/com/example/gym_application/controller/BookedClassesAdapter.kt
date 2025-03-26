@@ -18,10 +18,7 @@ class BookedClassesAdapter (private var classList: List<ClassWithScheduleModel>)
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val bookedClassTitle: TextView = view.findViewById(R.id.recyBookedClassTitle)
-        val bookedClassStartTime: TextView = view.findViewById(R.id.recyBookedStartTime)
-        val bookedClassLength : TextView = view.findViewById(R.id.recyBookedLength)
-        val bookedClassStartDate: TextView = view.findViewById(R.id.recyBookedStartDate)
-
+        val bookedClassDate: TextView = view.findViewById(R.id.recyBookedClassDate)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,18 +31,11 @@ class BookedClassesAdapter (private var classList: List<ClassWithScheduleModel>)
 
         val bookedClass = classList[position]
         holder.bookedClassTitle.text = bookedClass.classTitle
-        holder.bookedClassStartTime.text = "${bookedClass.classStartTime} - ${bookedClass.classEndTime}"
-        
-        val startMinutes = ClassBookingUtils.convertTimeToMinutes(bookedClass.classStartTime)
-        val endMinutes =  ClassBookingUtils.convertTimeToMinutes(bookedClass.classEndTime)
-        val durationMinutes = endMinutes - startMinutes
-        
-        holder.bookedClassLength.text = "$durationMinutes min"
-        
-        holder.bookedClassStartDate.text = "Start Date: ${bookedClass.classStartDate}"
-        
+        holder.bookedClassDate.text = bookedClass.classStartDate
+
         holder.itemView.setOnClickListener{
             val intent = Intent(holder.itemView.context, ClassDetailViewActivity::class.java).apply {
+                putExtra("scheduleId",bookedClass.scheduleId)
                 putExtra("classId", bookedClass.classId)
                 putExtra("classTitle", bookedClass.classTitle)
                 putExtra("classStartDate", bookedClass.classStartDate)

@@ -49,26 +49,24 @@ class BookedClassesFragment : Fragment() {
 
 
     private fun fetchUserCurrentBookings() {
-        userFirebaseHelper.fetchUserCurrentBookings(userId?:"") { fetchedClassId ->
-            if (fetchedClassId != null) {
-                fetchClassDetails(fetchedClassId)
+        userFirebaseHelper.fetchUserCurrentBookingsAsPairs(userId ?: "") { bookings ->
+            if (!bookings.isNullOrEmpty()) {
                 txtMessageNoBookings.visibility = View.GONE
+                fetchClassDetails(bookings)
             } else {
                 Log.d("FetchUserCurrentBookings", "No current class booking found")
-                recyclerView.visibility = View.GONE
             }
         }
     }
 
-    private fun fetchClassDetails(classIds : List<String>) {
 
+    private fun fetchClassDetails(bookings: List<Pair<String, String>>) {
         val classDetailsList = mutableListOf<ClassWithScheduleModel>()
 
-        classIds.forEach { classId ->
-            classFirebaseHelper.getClassesFullDetails(classId) { classDetails ->
-                if (classDetails != null) {
-                    txtMessageNoBookings.visibility = View.GONE
-                    classDetailsList.add(classDetails)
+        bookings.forEach { (classId, scheduleId) ->
+            classFirebaseHelper.getClassWithSpecificSchedule(classId, scheduleId) { classDetail ->
+                if (classDetail != null) {
+                    classDetailsList.add(classDetail)
                     classAdapter.updateData(classDetailsList)
                 }
             }

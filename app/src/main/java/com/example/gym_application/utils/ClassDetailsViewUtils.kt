@@ -90,13 +90,14 @@ fun utilsSetUpClassDescription(activity: Activity,inClassDescription: String) {
     txtClassDescription.text = inClassDescription
 }
 
-fun utilsSetUpBookAndCancelButton(activity: Activity, userId : String , classId : String) {
+fun utilsSetUpBookAndCancelButton(activity: Activity, userId : String , scheduleId : String) {
     val btnBookClass = activity.findViewById<Button>(R.id.btnBookClass)
     val bookingConfirmTextView = activity.findViewById<TextView>(R.id.bookingConfirmationText)
     val btnCancelClass = activity.findViewById<Button>(R.id.btnCancelClassBooking)
 
-    classFirebaseHelper.hasUserAlreadyBookedThisClass(userId,classId ?: "") { isBooked ->
+    classFirebaseHelper.hasUserAlreadyBookedThisClass(userId,scheduleId ?: "") { isBooked ->
         if (isBooked) {
+            // show confirmation and cancel button
             bookingConfirmTextView.visibility = View.VISIBLE
             btnBookClass.visibility = View.GONE
             btnCancelClass.visibility = View.VISIBLE

@@ -61,21 +61,15 @@ class FirebaseDatabaseHelper {
 
     }
 
-    fun hasUserAlreadyBookedThisClass(userId: String, classId: String, callback: (Boolean) -> Unit) {
+    fun hasUserAlreadyBookedThisClass(userId: String, scheduleId: String, callback: (Boolean) -> Unit) {
         val userDatabase = FirebaseDatabase.getInstance().reference.child("users").child(userId)
             .child("bookings")
             .child("current")
 
         userDatabase.get().addOnSuccessListener { snapshot ->
             if (snapshot.exists()) {
-                var isBooked = false
-
-                for (dataSnapshot in snapshot.children) {
-                    val userClassBooking = dataSnapshot.getValue(UserClassBooking::class.java)
-                    if (userClassBooking?.classId == classId) {
-                        isBooked = true
-                        break
-                    }
+                val isBooked = snapshot.children.any {
+                    it.child("scheduleId").getValue(String::class.java) == scheduleId
                 }
                 callback(isBooked)
             } else {
@@ -190,6 +184,52 @@ class FirebaseDatabaseHelper {
 
 
     }
+
+    fun getClassWithSpecificSchedule(
+        classId: String,
+        scheduleId: String,
+        callback: (ClassWithScheduleModel?) -> Unit
+    ) {
+        val classRef = FirebaseDatabase.getInstance().reference.child("classes").child(classId)
+
+        classRef.get().addOnSuccessListener { classSnap ->
+            if (classSnap.exists()) {
+                val classData = classSnap.getValue(ClassWithScheduleModel::class.java)
+
+                val scheduleRef = FirebaseDatabase.getInstance().reference
+                    .child("schedules")
+                    .child(scheduleId)
+
+                scheduleRef.get().addOnSuccessListener { schedule ->
+                    val scheduleClassId = schedule.child("classId").getValue(String::class.java)
+                    if (scheduleClassId == classId) {
+                        val merged = classData?.copy(
+                            scheduleId = schedule.child("scheduleId").getValue(String::class.java) ?: "",
+                            classInstructor = schedule.child("classInstructor").getValue(String::class.java) ?: "",
+                            classLocation = schedule.child("classLocation").getValue(String::class.java) ?: "",
+                            classStartDate = schedule.child("classStartDate").getValue(String::class.java) ?: "",
+                            classStartTime = schedule.child("classStartTime").getValue(String::class.java) ?: "",
+                            classEndTime = schedule.child("classEndTime").getValue(String::class.java) ?: "",
+                            classCurrentBookings = schedule.child("classCurrentBookings").getValue(Int::class.java) ?: 0,
+                            status = schedule.child("status").getValue(String::class.java) ?: "active"
+                        )
+                        callback(merged)
+                    } else {
+                        callback(null)
+                    }
+                }.addOnFailureListener {
+                    callback(null)
+                }
+            } else {
+                callback(null)
+            }
+        }.addOnFailureListener {
+            callback(null)
+        }
+    }
+
+
+
 
     fun listenForClassUpdates(onDataChanged: (List<ClassTemplate>) -> Unit) {
         val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
