@@ -11,6 +11,10 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.example.gym_application.R
 import com.example.gym_application.controller.ScheduleFirebaseHelper
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 val classFirebaseHelper = FirebaseDatabaseHelper()
 val scheduleFirebaseHelper = ScheduleFirebaseHelper()
@@ -90,10 +94,19 @@ fun utilsSetUpClassDescription(activity: Activity,inClassDescription: String) {
     txtClassDescription.text = inClassDescription
 }
 
-fun utilsSetUpBookAndCancelButton(activity: Activity, userId : String , scheduleId : String) {
+@RequiresApi(Build.VERSION_CODES.O)
+fun utilsSetUpBookAndCancelButton(activity: Activity, userId : String, scheduleId : String) {
     val btnBookClass = activity.findViewById<Button>(R.id.btnBookClass)
     val bookingConfirmTextView = activity.findViewById<TextView>(R.id.bookingConfirmationText)
     val btnCancelClass = activity.findViewById<Button>(R.id.btnCancelClassBooking)
+
+    if (isClassOver(activity)) {
+        btnBookClass.visibility = View.GONE
+        bookingConfirmTextView.text = "CLASS COMPLETED"
+//        bookingConfirmTextView.visibility = View.GONE
+        btnCancelClass.visibility = View.GONE
+        return
+    }
 
     classFirebaseHelper.hasUserAlreadyBookedThisClass(userId,scheduleId ?: "") { isBooked ->
         if (isBooked) {
@@ -152,3 +165,24 @@ fun utilsUpdateClassCurrentBookings(
         callback
     )
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+private fun isClassOver(activity: Activity): Boolean {
+    val inClassDate = activity.intent.getStringExtra("classStartDate") ?: return true
+    val inClassEndTime = activity.intent.getStringExtra("classEndTime") ?: return true
+
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
+    return try {
+        val classDate = LocalDate.parse(inClassDate, dateFormatter)
+        val classEndTime = LocalTime.parse(inClassEndTime, timeFormatter)
+        val classDateTimeEnd = classDate.atTime(classEndTime)
+
+        val now = LocalDateTime.now()
+        now.isAfter(classDateTimeEnd)
+    } catch (e: Exception) {
+        true
+    }
+}
+

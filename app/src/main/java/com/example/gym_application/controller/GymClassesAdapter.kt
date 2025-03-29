@@ -1,12 +1,17 @@
 import android.content.Intent
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.ClassDetailViewActivity
 import com.example.gym_application.R
 import com.example.gym_application.model.ClassWithScheduleModel
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class GymClassesAdapter(private var classList: List<ClassWithScheduleModel>) :
     RecyclerView.Adapter<GymClassesAdapter.ViewHolder>() {
@@ -72,8 +77,29 @@ class GymClassesAdapter(private var classList: List<ClassWithScheduleModel>) :
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun updateData(newList: List<ClassWithScheduleModel>) {
-        classList = newList.sortedBy { convertTimeToMinutes(it.classStartTime) }
+        val now = java.time.LocalTime.now()
+        val today = java.time.LocalDate.now()
+
+        val filteredList = newList.filter { classItem ->
+            val classDate = LocalDate.parse(classItem.classStartDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+
+            if (classDate.isAfter(today)) {
+                // displays future classes
+                true
+            } else if (classDate.isEqual(today)) {
+                val classTime = LocalTime.parse(classItem.classStartTime, DateTimeFormatter.ofPattern("HH:mm"))
+                classTime.isAfter(now)
+            } else {
+                // filters out past classes
+                false
+            }
+        }.sortedBy { convertTimeToMinutes(it.classStartTime) }
+
+        classList = filteredList
         notifyDataSetChanged()
     }
+
+
 }

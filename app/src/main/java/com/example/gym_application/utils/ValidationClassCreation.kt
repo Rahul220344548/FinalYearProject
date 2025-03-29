@@ -2,9 +2,11 @@ package com.example.gym_application.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.gym_application.model.ClassWithScheduleModel
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Calendar
@@ -131,5 +133,26 @@ object ValidationClassCreation {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun isClassUpcomingOrToday(classItem: ClassWithScheduleModel): Boolean {
+        return try {
+            val formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val formatterTime = DateTimeFormatter.ofPattern("HH:mm")
+
+            val classDate = LocalDate.parse(classItem.classStartDate, formatterDate)
+            val classTime = LocalTime.parse(classItem.classStartTime, formatterTime)
+
+            val nowDate = LocalDate.now()
+            val nowTime = LocalTime.now()
+
+            when {
+                classDate.isAfter(nowDate) -> true // Future class
+                classDate.isEqual(nowDate) && classTime.isAfter(nowTime) -> true // Today but not yet started
+                else -> false // Past class
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
 
 }

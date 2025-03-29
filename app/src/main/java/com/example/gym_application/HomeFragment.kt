@@ -17,10 +17,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import com.example.gym_application.controller.ScheduleFirebaseHelper
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.model.ClassWithScheduleModel
+import com.example.gym_application.utils.formatDateUtils
+import com.example.gym_application.utils.formatDateUtils.getTodayDate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import org.w3c.dom.Text
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -38,6 +42,7 @@ class HomeFragment : Fragment() {
     private lateinit var txtUpcomingClassDate : TextView
     private lateinit var txtUpcomingClassTimes : TextView
     private lateinit var txtUpcomingClassLocation : TextView
+    private lateinit var txtnoUpcominbBooking : TextView
 
     private lateinit var rejoinMembershipButton: Button
     private lateinit var buyMembershipButton: Button
@@ -72,6 +77,7 @@ class HomeFragment : Fragment() {
         txtUpcomingClassDate = view.findViewById(R.id.txtUpcomingClassDate)
         txtUpcomingClassTimes = view.findViewById(R.id.txtUpcomingClassTimes)
         txtUpcomingClassLocation = view.findViewById(R.id.txtUpcomingClassLocation)
+        txtnoUpcominbBooking = view.findViewById(R.id.txtnoUpcominbBookings)
 
         setUserName()
         checkMembershipStatus()
@@ -128,7 +134,7 @@ class HomeFragment : Fragment() {
                 if (membershipInfo != null) {
                     if (membershipInfo.status == "active") {
                         txtMembershipType.text = "${membershipInfo.title} - ${membershipInfo.duration} Plan"
-                        val formattedExpirationDate = formatExpirationDate(membershipInfo.expirationDate)
+                        val formattedExpirationDate = formatDateUtils.formatExpirationDate(membershipInfo.expirationDate)
                         txtPlanExpiration.text = "Expires - $formattedExpirationDate"
                         membershipCard.visibility = View.VISIBLE
                     } else {
@@ -143,61 +149,49 @@ class HomeFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun displayUpcomingBookings() {
-        val userId = auth.currentUser?.uid
-        val todayDate = getTodayDate()
-        if (userId != null) {
-            firebaseHelper.fetchUserCurrentBookings(userId) { fetchedClassIds ->
-                if (fetchedClassIds != null && fetchedClassIds.isNotEmpty()) {
-                    scheduleFirebaseHelper.fetchClassesForADate(todayDate) { allClassesForToday ->
-                        val userBookedClasses = allClassesForToday.filter {
-                            it.classId in fetchedClassIds
-                        }
-                        if (userBookedClasses.isNotEmpty()) {
-                            val firstBooking = userBookedClasses.first()
-                            bookingsCard.visibility = View.VISIBLE
-                            txtUpcomingBookingTitle.text = firstBooking.classTitle
-                            txtUpcomingClassDate.text = newFormatExpirationDate(firstBooking.classStartDate)
-                            txtUpcomingClassTimes.text = "${firstBooking.classStartTime} - ${firstBooking.classEndTime}"
-                            txtUpcomingClassLocation.text = firstBooking.classLocation
-                        } else {
+        val userId = auth.currentUser?.uid ?: return
+        val todayDate = formatDateUtils.getTodayDate()
 
-                            txtUpcomingBookingTitle.text = "No bookings for today"
-                        }
-                    }
+        firebaseHelper.fetchUserCurrentBookings(userId) { fetchedClassIds ->
+            if (fetchedClassIds.isNullOrEmpty()) {
+                txtUpcomingBookingTitle.text = "No upcoming bookings"
+                return@fetchUserCurrentBookings
+            }
+
+            scheduleFirebaseHelper.fetchClassesForADate(todayDate) { allClassesForToday ->
+                val upcomingBookings = getUpcomingUserBookingsForToday(allClassesForToday, fetchedClassIds)
+
+                if (upcomingBookings.isNotEmpty()) {
+                    displayBookingDetails(upcomingBookings.first())
                 } else {
-                    txtUpcomingBookingTitle.text = "No upcoming bookings"
+                    txtUpcomingBookingTitle.text = "No bookings for today"
                 }
             }
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun formatExpirationDate(expirationDate : String): String {
-        val inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.US)
-        val outputFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.US)
-
-        val date = LocalDate.parse(expirationDate, inputFormatter)
-        return date.format(outputFormatter)
-
+    private fun displayBookingDetails(classModel: ClassWithScheduleModel) {
+        bookingsCard.visibility = View.VISIBLE
+        txtUpcomingBookingTitle.text = classModel.classTitle
+        txtUpcomingClassDate.text = formatDateUtils.newFormatExpirationDate(classModel.classStartDate)
+        txtUpcomingClassTimes.text = "${classModel.classStartTime} - ${classModel.classEndTime}"
+        txtUpcomingClassLocation.text = classModel.classLocation
+        txtnoUpcominbBooking.visibility = View.GONE
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun newFormatExpirationDate(expirationDate : String): String {
-        val inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US)
-        val outputFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.US)
-
-        val date = LocalDate.parse(expirationDate, inputFormatter)
-        return date.format(outputFormatter)
-
+    private fun getUpcomingUserBookingsForToday(
+        allClassesForToday: List<ClassWithScheduleModel>,
+        bookedClassIds: List<String>
+    ): List<ClassWithScheduleModel> {
+        return allClassesForToday
+            .filter { it.classId in bookedClassIds && !formatDateUtils.isClassOver(it) }
+            .sortedBy {
+                LocalTime.parse(it.classStartTime, DateTimeFormatter.ofPattern("HH:mm"))
+            }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun getTodayDate(): String {
-        val today = LocalDate.now()
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US)
-        return today.format(formatter)
-    }
 
 
 }

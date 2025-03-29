@@ -114,32 +114,30 @@ class UserFirebaseDatabaseHelper {
     }
 
     fun fetchUserCurrentBookingsAsPairs(userId: String, callback: (List<Pair<String, String>>?) -> Unit) {
-        val userDatabase = FirebaseDatabase.getInstance().reference
+
+        val userBookingsRef = FirebaseDatabase.getInstance().reference
             .child("users")
             .child(userId)
             .child("bookings")
             .child("current")
 
-        userDatabase.get().addOnSuccessListener { snapshot ->
-            val bookings = mutableListOf<Pair<String, String>>()
-
-            if (snapshot.exists()) {
-                for (bookingSnapshot in snapshot.children) {
+        userBookingsRef.get()
+            .addOnSuccessListener { snapshot ->
+                val bookings = snapshot.children.mapNotNull { bookingSnapshot ->
                     val booking = bookingSnapshot.getValue(UserClassBooking::class.java)
                     val classId = booking?.classId
                     val scheduleId = booking?.scheduleId
 
                     if (!classId.isNullOrEmpty() && !scheduleId.isNullOrEmpty()) {
-                        bookings.add(Pair(classId, scheduleId))
-                    }
+                        Pair(classId, scheduleId)
+                    } else null
                 }
-                callback(bookings)
-            } else {
+
+                callback(bookings.takeIf { it.isNotEmpty() })
+            }
+            .addOnFailureListener {
                 callback(null)
             }
-        }.addOnFailureListener {
-            callback(null)
-        }
     }
 
     fun fetchInstructors (callback: (List<String>) -> Unit) {
