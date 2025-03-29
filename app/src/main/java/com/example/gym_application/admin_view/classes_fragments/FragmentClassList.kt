@@ -10,14 +10,14 @@ import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
-import com.example.gym_application.admin_view.adapter.AdminBookingListAdapter
+import com.example.gym_application.admin_view.adapter.AdminClassListAdapter
 import com.example.gym_application.model.ClassTemplate
 
 
 class FragmentClassList : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter : AdminBookingListAdapter
+    private lateinit var adapter : AdminClassListAdapter
 
     private lateinit var searchView : SearchView
 
@@ -36,7 +36,7 @@ class FragmentClassList : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        adapter = AdminBookingListAdapter(emptyList())
+        adapter = AdminClassListAdapter(emptyList())
         recyclerView.adapter = adapter
 
         fetchClassesList()

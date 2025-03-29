@@ -74,7 +74,6 @@ class FragmentScheduleList : Fragment() {
 
     private fun fetchSchedulesList() {
 
-//        val selectedDate = LocalDate.now().toString()
         var getFormattedDate = formatDateUtils.getTodayDate()
         scheduleFirebaseHelper.fetchClassesForADate(getFormattedDate) { classList ->
             adapter.updateDate(classList)
