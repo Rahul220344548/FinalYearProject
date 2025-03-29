@@ -1,6 +1,6 @@
 package com.example.gym_application.admin_view.classes_fragments
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -14,16 +14,23 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
+import com.example.gym_application.admin_view.adapter.AdminScheduleListAdapter
 import com.example.gym_application.controller.ScheduleFirebaseHelper
 import com.example.gym_application.model.Schedule
 import com.example.gym_application.utils.ClassBookingUtils
 import com.example.gym_application.utils.ValidationClassScheduleFields
+import com.example.gym_application.utils.formatDateUtils
 import com.google.android.material.button.MaterialButton
+import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 class FragmentScheduleList : Fragment() {
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter : AdminScheduleListAdapter
 
     private lateinit var btnAddNewSchedule : Button
 
@@ -43,6 +50,7 @@ class FragmentScheduleList : Fragment() {
 
     private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,13 +58,28 @@ class FragmentScheduleList : Fragment() {
 
         val view =  inflater.inflate(R.layout.fragment_schedule_list, container, false)
 
-        btnAddNewSchedule = view.findViewById<Button>(R.id.btnAddNewSchedule)
+        recyclerView = view.findViewById(R.id.newAdminClassesListRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = AdminScheduleListAdapter(emptyList())
+        recyclerView.adapter = adapter
+        fetchSchedulesList()
 
+        btnAddNewSchedule = view.findViewById<Button>(R.id.btnAddNewSchedule)
         btnAddNewSchedule.setOnClickListener {
             onCreateNewScheduleBtn()
         }
 
         return view
+    }
+
+    private fun fetchSchedulesList() {
+
+//        val selectedDate = LocalDate.now().toString()
+        var getFormattedDate = formatDateUtils.getTodayDate()
+        scheduleFirebaseHelper.fetchClassesForADate(getFormattedDate) { classList ->
+            adapter.updateDate(classList)
+        }
+
     }
 
 

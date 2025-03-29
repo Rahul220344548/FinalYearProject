@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginEnd="20dp"
+    android:background="@drawable/layout_classes_item_border"
+    android:backgroundTint="@color/peach"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/baseline_access_time_24" />
+
+        <TextView
+            android:id="@+id/recyAdminSchedulesClassTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="#AA000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            android:text="Class Title"
+            android:textColor="@color/black"
+            android:textSize="35sp"
+            android:textStyle="italic | bold " />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/recyAdminSchedulesClassDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="#AA000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="1"
+        android:text="13th Mon, March"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="italic | bold " />
+    <TextView
+        android:id="@+id/recyAdminSchedulesClassTimes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="#AA000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="1"
+        android:text="18:00 - 19:00"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="italic | bold " />
+
+
+</LinearLayout>

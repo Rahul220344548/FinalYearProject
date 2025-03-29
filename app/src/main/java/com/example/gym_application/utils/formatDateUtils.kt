@@ -54,5 +54,26 @@ object formatDateUtils {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun adminFormattedDate(inDate : String) : String {
+        return try {
+            val inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US)
+            val outputFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.US)
+
+            val date = LocalDate.parse(inDate, inputFormatter)
+            date.format(outputFormatter)
+
+        } catch (e: Exception) {
+            inDate
+        }
+    }
+
+    fun convertTimeToMinutes(time: String): Int {
+        val parts = time.split(":")
+        val hours = parts[0].toInt()
+        val minutes = parts[1].toInt()
+        return (hours * 60) + minutes
+    }
+
 
 }
