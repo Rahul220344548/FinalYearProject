@@ -188,19 +188,35 @@ class ClassDetailViewActivity : AppCompatActivity() {
         val validClassId = classId ?: return
         val validScheduleId = scheduleId
 
+        /*
+           Delete Bookings Info from users collection
+        */
         firebaseHelper.deleteUserCurrentBookingById(validUserId, validClassId) { success ->
-            if (success) {
-                val currentBookingCount = mapOf("classCurrentBookings" to currBookings-1)
-                firebaseHelper.decrementClassCurrentBookings(scheduleId, currentBookingCount) { decrementSuccess ->
+            if (!success) {
+                Toast.makeText(this, "Failed to delete booking or booking not found.", Toast.LENGTH_LONG).show()
+                return@deleteUserCurrentBookingById
+            }
+
+            /*
+            Delete User ID, Schedule ID from schedules collection
+             */
+            scheduleFirebaseHelper.deleteUserBookingsFromSchedule(validScheduleId, validUserId) { deletionSuccess ->
+                if (!deletionSuccess) {
+                    Toast.makeText(this, "Failed to remove from schedule bookings.", Toast.LENGTH_LONG).show()
+                    return@deleteUserBookingsFromSchedule
+                }
+                /*
+                  decrements bookings to -1, when user cancels
+                */
+                val updatedBookingCount = mapOf("classCurrentBookings" to currBookings - 1)
+                firebaseHelper.decrementClassCurrentBookings(validScheduleId, updatedBookingCount) { decrementSuccess ->
                     if (decrementSuccess) {
                         Toast.makeText(this, "Your booking has been successfully canceled.", Toast.LENGTH_LONG).show()
                         finish()
                     } else {
-                        Toast.makeText(this, "An error occured: Please contact support!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "An error occurred while updating bookings. Please contact support!", Toast.LENGTH_LONG).show()
                     }
                 }
-            } else {
-                println("Failed to delete booking or booking not found.")
             }
         }
     }

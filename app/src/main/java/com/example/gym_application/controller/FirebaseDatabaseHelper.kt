@@ -133,9 +133,10 @@ class FirebaseDatabaseHelper {
                             println("Error deleting booking: ${it.message}")
                             callback(false)
                         }
-                        break
+                        return@addOnSuccessListener
                     }
                 }
+
 
                 if (!bookingDeleted) {
                     callback(false) // Booking not found

@@ -7,7 +7,11 @@ import com.google.firebase.database.*
 
 class ScheduleFirebaseHelper {
 
-    fun createClassScheduleEntry(schedule: Schedule, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+    fun createClassScheduleEntry(
+        schedule: Schedule,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
 
         val databaseRef = FirebaseDatabase.getInstance().getReference("schedules")
 
@@ -17,7 +21,7 @@ class ScheduleFirebaseHelper {
 
         databaseRef.child(newScheduleId).setValue(scheduleWithId)
             .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { exception -> onFailure (exception) }
+            .addOnFailureListener { exception -> onFailure(exception) }
 
     }
 
@@ -51,7 +55,8 @@ class ScheduleFirebaseHelper {
     }
 
     fun fetchClassesForADate(
-        selectedDate: String, callback: (List<ClassWithScheduleModel>) -> Unit) {
+        selectedDate: String, callback: (List<ClassWithScheduleModel>) -> Unit
+    ) {
 
         val database = FirebaseDatabase.getInstance().reference
         val scheduleRef = database.child("schedules")
@@ -91,7 +96,6 @@ class ScheduleFirebaseHelper {
 
         scheduleRef.addValueEventListener(scheduleListener!!)
     }
-
 
 
     private fun fetchClassTemplates(
@@ -145,7 +149,8 @@ class ScheduleFirebaseHelper {
     fun incrementClassCurrentBookingInSchedules(
         scheduleId: String,
         currentBookingCount: Map<String, Any>,
-        callback: (Boolean) -> Unit) {
+        callback: (Boolean) -> Unit
+    ) {
 
         val schedulesRef = FirebaseDatabase.getInstance().getReference("schedules")
             .child(scheduleId)
@@ -182,5 +187,26 @@ class ScheduleFirebaseHelper {
             .addOnCompleteListener { task ->
                 callback(task.isSuccessful)
             }
-        }
     }
+
+    fun deleteUserBookingsFromSchedule(
+        scheduleId: String,
+        userId: String,
+        callback: (Boolean) -> Unit
+    ) {
+
+        val scheduleBookingsRef = FirebaseDatabase.getInstance()
+            .getReference("schedules")
+            .child(scheduleId)
+            .child("bookings")
+            .child(userId)
+
+        scheduleBookingsRef.removeValue().addOnCompleteListener { task ->
+            callback(task.isSuccessful)
+        }
+
+
+    }
+
+}
+
