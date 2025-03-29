@@ -1,11 +1,9 @@
 package com.example.gym_application.controller
-import android.content.Intent
-import com.example.gym_application.HomeActivity
 import com.example.gym_application.model.ClassTemplate
 import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.model.Schedule
+import com.example.gym_application.model.UserScheduleBooking
 import com.google.firebase.database.*
-import kotlin.time.measureTime
 
 class ScheduleFirebaseHelper {
 
@@ -167,4 +165,22 @@ class ScheduleFirebaseHelper {
         }
     }
 
-}
+    fun addUserBookingToSchedules(
+        scheduleId: String,
+        userId: String,
+        booking: UserScheduleBooking,
+        callback: (Boolean) -> Unit
+    ) {
+
+        val scheduleBookingsRef = FirebaseDatabase.getInstance()
+            .getReference("schedules")
+            .child(scheduleId)
+            .child("bookings")
+            .child(userId)
+
+        scheduleBookingsRef.setValue(booking)
+            .addOnCompleteListener { task ->
+                callback(task.isSuccessful)
+            }
+        }
+    }

@@ -1,25 +1,21 @@
 package com.example.gym_application
 
 import FirebaseDatabaseHelper
-import android.app.Activity
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
-import com.example.gym_application.model.UserClassBooking
-import com.example.gym_application.utils.ClassBookingUtils
+import com.example.gym_application.model.UserScheduleBooking
+import com.example.gym_application.utils.scheduleFirebaseHelper
 import com.example.gym_application.utils.utilsSetUpBookAndCancelButton
 import com.example.gym_application.utils.utilsSetUpClassAvailableFor
 import com.example.gym_application.utils.utilsSetUpClassDescription
@@ -158,6 +154,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
 
         userFirebaseHelper.addUserBookedClassToCurrentBookings( validUserId, validClassId,validScheduleId) { success ->
             if (success) {
+                addBookingToSchedules(validScheduleId,validUserId)
                 val currentBookingCount = mapOf("classCurrentBookings" to currBookings+1)
                 utilsUpdateClassCurrentBookings(validScheduleId, currentBookingCount) { success ->
                     if (success){
@@ -167,6 +164,21 @@ class ClassDetailViewActivity : AppCompatActivity() {
                 }
             }else {
                 Toast.makeText(this, "Failed to book the class", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun addBookingToSchedules(scheduleId: String, userId: String) {
+        val booking = UserScheduleBooking(
+            userId = userId,
+            classId = classId,
+            scheduleId = scheduleId
+        )
+        scheduleFirebaseHelper.addUserBookingToSchedules( scheduleId, userId, booking) { success ->
+            if (success) {
+                println("Booking added to schedule successfully.")
+            }else {
+                println("Failed to add booking to schedule.")
             }
         }
     }
