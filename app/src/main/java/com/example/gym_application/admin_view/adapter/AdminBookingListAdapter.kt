@@ -1,36 +1,49 @@
 package com.example.gym_application.admin_view.adapter
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
-import com.example.gym_application.model.ClassTemplate
+import com.example.gym_application.admin_view.adapter.AdminClassListAdapter.ViewHolder
 
-class AdminBookingListAdapter (private  var bookingList : List<ClassTemplate>)  :
-    RecyclerView.Adapter<AdminClassListAdapter.ViewHolder>() {
+import com.example.gym_application.model.UserDetails
+
+class AdminBookingListAdapter (private  var bookingList : List<UserDetails>)  :
+    RecyclerView.Adapter<AdminBookingListAdapter.ViewHolder>() {
 
     class ViewHolder ( view: View) : RecyclerView.ViewHolder(view) {
 
-        val classTitle: TextView = view.findViewById(R.id.classListTitle)
+        val bookingUserName: TextView = view.findViewById(R.id.bookedUserFullName)
+        val bookingUserDOB : TextView = view.findViewById(R.id.bookedUserDOB)
+
+    }
+
+    override fun onCreateViewHolder( parent: ViewGroup, viewType: Int) : ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_all_schedule_bookings, parent, false)
+        return  ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+        val bookingListItem = bookingList[position]
+        holder.bookingUserName.text = "${bookingListItem.firstName} ${bookingListItem.lastName}"
+        holder.bookingUserDOB.text = bookingListItem.dateOfBirth
+
 
 
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): AdminClassListAdapter.ViewHolder {
-        TODO("Not yet implemented")
-    }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
 
-    override fun onBindViewHolder(holder: AdminClassListAdapter.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = bookingList.size
 
+
+    fun updateData( newBookings : List<UserDetails>) {
+        bookingList = newBookings
+        notifyDataSetChanged()
+    }
 
 }
