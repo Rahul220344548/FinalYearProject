@@ -1,11 +1,15 @@
 package com.example.gym_application.admin_view
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.widget.EditText
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
@@ -14,12 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminBookingListAdapter
-import com.example.gym_application.admin_view.adapter.AdminClassListAdapter
 import com.example.gym_application.model.UserDetails
+import com.example.gym_application.utils.OnDeleteClickListener
 import com.example.gym_application.utils.formatDateUtils
-import com.google.firebase.database.FirebaseDatabase
+import com.google.android.material.button.MaterialButton
 import helper.FirebaseBookingsHelper
-
+@RequiresApi(Build.VERSION_CODES.O)
 class AdminScheduleInfo : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -31,6 +35,7 @@ class AdminScheduleInfo : AppCompatActivity() {
     private lateinit var classInstructor: TextView
     private lateinit var classLocation : TextView
     private lateinit var classRemainingSpots : TextView
+    private lateinit var showNoBookings : TextView
 
     private lateinit var classId: String
     private lateinit var scheduleId : String
@@ -56,12 +61,15 @@ class AdminScheduleInfo : AppCompatActivity() {
         adapter = AdminBookingListAdapter(emptyList())
         recyclerView.adapter = adapter
 
+
+
         scheduleId = intent.getStringExtra("scheduleId")?:""
         classId = intent.getStringExtra("classId")?:""
 
         initialTextFields()
 
         fetchBookingForSchedule()
+
 
     }
 
@@ -106,17 +114,20 @@ class AdminScheduleInfo : AppCompatActivity() {
             if (userIds.isNotEmpty()) {
                 fetchUserDetails(userIds)
             } else {
+                showNoBookings = findViewById<TextView>(R.id.txtNoBookingsMade)
+                showNoBookings.visibility = View.VISIBLE
                 adapter.updateData(emptyList())
             }
         }
 
     }
 
+
+    private fun fetchUserDetails(userIds: List<String>) {
     /*
     Once UserIDs are fetched
     UserDetails is fetched as a List matched with UserID
      */
-    private fun fetchUserDetails(userIds: List<String>) {
         val userList = mutableListOf<UserDetails>()
         var usersFetched = 0
 
@@ -134,7 +145,34 @@ class AdminScheduleInfo : AppCompatActivity() {
     }
 
 
+    private fun showDeleteUserDialog() {
 
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.cancel_class_dialog_box, null)
+
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+        val btnCancelDialog = dialogView.findViewById<MaterialButton>(R.id.btnCancelDialogBox)
+        val btnConfirmDeletion = dialogView.findViewById<MaterialButton>(R.id.btnConfirmCancellation)
+
+        btnCancelDialog.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        btnConfirmDeletion.setOnClickListener {
+            alertDialog.dismiss()
+        }
+    }
+
+
+    fun onCancelScheduleBtn(view : View) {
+        showDeleteUserDialog()
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

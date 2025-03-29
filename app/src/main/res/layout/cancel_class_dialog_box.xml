@@ -11,6 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:padding="16dp">
 
 
@@ -76,7 +77,6 @@
                 app:strokeColor="@color/black"
                 app:strokeWidth="2dp" />
         </LinearLayout>
-<!--     Change layout_width of buttons to 0dp if necessary -->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

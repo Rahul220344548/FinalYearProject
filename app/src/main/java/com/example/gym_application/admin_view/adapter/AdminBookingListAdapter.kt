@@ -9,14 +9,19 @@ import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminClassListAdapter.ViewHolder
 
 import com.example.gym_application.model.UserDetails
+import com.example.gym_application.utils.OnDeleteClickListener
 
-class AdminBookingListAdapter (private  var bookingList : List<UserDetails>)  :
+class AdminBookingListAdapter (
+    private  var bookingList : List<UserDetails>,
+//    private val deleteClickListener: OnDeleteClickListener
+)  :
     RecyclerView.Adapter<AdminBookingListAdapter.ViewHolder>() {
 
     class ViewHolder ( view: View) : RecyclerView.ViewHolder(view) {
 
         val bookingUserName: TextView = view.findViewById(R.id.bookedUserFullName)
         val bookingUserDOB : TextView = view.findViewById(R.id.bookedUserDOB)
+//        val deleteIcon: View = view.findViewById(R.id.deleteUserBooking)
 
     }
 
@@ -31,6 +36,10 @@ class AdminBookingListAdapter (private  var bookingList : List<UserDetails>)  :
         val bookingListItem = bookingList[position]
         holder.bookingUserName.text = "${bookingListItem.firstName} ${bookingListItem.lastName}"
         holder.bookingUserDOB.text = bookingListItem.dateOfBirth
+
+//        holder.deleteIcon.setOnClickListener {
+//            deleteClickListener.onDeleteClick(bookingListItem)
+//        }
 
 
 
