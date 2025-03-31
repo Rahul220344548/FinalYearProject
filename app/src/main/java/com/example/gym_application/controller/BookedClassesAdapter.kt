@@ -12,10 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.ClassDetailViewActivity
 import com.example.gym_application.R
 import com.example.gym_application.model.ClassWithScheduleModel
+import com.example.gym_application.newModel.NewSchedule
 import com.example.gym_application.utils.ClassBookingUtils
 import com.example.gym_application.utils.ValidationClassCreation.isClassUpcomingOrToday
 
-class BookedClassesAdapter (private var classList: List<ClassWithScheduleModel>) :
+class BookedClassesAdapter (private var classList: List<NewSchedule>) :
     RecyclerView.Adapter<BookedClassesAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -60,7 +61,7 @@ class BookedClassesAdapter (private var classList: List<ClassWithScheduleModel>)
     override fun getItemCount() = classList.size
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateData(newList: List<ClassWithScheduleModel>) {
+    fun updateData(newList: List<NewSchedule>) {
         val filteredList = newList.filter { isClassUpcomingOrToday(it) }
             .sortedBy { convertTimeToMinutes(it.classStartTime) }
 

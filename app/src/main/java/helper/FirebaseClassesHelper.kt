@@ -1,8 +1,8 @@
 package helper
-import androidx.appcompat.view.ActionMode.Callback
 import com.example.gym_application.model.UserDetails
+import com.example.gym_application.newModel.NewSchedule
 import com.google.firebase.database.*
-class FirebaseBookingsHelper {
+class FirebaseClassesHelper {
 
 
 
@@ -38,6 +38,49 @@ class FirebaseBookingsHelper {
         }.addOnFailureListener {
             callback(null)
         }
+    }
+
+
+    fun fetchedSchedulesForADateLive(
+        selectedDate: String,
+        callback: (List<NewSchedule>) -> Unit
+    ) {
+        val databaseRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
+
+        databaseRef.orderByChild("classStartDate").equalTo(selectedDate)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val scheduleList = mutableListOf<NewSchedule>()
+                    for (scheduleSnapshot in snapshot.children) {
+                        val schedule = scheduleSnapshot.getValue(NewSchedule::class.java)
+                        if (schedule != null && schedule.status == "active") {
+                            scheduleList.add(schedule)
+                        }
+                    }
+                    callback(scheduleList)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    callback(emptyList())
+                }
+            })
+    }
+
+    fun softDeleteSchedule(
+        scheduleId: String,
+        onComplete : (Boolean) -> Unit
+    ) {
+
+        val scheduleRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
+            .child(scheduleId)
+
+        scheduleRef.child("status").setValue("inactive")
+            .addOnSuccessListener {
+                onComplete(true)
+            }
+            .addOnFailureListener { e ->
+                onComplete(false)
+            }
     }
 
 

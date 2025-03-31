@@ -8,12 +8,13 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.ClassDetailViewActivity
 import com.example.gym_application.R
-import com.example.gym_application.model.ClassWithScheduleModel
+import com.example.gym_application.model.Schedule
+import com.example.gym_application.newModel.NewSchedule
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class GymClassesAdapter(private var classList: List<ClassWithScheduleModel>) :
+class GymClassesAdapter(private var classList: List<NewSchedule>) :
     RecyclerView.Adapter<GymClassesAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -78,7 +79,7 @@ class GymClassesAdapter(private var classList: List<ClassWithScheduleModel>) :
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateData(newList: List<ClassWithScheduleModel>) {
+    fun updateData(newList: List<NewSchedule>) {
         val now = java.time.LocalTime.now()
         val today = java.time.LocalDate.now()
 

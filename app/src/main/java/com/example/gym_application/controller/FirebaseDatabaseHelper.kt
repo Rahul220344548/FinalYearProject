@@ -151,7 +151,7 @@ class FirebaseDatabaseHelper {
     }
 
     fun decrementClassCurrentBookings(scheduleId: String, currentBookingCount: Map<String, Int>, callback: (Boolean) -> Unit) {
-        val classDatabase = FirebaseDatabase.getInstance().reference.child("schedules").child(scheduleId)
+        val classDatabase = FirebaseDatabase.getInstance().reference.child("schedulesInfo").child(scheduleId)
 
         val updateData = currentBookingCount.mapValues { it.value as Any? }
         classDatabase.updateChildren(updateData)
@@ -164,7 +164,7 @@ class FirebaseDatabaseHelper {
             }
     }
 
-    fun getClassesFullDetails(classId: String , callback: (ClassWithScheduleModel?) -> Unit) {
+    fun fetchClassTemplateByClassId(classId: String , callback: (ClassTemplate?) -> Unit) {
 
         val classDatabase = FirebaseDatabase.getInstance().reference.child("classes")
             .child(classId)
@@ -172,7 +172,7 @@ class FirebaseDatabaseHelper {
         classDatabase.get().addOnSuccessListener { snapshot ->
 
             if (snapshot.exists()) {
-                val classDetails = snapshot.getValue(ClassWithScheduleModel::class.java)
+                val classDetails = snapshot.getValue(ClassTemplate::class.java)
                 callback(classDetails)
             }else {
                 callback(null)
@@ -181,9 +181,6 @@ class FirebaseDatabaseHelper {
         }.addOnFailureListener {
             callback(null)
         }
-
-
-
     }
 
     fun getClassWithSpecificSchedule(

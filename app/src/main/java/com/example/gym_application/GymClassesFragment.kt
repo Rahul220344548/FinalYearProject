@@ -1,6 +1,5 @@
 package com.example.gym_application
 
-import FirebaseDatabaseHelper
 import GymClassesAdapter
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +13,8 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.controller.ScheduleFirebaseHelper
+import com.google.firebase.database.FirebaseDatabase
+import helper.FirebaseClassesHelper
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.YearMonth
@@ -28,6 +29,7 @@ class GymClassesFragment : Fragment() {
     private lateinit var classAdapter: GymClassesAdapter
 
     private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
+    private val newSchedulesFirebaseHelper = FirebaseClassesHelper()
     private var currentMonth: LocalDate = LocalDate.now()
 
     override fun onDestroyView() {
@@ -52,10 +54,15 @@ class GymClassesFragment : Fragment() {
 
         adapter = CalendarAdapter { selectedDate ->
             val formattedDate = formatDate(selectedDate.toString())
-            scheduleFirebaseHelper.fetchClassesForADate(formattedDate) { classList ->
+
+            scheduleFirebaseHelper.removeScheduleListener()
+
+            val scheduleRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
+            scheduleFirebaseHelper.fetchSchedulesForDateLive(scheduleRef, formattedDate) { classList ->
                 classAdapter.updateData(classList)
             }
         }
+
 
         recyclerView.adapter = adapter
 

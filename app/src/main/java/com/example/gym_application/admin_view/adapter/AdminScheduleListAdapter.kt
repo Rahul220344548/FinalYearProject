@@ -12,12 +12,13 @@ import com.example.gym_application.ClassDetailViewActivity
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.AdminScheduleInfo
 import com.example.gym_application.model.ClassWithScheduleModel
+import com.example.gym_application.newModel.NewSchedule
 import com.example.gym_application.utils.formatDateUtils
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class AdminScheduleListAdapter ( private var classList : List<ClassWithScheduleModel>) :
+class AdminScheduleListAdapter ( private var classList : List<NewSchedule>) :
     RecyclerView.Adapter<AdminScheduleListAdapter.ViewHolder>(){
 
         class ViewHolder ( view : View) : RecyclerView.ViewHolder(view) {
@@ -68,7 +69,7 @@ class AdminScheduleListAdapter ( private var classList : List<ClassWithScheduleM
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateDate(newSchedule: List<ClassWithScheduleModel>) {
+    fun updateDate(newSchedule: List<NewSchedule>) {
 
         val now = java.time.LocalTime.now()
         val today = java.time.LocalDate.now()

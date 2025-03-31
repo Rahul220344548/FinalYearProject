@@ -14,7 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
-import com.example.gym_application.model.UserScheduleBooking
+import com.example.gym_application.newModel.booking
 import com.example.gym_application.utils.scheduleFirebaseHelper
 import com.example.gym_application.utils.utilsSetUpBookAndCancelButton
 import com.example.gym_application.utils.utilsSetUpClassAvailableFor
@@ -169,12 +169,11 @@ class ClassDetailViewActivity : AppCompatActivity() {
     }
 
     private fun addBookingToSchedules(scheduleId: String, userId: String) {
-        val booking = UserScheduleBooking(
+        val booking = booking(
             userId = userId,
-            classId = classId,
             scheduleId = scheduleId
         )
-        scheduleFirebaseHelper.addUserBookingToSchedules( scheduleId, userId, booking) { success ->
+        scheduleFirebaseHelper.newAddUserBookingToSchedules( scheduleId, userId, booking) { success ->
             if (success) {
                 println("Booking added to schedule successfully.")
             }else {

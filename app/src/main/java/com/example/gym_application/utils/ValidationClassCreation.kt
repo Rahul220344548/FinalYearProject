@@ -3,6 +3,7 @@ package com.example.gym_application.utils
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.gym_application.model.ClassWithScheduleModel
+import com.example.gym_application.newModel.NewSchedule
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -134,7 +135,7 @@ object ValidationClassCreation {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun isClassUpcomingOrToday(classItem: ClassWithScheduleModel): Boolean {
+    fun isClassUpcomingOrToday(classItem: NewSchedule): Boolean {
         return try {
             val formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             val formatterTime = DateTimeFormatter.ofPattern("HH:mm")

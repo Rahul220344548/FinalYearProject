@@ -1,11 +1,36 @@
 package com.example.gym_application.controller
+import android.util.Log
 import com.example.gym_application.model.ClassTemplate
 import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.model.Schedule
 import com.example.gym_application.model.UserScheduleBooking
+import com.example.gym_application.newModel.NewSchedule
+import com.example.gym_application.newModel.booking
 import com.google.firebase.database.*
 
 class ScheduleFirebaseHelper {
+
+    fun fetchClassTemplateByClassId(
+        classId: String,
+        onSuccess: (ClassTemplate) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val databaseRef = FirebaseDatabase.getInstance().getReference("classTemplates").child(classId)
+    }
+
+    fun newCreateClassScheduleEntry(
+        schedule: NewSchedule,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ){
+        val databaseRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
+        val newScheduleId = databaseRef.push().key ?: return
+        val scheduleWithId = schedule.copy(scheduleId = newScheduleId)
+        databaseRef.child(newScheduleId).setValue(scheduleWithId)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { exception -> onFailure(exception) }
+
+    }
 
     fun createClassScheduleEntry(
         schedule: Schedule,
@@ -62,12 +87,12 @@ class ScheduleFirebaseHelper {
         val scheduleRef = database.child("schedules")
         val classRef = database.child("classes")
 
-        fetchSchedulesForDateLive(scheduleRef, selectedDate) { schedules ->
-            fetchClassTemplates(classRef) { templates ->
-                val mergedClasses = mergeSchedulesWithTemplates(schedules, templates)
-                callback(mergedClasses)
-            }
-        }
+//        fetchSchedulesForDateLive(scheduleRef, selectedDate) { schedules ->
+//            fetchClassTemplates(classRef) { templates ->
+//                val mergedClasses = mergeSchedulesWithTemplates(schedules, templates)
+//                callback(mergedClasses)
+//            }
+//        }
 
     }
 
@@ -77,14 +102,16 @@ class ScheduleFirebaseHelper {
     fun fetchSchedulesForDateLive(
         scheduleRef: DatabaseReference,
         selectedDate: String,
-        callback: (List<Schedule>) -> Unit
+        callback: (List<NewSchedule>) -> Unit
     ) {
+        removeScheduleListener()
+
         savedScheduleRef = scheduleRef
 
         scheduleListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val schedules = snapshot.children
-                    .mapNotNull { it.getValue(Schedule::class.java) }
+                    .mapNotNull { it.getValue(NewSchedule::class.java) }
                     .filter {
                         it.classStartDate.contains(selectedDate) && it.status == "active"
                     }
@@ -92,7 +119,6 @@ class ScheduleFirebaseHelper {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                println("Error fetching schedules: ${error.message}")
                 callback(emptyList())
             }
         }
@@ -166,6 +192,23 @@ class ScheduleFirebaseHelper {
             }
     }
 
+    fun newIncrementClassCurrentBookingInSchedules(
+        scheduleId: String,
+        currentBookingCount: Map<String, Any>,
+        callback: (Boolean) -> Unit
+    ) {
+
+        val schedulesRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
+            .child(scheduleId)
+        schedulesRef.updateChildren(currentBookingCount)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
     fun removeScheduleListener() {
         scheduleListener?.let {
             savedScheduleRef.removeEventListener(it)
@@ -176,12 +219,31 @@ class ScheduleFirebaseHelper {
     fun addUserBookingToSchedules(
         scheduleId: String,
         userId: String,
-        booking: UserScheduleBooking,
+        booking: booking,
         callback: (Boolean) -> Unit
     ) {
 
         val scheduleBookingsRef = FirebaseDatabase.getInstance()
             .getReference("schedules")
+            .child(scheduleId)
+            .child("bookings")
+            .child(userId)
+
+        scheduleBookingsRef.setValue(booking)
+            .addOnCompleteListener { task ->
+                callback(task.isSuccessful)
+            }
+    }
+
+    fun newAddUserBookingToSchedules(
+        scheduleId: String,
+        userId: String,
+        booking: booking,
+        callback: (Boolean) -> Unit
+    ) {
+
+        val scheduleBookingsRef = FirebaseDatabase.getInstance()
+            .getReference("schedulesInfo")
             .child(scheduleId)
             .child("bookings")
             .child(userId)
@@ -199,7 +261,7 @@ class ScheduleFirebaseHelper {
     ) {
 
         val scheduleBookingsRef = FirebaseDatabase.getInstance()
-            .getReference("schedules")
+            .getReference("schedulesInfo")
             .child(scheduleId)
             .child("bookings")
             .child(userId)
@@ -209,6 +271,49 @@ class ScheduleFirebaseHelper {
         }
 
     }
+
+    private val scheduleListeners = mutableMapOf<String, ValueEventListener>()
+
+    fun listenToBookedSchedulesFullDetail(
+        scheduleId: String,
+        onUpdate: (schedule: NewSchedule?) -> Unit
+    ) {
+        val scheduleRef = FirebaseDatabase.getInstance().reference
+            .child("schedulesInfo")
+            .child(scheduleId)
+
+
+        if (scheduleListeners.containsKey(scheduleId)) return
+
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val scheduleDetails = snapshot.getValue(NewSchedule::class.java)
+                if (scheduleDetails != null && scheduleDetails.status == "active") {
+                    onUpdate(scheduleDetails)
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("LiveSchedule", "Error: ${error.message}")
+                onUpdate(null)
+            }
+        }
+
+        scheduleRef.addValueEventListener(listener)
+        scheduleListeners[scheduleId] = listener
+    }
+
+
+    fun removeAllScheduleListeners() {
+        val databaseRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
+        for ((scheduleId, listener) in scheduleListeners) {
+            databaseRef.child(scheduleId).removeEventListener(listener)
+        }
+        scheduleListeners.clear()
+    }
+
+
 
 
 

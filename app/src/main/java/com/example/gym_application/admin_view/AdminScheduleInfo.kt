@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -19,10 +20,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminBookingListAdapter
 import com.example.gym_application.model.UserDetails
-import com.example.gym_application.utils.OnDeleteClickListener
 import com.example.gym_application.utils.formatDateUtils
 import com.google.android.material.button.MaterialButton
-import helper.FirebaseBookingsHelper
+import helper.FirebaseClassesHelper
 @RequiresApi(Build.VERSION_CODES.O)
 class AdminScheduleInfo : AppCompatActivity() {
 
@@ -40,7 +40,8 @@ class AdminScheduleInfo : AppCompatActivity() {
     private lateinit var classId: String
     private lateinit var scheduleId : String
 
-    private val firebaseHelper = FirebaseBookingsHelper()
+    private val firebaseHelper = FirebaseClassesHelper()
+    private val scheduleHelper = FirebaseClassesHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,6 +167,7 @@ class AdminScheduleInfo : AppCompatActivity() {
 
         btnConfirmDeletion.setOnClickListener {
             alertDialog.dismiss()
+            deactivateSchedule()
         }
     }
 
@@ -175,9 +177,14 @@ class AdminScheduleInfo : AppCompatActivity() {
     }
 
     private fun deactivateSchedule() {
-
-
-
+        scheduleHelper.softDeleteSchedule(scheduleId) { success ->
+            if (success) {
+                Toast.makeText(this, "Schedule successfully soft deleted", Toast.LENGTH_SHORT).show()
+                finish()
+            }else {
+                Toast.makeText(this, "Failed to soft delete schedule", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

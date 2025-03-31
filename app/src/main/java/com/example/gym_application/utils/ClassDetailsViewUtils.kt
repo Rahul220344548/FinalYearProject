@@ -159,7 +159,7 @@ fun utilsUpdateClassCurrentBookings(
     currentBookingCount : Map<String,Any>,
     callback: (Boolean) -> Unit) {
 
-    scheduleFirebaseHelper.incrementClassCurrentBookingInSchedules(
+    scheduleFirebaseHelper.newIncrementClassCurrentBookingInSchedules(
         scheduleId,
         currentBookingCount,
         callback

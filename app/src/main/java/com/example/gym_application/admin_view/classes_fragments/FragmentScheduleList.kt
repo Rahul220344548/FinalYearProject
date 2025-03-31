@@ -1,5 +1,6 @@
 package com.example.gym_application.admin_view.classes_fragments
 
+import FirebaseDatabaseHelper
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -20,12 +21,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminScheduleListAdapter
 import com.example.gym_application.controller.ScheduleFirebaseHelper
-import com.example.gym_application.model.Schedule
 import com.example.gym_application.utils.ClassBookingUtils
+import com.example.gym_application.utils.ScheduleUtils.createScheduleFromClassTemplate
+import com.example.gym_application.utils.ScheduleUtils.generateNewScheduleId
 import com.example.gym_application.utils.ValidationClassScheduleFields
 import com.example.gym_application.utils.formatDateUtils
 import com.google.android.material.button.MaterialButton
-import java.time.LocalDate
+import helper.FirebaseClassesHelper
 
 @RequiresApi(Build.VERSION_CODES.O)
 class FragmentScheduleList : Fragment() {
@@ -52,7 +54,8 @@ class FragmentScheduleList : Fragment() {
     private val classTitleToIdMap = mutableMapOf<String, String>()
 
     private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
-
+    private val classFirebaseHelper = FirebaseDatabaseHelper()
+    private val newClassFirebaseHelper = FirebaseClassesHelper()
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,11 +83,12 @@ class FragmentScheduleList : Fragment() {
     private fun fetchSchedulesList() {
 
         var getFormattedDate = formatDateUtils.getTodayDate()
-        scheduleFirebaseHelper.fetchClassesForADate(getFormattedDate) { classList ->
+        newClassFirebaseHelper.fetchedSchedulesForADateLive(getFormattedDate) { classList ->
             if (classList.isNotEmpty()) {
                 adapter.updateDate(classList)
             }else {
                 txtNoSchedules.visibility = View.VISIBLE
+                adapter.updateDate(emptyList())
             }
         }
     }
@@ -129,47 +133,54 @@ class FragmentScheduleList : Fragment() {
         val selectedClassId = classTitleToIdMap[selectedClassTitle]
         val selectedClassLocation = autoCompleteClassLocation.text.toString().trim()
         val selectedClassInstructor = autoCompleteClassInstructor.text.toString().trim()
+        val classStartTime = autoCompleteStartTime.text.toString().trim()
+        val classEndTime = autoCompleteEndTime.text.toString().trim()
+        val classStartDate = startDate.text.toString().trim()
 
         if (selectedClassId.isNullOrEmpty()) {
             Toast.makeText(context, "Invalid class selected.", Toast.LENGTH_SHORT).show()
             return
         }
 
-
-        val classStarTime = autoCompleteStartTime.text.toString().trim()
-        val classEndTime = autoCompleteEndTime.text.toString().trim()
-        val classStartDate = startDate.text.toString().trim()
-
-        val newSchedule = Schedule(
-            classId = selectedClassId,
-            classLocation = selectedClassLocation,
-            classInstructor = selectedClassInstructor,
-            classStartTime = classStarTime,
-            classEndTime = classEndTime,
-            classStartDate = classStartDate,
-            classCurrentBookings = 0,
-            status = "active"
-        )
-
-        scheduleFirebaseHelper.checkForDuplicateSchedules(selectedClassId, classStartDate, classStarTime) { isDuplicate ->
+        scheduleFirebaseHelper.checkForDuplicateSchedules(selectedClassId, classStartDate, classStartTime) { isDuplicate ->
             if (isDuplicate) {
                 Toast.makeText(context, "A class is already scheduled at this time!", Toast.LENGTH_SHORT).show()
-            }else {
-                scheduleFirebaseHelper.createClassScheduleEntry(
+                return@checkForDuplicateSchedules
+            }
+
+            classFirebaseHelper.fetchClassTemplateByClassId(selectedClassId) { classTemplate ->
+                if (classTemplate == null){
+                    Toast.makeText(context, "Failed to fetch class details.", Toast.LENGTH_SHORT).show()
+                    return@fetchClassTemplateByClassId
+                }
+                val newScheduleId = generateNewScheduleId() ?: return@fetchClassTemplateByClassId
+                val newSchedule = createScheduleFromClassTemplate(
+                    classTemplate,
+                    newScheduleId,
+                    selectedClassLocation,
+                    selectedClassInstructor,
+                    classStartDate,
+                    classStartTime,
+                    classEndTime
+                )
+
+                scheduleFirebaseHelper.newCreateClassScheduleEntry(
                     schedule = newSchedule,
                     onSuccess = {
                         Toast.makeText(context, "Schedule created successfully!", Toast.LENGTH_SHORT).show()
                         alertDialog.dismiss()
-                                },
+                    },
                     onFailure = { exception ->
                         Toast.makeText(context, "Failed to create schedule: ${exception.message}", Toast.LENGTH_SHORT).show()
                     }
                 )
-
             }
+
         }
 
+
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun validationFields():String{

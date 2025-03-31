@@ -1,6 +1,7 @@
 package com.example.gym_application
 
 import FirebaseDatabaseHelper
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,15 +9,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.controller.BookedClassesAdapter
+import com.example.gym_application.controller.ScheduleFirebaseHelper
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.ClassWithScheduleModel
+import com.example.gym_application.model.Schedule
+import com.example.gym_application.newModel.NewSchedule
 import com.google.firebase.auth.FirebaseAuth
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 class BookedClassesFragment : Fragment() {
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        scheduleFirebaseHelper.removeAllScheduleListeners()
+        userFirebaseHelper.removeUserCurrentBookingsListener(userId ?: "")
+    }
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var classAdapter : BookedClassesAdapter
@@ -24,6 +35,7 @@ class BookedClassesFragment : Fragment() {
 
     private val userFirebaseHelper = UserFirebaseDatabaseHelper()
     private val classFirebaseHelper = FirebaseDatabaseHelper()
+    private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -42,32 +54,33 @@ class BookedClassesFragment : Fragment() {
 
         txtMessageNoBookings = view.findViewById<TextView>(R.id.txtNoBookings)
 
-        fetchUserCurrentBookings()
+        observeUserCurrentBookingsLive()
 
         return view
     }
 
 
-    private fun fetchUserCurrentBookings() {
-        userFirebaseHelper.fetchUserCurrentBookingsAsPairs(userId ?: "") { bookings ->
-            if (!bookings.isNullOrEmpty()) {
+    private fun observeUserCurrentBookingsLive() {
+        userFirebaseHelper.listenToUserCurrentBookingsLive(userId ?: "") { bookings ->
+            if (bookings.isNotEmpty()) {
                 txtMessageNoBookings.visibility = View.GONE
                 fetchClassDetails(bookings)
-            } else {
-                Log.d("FetchUserCurrentBookings", "No current class booking found")
             }
         }
     }
 
-
-    private fun fetchClassDetails(bookings: List<Pair<String, String>>) {
-        val classDetailsList = mutableListOf<ClassWithScheduleModel>()
-
-        bookings.forEach { (classId, scheduleId) ->
-            classFirebaseHelper.getClassWithSpecificSchedule(classId, scheduleId) { classDetail ->
-                if (classDetail != null) {
-                    classDetailsList.add(classDetail)
-                    classAdapter.updateData(classDetailsList)
+    private fun fetchClassDetails(scheduleIds: List<String>) {
+        val liveSchedules = mutableListOf<NewSchedule>()
+        scheduleIds.forEach { scheduleId ->
+            scheduleFirebaseHelper.listenToBookedSchedulesFullDetail(scheduleId) { updatedSchedule ->
+                if (updatedSchedule != null) {
+                    val existingIndex = liveSchedules.indexOfFirst { it.scheduleId == updatedSchedule.scheduleId }
+                    if (existingIndex >= 0) {
+                        liveSchedules[existingIndex] = updatedSchedule
+                    } else {
+                        liveSchedules.add(updatedSchedule)
+                    }
+                    classAdapter.updateData(liveSchedules)
                 }
             }
         }

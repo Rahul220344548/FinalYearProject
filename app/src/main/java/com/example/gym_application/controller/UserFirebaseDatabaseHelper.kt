@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.gym_application.model.MembershipInfo
 import com.example.gym_application.model.UserClassBooking
 import com.example.gym_application.model.UserDetails
+import com.example.gym_application.newModel.newUserClassBooking
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -84,6 +85,26 @@ class UserFirebaseDatabaseHelper {
 
     }
 
+    fun newAddUserBookedClassToCurrentBookings(
+    userId: String,
+    scheduleId: String,
+    callback: (Boolean) -> Unit
+    ) {
+        val userDatabaseRef = FirebaseDatabase.getInstance().reference.child("users")
+            .child(userId)
+            .child("bookings")
+            .child("current")
+            .push()
+        val booking = newUserClassBooking(scheduleId)
+        userDatabaseRef.setValue(booking)
+            .addOnSuccessListener { callback(true) }
+            .addOnFailureListener { exception ->
+                exception.printStackTrace()
+                callback(false)
+            }
+
+    }
+
     fun fetchUserCurrentBookings(userId : String, callback: (List<String>?) -> Unit) {
 
         val userDatabase = FirebaseDatabase.getInstance().reference.child("users")
@@ -111,6 +132,53 @@ class UserFirebaseDatabaseHelper {
             callback(null)
         }
 
+    }
+
+    private var currentBookingsListener: ValueEventListener? = null
+
+    fun listenToUserCurrentBookingsLive(
+        userId: String,
+        onUpdate: (List<String>) -> Unit
+    ) {
+        val userDatabase = FirebaseDatabase.getInstance().reference
+            .child("users")
+            .child(userId)
+            .child("bookings")
+            .child("current")
+
+        currentBookingsListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val scheduleIdList = mutableListOf<String>()
+                for (bookingSnapshot in snapshot.children) {
+                    val booking = bookingSnapshot.getValue(UserClassBooking::class.java)
+                    val fetchedScheduleId = booking?.scheduleId
+                    if (fetchedScheduleId != null) {
+                        scheduleIdList.add(fetchedScheduleId)
+                    }
+                }
+                onUpdate(scheduleIdList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("UserBookings", "Error: ${error.message}")
+                onUpdate(emptyList())
+            }
+        }
+
+        userDatabase.addValueEventListener(currentBookingsListener!!)
+    }
+
+    fun removeUserCurrentBookingsListener(userId: String) {
+        val userDatabase = FirebaseDatabase.getInstance().reference
+            .child("users")
+            .child(userId)
+            .child("bookings")
+            .child("current")
+
+        currentBookingsListener?.let {
+            userDatabase.removeEventListener(it)
+        }
+        currentBookingsListener = null
     }
 
     fun fetchUserCurrentBookingsAsPairs(userId: String, callback: (List<Pair<String, String>>?) -> Unit) {
