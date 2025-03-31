@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -41,6 +42,8 @@ class FragmentScheduleList : Fragment() {
     private lateinit var autoCompleteStartTime: AutoCompleteTextView
     private lateinit var autoCompleteEndTime : AutoCompleteTextView
 
+    private lateinit var txtNoSchedules : TextView
+
     private lateinit var startDate: AutoCompleteTextView
 
     private var selectedRoom: String = ""
@@ -57,6 +60,8 @@ class FragmentScheduleList : Fragment() {
     ): View? {
 
         val view =  inflater.inflate(R.layout.fragment_schedule_list, container, false)
+
+        txtNoSchedules =  view.findViewById<TextView>(R.id.txtNoScheduleToday)
 
         recyclerView = view.findViewById(R.id.newAdminClassesListRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -76,11 +81,13 @@ class FragmentScheduleList : Fragment() {
 
         var getFormattedDate = formatDateUtils.getTodayDate()
         scheduleFirebaseHelper.fetchClassesForADate(getFormattedDate) { classList ->
-            adapter.updateDate(classList)
+            if (classList.isNotEmpty()) {
+                adapter.updateDate(classList)
+            }else {
+                txtNoSchedules.visibility = View.VISIBLE
+            }
         }
-
     }
-
 
     fun onCreateNewScheduleBtn() {
 

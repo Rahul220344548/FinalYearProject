@@ -12,6 +12,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.model.Membership
 import com.example.gym_application.model.MembershipPlans
 import com.google.firebase.auth.FirebaseAuth
@@ -43,6 +46,10 @@ class MembershipPaymentActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_membership_payment)
+
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+
         setContentView(R.layout.activity_membership_payment)
 
         val toolbar: Toolbar = findViewById(R.id.user_toolbar)

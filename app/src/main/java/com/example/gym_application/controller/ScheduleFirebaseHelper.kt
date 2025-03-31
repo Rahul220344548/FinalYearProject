@@ -83,8 +83,11 @@ class ScheduleFirebaseHelper {
 
         scheduleListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val schedules = snapshot.children.mapNotNull { it.getValue(Schedule::class.java) }
-                    .filter { it.classStartDate.contains(selectedDate) }
+                val schedules = snapshot.children
+                    .mapNotNull { it.getValue(Schedule::class.java) }
+                    .filter {
+                        it.classStartDate.contains(selectedDate) && it.status == "active"
+                    }
                 callback(schedules)
             }
 
@@ -205,8 +208,9 @@ class ScheduleFirebaseHelper {
             callback(task.isSuccessful)
         }
 
-
     }
+
+
 
 }
 

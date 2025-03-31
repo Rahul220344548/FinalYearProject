@@ -177,8 +177,8 @@ class SignUp : AppCompatActivity() {
 
     //creates userDetails Object
     private fun saveUserDetails(userId: String) {
-        val user = UserDetails(firstName.text.trim().toString(),
-            lastName.text.trim().toString(),
+        val user = UserDetails(firstName.text.trim().toString().lowercase().replaceFirstChar { it.uppercase() },
+            lastName.text.trim().toString().lowercase().replaceFirstChar { it.uppercase() },
             dateOfBirth,
             gender.text.toString(),
             phoneNumber.text.trim().toString(),

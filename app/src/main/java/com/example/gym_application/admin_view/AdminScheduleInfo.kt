@@ -174,6 +174,12 @@ class AdminScheduleInfo : AppCompatActivity() {
         showDeleteUserDialog()
     }
 
+    private fun deactivateSchedule() {
+
+
+
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true

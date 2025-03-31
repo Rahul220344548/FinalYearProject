@@ -27,6 +27,7 @@ class MembershipActivity : AppCompatActivity() {
         setContentView(R.layout.activity_membership)
 
 
+
         val toolbar: Toolbar = findViewById(R.id.user_toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
