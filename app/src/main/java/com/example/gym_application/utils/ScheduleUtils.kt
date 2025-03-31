@@ -1,5 +1,7 @@
 package com.example.gym_application.utils
 
+import android.view.View
+import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.ClassTemplate
 import com.example.gym_application.newModel.NewSchedule
 import com.google.firebase.database.FirebaseDatabase

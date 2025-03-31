@@ -44,9 +44,13 @@ class AccountFragment : Fragment() {
         setProfileDetails()
 
         val btnEditProfile: AppCompatButton = view.findViewById(R.id.btnEditProfile)
-
         btnEditProfile.setOnClickListener {
             goToEditProfile()
+        }
+
+        val btnMyBookings : AppCompatButton = view.findViewById(R.id.btnMyBookings)
+        btnMyBookings.setOnClickListener {
+            goToMyBookingsPage()
         }
 
         val btnMembership : AppCompatButton = view.findViewById(R.id.btnMembership)
@@ -65,6 +69,11 @@ class AccountFragment : Fragment() {
 
     private fun goToEditProfile() {
         val intent = Intent(requireContext(), EditProfileActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToMyBookingsPage() {
+        val intent = Intent(requireContext(), MyBookingsActivity::class.java)
         startActivity(intent)
     }
 

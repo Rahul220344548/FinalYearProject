@@ -8,6 +8,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Locale
 
 object formatDateUtils {
@@ -67,6 +68,16 @@ object formatDateUtils {
             inDate
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun parseDateTime(date: String, time: String): LocalDateTime? {
+        return try {
+            LocalDateTime.parse("$date T $time", DateTimeFormatter.ofPattern("dd/MM/yyyy'T'HH:mm"))
+        } catch (e: DateTimeParseException) {
+            null
+        }
+    }
+
 
     fun convertTimeToMinutes(time: String): Int {
         val parts = time.split(":")

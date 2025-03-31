@@ -288,7 +288,7 @@ class ScheduleFirebaseHelper {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val scheduleDetails = snapshot.getValue(NewSchedule::class.java)
-                if (scheduleDetails != null && scheduleDetails.status == "active") {
+                if (scheduleDetails != null) {
                     onUpdate(scheduleDetails)
                 }
 

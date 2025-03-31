@@ -73,7 +73,7 @@ class BookedClassesFragment : Fragment() {
         val liveSchedules = mutableListOf<NewSchedule>()
         scheduleIds.forEach { scheduleId ->
             scheduleFirebaseHelper.listenToBookedSchedulesFullDetail(scheduleId) { updatedSchedule ->
-                if (updatedSchedule != null) {
+                if (updatedSchedule != null && updatedSchedule.status == "active") {
                     val existingIndex = liveSchedules.indexOfFirst { it.scheduleId == updatedSchedule.scheduleId }
                     if (existingIndex >= 0) {
                         liveSchedules[existingIndex] = updatedSchedule

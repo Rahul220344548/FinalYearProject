@@ -61,4 +61,6 @@
 
     <string name="all_bookings"><u>BOOKING LIST</u></string>
 
+    <string name="user_booking_list"><u>My Bookings</u></string>
+
 </resources>

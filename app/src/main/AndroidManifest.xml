@@ -15,6 +15,9 @@
         android:theme="@style/Theme.GymApplication"
         tools:targetApi="31">
         <activity
+            android:name=".MyBookingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".admin_view.AdminScheduleInfo"
             android:exported="false" />
         <activity
