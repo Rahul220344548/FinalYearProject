@@ -4,6 +4,8 @@ import com.example.gym_application.model.UserDetails
 import com.google.firebase.database.*
 class FirebaseBookingsHelper {
 
+
+
     fun getUserIdsForSchedule(
         scheduleId: String,
         callback: (List<String>) -> Unit
