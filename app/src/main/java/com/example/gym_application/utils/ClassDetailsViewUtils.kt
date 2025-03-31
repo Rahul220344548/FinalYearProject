@@ -59,12 +59,18 @@ fun utilsSetUpClassAvailableFor(activity: Activity,classAvailabilityFor: String)
 
 }
 
-fun utilsSetUpClassStatus(activity: Activity, maxCapacity: Int,currBookings : Int) {
+fun utilsSetUpClassStatus(activity: Activity, maxCapacity: Int,
+                          currBookings : Int, status: String) {
 
     val remainingSpots = maxCapacity - currBookings
     val txtClassRemainingSpot =activity.findViewById<TextView>(R.id.classRemainingSpots)
     val btnBookClass = activity.findViewById<Button>(R.id.btnBookClass)
 
+    if (status == "inactive") {
+        txtClassRemainingSpot.text = "NOT AVAILABLE"
+        txtClassRemainingSpot.setTextColor(ContextCompat.getColor(activity, R.color.red))
+        return
+    }
     if (currBookings >= maxCapacity) {
         txtClassRemainingSpot.setTextColor(ContextCompat.getColor(activity,R.color.red))
         txtClassRemainingSpot.text = "Class Full"
@@ -95,7 +101,8 @@ fun utilsSetUpClassDescription(activity: Activity,inClassDescription: String) {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun utilsSetUpBookAndCancelButton(activity: Activity, userId : String, scheduleId : String) {
+fun utilsSetUpBookAndCancelButton(activity: Activity, userId : String,
+                                  scheduleId : String, status: String) {
     val btnBookClass = activity.findViewById<Button>(R.id.btnBookClass)
     val bookingConfirmTextView = activity.findViewById<TextView>(R.id.bookingConfirmationText)
     val btnCancelClass = activity.findViewById<Button>(R.id.btnCancelClassBooking)
@@ -104,6 +111,12 @@ fun utilsSetUpBookAndCancelButton(activity: Activity, userId : String, scheduleI
         btnBookClass.visibility = View.GONE
         bookingConfirmTextView.text = "CLASS COMPLETED"
 //        bookingConfirmTextView.visibility = View.GONE
+        btnCancelClass.visibility = View.GONE
+        return
+    }
+
+    if (status=="inactive") {
+        btnBookClass.visibility = View.GONE
         btnCancelClass.visibility = View.GONE
         return
     }

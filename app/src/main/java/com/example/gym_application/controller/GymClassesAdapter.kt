@@ -63,6 +63,7 @@ class GymClassesAdapter(private var classList: List<NewSchedule>) :
                 putExtra("classCurrentBookings", gymClass.classCurrentBookings)
                 putExtra("classMaxCapacity", gymClass.classMaxCapacity)
                 putExtra("classDescription", gymClass.classDescription)
+                putExtra("status", gymClass.status)
             }
             holder.itemView.context.startActivity(intent)
         }

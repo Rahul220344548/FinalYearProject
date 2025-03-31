@@ -12,7 +12,7 @@ import com.example.gym_application.admin_view.adapter.AdminClassListAdapter
 class FragmentBookingList : Fragment() {
 
 
-    private lateinit var adapter: AdminClassListAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

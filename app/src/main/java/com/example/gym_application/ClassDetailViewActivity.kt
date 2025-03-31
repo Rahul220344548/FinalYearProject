@@ -79,17 +79,18 @@ class ClassDetailViewActivity : AppCompatActivity() {
         val inClassLocation = intent.getStringExtra("classLocation") ?: ""
         val inClassInstructor = intent.getStringExtra("classInstructor") ?: ""
         val inClassDescription = intent.getStringExtra("classDescription") ?: ""
+        val inClassStatus =  intent.getStringExtra("status") ?: ""
 
         utilsSetUpClassTitle(this, inClassTitle)
         utilsSetUpClassStartDate(this,inClassStartDate)
         utilsSetUpClassStartTime(this,inClassStartTime,inClassEndTime)
         utilsSetUpClassDuration(this,inClassStartTime,inClassEndTime)
         utilsSetUpClassAvailableFor(this,classAvailabilityFor)
-        utilsSetUpClassStatus(this,maxCapacity,currBookings)
+        utilsSetUpClassStatus(this,maxCapacity,currBookings,inClassStatus)
         utilsSetUpClassLocation(this,inClassLocation)
         utilsSetUpClassInstructor(this,inClassInstructor)
         utilsSetUpClassDescription(this,inClassDescription)
-        utilsSetUpBookAndCancelButton(this,userId,scheduleId)
+        utilsSetUpBookAndCancelButton(this,userId,scheduleId, inClassStatus)
 
     }
 

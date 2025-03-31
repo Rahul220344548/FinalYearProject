@@ -1,8 +1,10 @@
 package com.example.gym_application
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
@@ -16,7 +18,7 @@ import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.newModel.NewSchedule
 import com.google.firebase.auth.FirebaseAuth
 import helper.FirebaseClassesHelper
-
+@RequiresApi(Build.VERSION_CODES.O)
 class MyBookingsActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -26,6 +28,7 @@ class MyBookingsActivity : AppCompatActivity() {
     private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,6 +53,7 @@ class MyBookingsActivity : AppCompatActivity() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun observeUserCurrentBookingsLive() {
         userFirebaseHelper.listenToUserCurrentBookingsLive(userId ?: "") { bookings ->
             if (bookings.isNotEmpty()) {
@@ -58,6 +62,7 @@ class MyBookingsActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun fetchAllBookedClasses(scheduleIds: List<String>) {
         val liveSchedules = mutableListOf<NewSchedule>()
         scheduleIds.forEach { scheduleId ->

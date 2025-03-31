@@ -63,7 +63,6 @@ class BookedClassesFragment : Fragment() {
     private fun observeUserCurrentBookingsLive() {
         userFirebaseHelper.listenToUserCurrentBookingsLive(userId ?: "") { bookings ->
             if (bookings.isNotEmpty()) {
-                txtMessageNoBookings.visibility = View.GONE
                 fetchClassDetails(bookings)
             }
         }
@@ -80,6 +79,7 @@ class BookedClassesFragment : Fragment() {
                     } else {
                         liveSchedules.add(updatedSchedule)
                     }
+                    txtMessageNoBookings.visibility = View.GONE
                     classAdapter.updateData(liveSchedules)
                 }
             }

@@ -57,6 +57,8 @@ class AdminScheduleListAdapter ( private var classList : List<NewSchedule>) :
                 putExtra("classCurrentBookings", scheduledListItem.classCurrentBookings)
                 putExtra("classMaxCapacity", scheduledListItem.classMaxCapacity)
                 putExtra("classDescription", scheduledListItem.classDescription)
+                putExtra("status", scheduledListItem.status)
+
             }
             holder.itemView.context.startActivity(intent)
         }
@@ -69,7 +71,7 @@ class AdminScheduleListAdapter ( private var classList : List<NewSchedule>) :
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateDate(newSchedule: List<NewSchedule>) {
+    fun updateData(newSchedule: List<NewSchedule>) {
 
         val now = java.time.LocalTime.now()
         val today = java.time.LocalDate.now()

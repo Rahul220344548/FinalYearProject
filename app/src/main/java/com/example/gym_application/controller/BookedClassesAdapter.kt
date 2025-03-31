@@ -51,6 +51,7 @@ class BookedClassesAdapter (private var classList: List<NewSchedule>) :
                 putExtra("classCurrentBookings", bookedClass.classCurrentBookings)
                 putExtra("classMaxCapacity", bookedClass.classMaxCapacity)
                 putExtra("classDescription", bookedClass.classDescription)
+                putExtra("status", bookedClass.status)
             }
             holder.itemView.context.startActivity(intent)
         }

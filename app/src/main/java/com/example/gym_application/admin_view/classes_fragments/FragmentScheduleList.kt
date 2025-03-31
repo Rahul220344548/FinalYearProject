@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
@@ -26,11 +27,19 @@ import com.example.gym_application.utils.ScheduleUtils.createScheduleFromClassTe
 import com.example.gym_application.utils.ScheduleUtils.generateNewScheduleId
 import com.example.gym_application.utils.ValidationClassScheduleFields
 import com.example.gym_application.utils.formatDateUtils
+import com.example.gym_application.viewmodel.ScheduleViewModel
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import helper.FirebaseClassesHelper
 
 @RequiresApi(Build.VERSION_CODES.O)
 class FragmentScheduleList : Fragment() {
+    private lateinit var eventListener: ValueEventListener
+    private lateinit var databaseRef: DatabaseReference
+
+
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter : AdminScheduleListAdapter
@@ -56,7 +65,8 @@ class FragmentScheduleList : Fragment() {
     private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
     private val classFirebaseHelper = FirebaseDatabaseHelper()
     private val newClassFirebaseHelper = FirebaseClassesHelper()
-    @SuppressLint("MissingInflatedId")
+    private lateinit var viewModel: ScheduleViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,10 +76,8 @@ class FragmentScheduleList : Fragment() {
 
         txtNoSchedules =  view.findViewById<TextView>(R.id.txtNoScheduleToday)
 
-        recyclerView = view.findViewById(R.id.newAdminClassesListRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = AdminScheduleListAdapter(emptyList())
-        recyclerView.adapter = adapter
+        viewModel = ViewModelProvider(this).get(ScheduleViewModel::class.java)
+        setupRecyclerView(view)
         fetchSchedulesList()
 
         btnAddNewSchedule = view.findViewById<Button>(R.id.btnAddNewSchedule)
@@ -77,18 +85,26 @@ class FragmentScheduleList : Fragment() {
             onCreateNewScheduleBtn()
         }
 
+        databaseRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
+
         return view
     }
 
-    private fun fetchSchedulesList() {
+    private fun setupRecyclerView(view: View) {
+        recyclerView = view.findViewById(R.id.newAdminClassesListRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = AdminScheduleListAdapter(emptyList())
+        recyclerView.adapter = adapter
+    }
 
-        var getFormattedDate = formatDateUtils.getTodayDate()
-        newClassFirebaseHelper.fetchedSchedulesForADateLive(getFormattedDate) { classList ->
-            if (classList.isNotEmpty()) {
-                adapter.updateDate(classList)
-            }else {
-                txtNoSchedules.visibility = View.VISIBLE
-                adapter.updateDate(emptyList())
+    private fun fetchSchedulesList() {
+        val today = formatDateUtils.getTodayDate()
+        viewModel.attachListenerForDate(today) { schedules, error ->
+            if (schedules.isNotEmpty() && !error) {
+                adapter.updateData(schedules)
+            } else {
+                txtNoSchedules.visibility = View.GONE
+                adapter.updateData(emptyList())
             }
         }
     }

@@ -11,7 +11,7 @@ class FirebaseClassesHelper {
         callback: (List<String>) -> Unit
     ) {
         val scheduleRef = FirebaseDatabase.getInstance()
-            .getReference("schedules")
+            .getReference("schedulesInfo")
             .child(scheduleId)
             .child("bookings")
 
@@ -40,15 +40,14 @@ class FirebaseClassesHelper {
         }
     }
 
+    private var listener: ValueEventListener? = null
+    private val databaseRef: DatabaseReference = FirebaseDatabase.getInstance().getReference("schedulesInfo")
 
-    fun fetchedSchedulesForADateLive(
-        selectedDate: String,
-        callback: (List<NewSchedule>) -> Unit
-    ) {
+    fun fetchedSchedulesForADateLive(selectedDate: String, callback: (List<NewSchedule>) -> Unit) {
         val databaseRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
 
         databaseRef.orderByChild("classStartDate").equalTo(selectedDate)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val scheduleList = mutableListOf<NewSchedule>()
                     for (scheduleSnapshot in snapshot.children) {
@@ -57,7 +56,7 @@ class FirebaseClassesHelper {
                             scheduleList.add(schedule)
                         }
                     }
-                    callback(scheduleList)
+                    callback(scheduleList.sortedBy { it.classStartTime })
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -65,6 +64,8 @@ class FirebaseClassesHelper {
                 }
             })
     }
+
+
 
     fun softDeleteSchedule(
         scheduleId: String,
