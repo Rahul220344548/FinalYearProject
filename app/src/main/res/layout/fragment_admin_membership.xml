@@ -30,7 +30,7 @@
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtAllMembershipPlans" />
-    <!--        android:onClick="btnToNavigateToStaffCreation"-->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/adminMembershipListRecyclerView"
         android:layout_width="match_parent"

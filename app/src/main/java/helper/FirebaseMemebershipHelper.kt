@@ -3,6 +3,7 @@ package helper
 import android.util.Log
 import android.widget.Toast
 import com.example.gym_application.model.MembershipPlans
+import com.example.gym_application.newModel.NewMembershipPlan
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -33,5 +34,19 @@ class FirebaseMemebershipHelper {
         })
 
     }
+
+    fun createMembershipEntry(
+        membershipId : String,
+        newMembershipPlan: NewMembershipPlan,
+        onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+
+        val databaseRef = FirebaseDatabase.getInstance().getReference("memberships")
+
+        databaseRef.child(membershipId).setValue(newMembershipPlan)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { exception -> onFailure (exception) }
+
+    }
+
 
 }

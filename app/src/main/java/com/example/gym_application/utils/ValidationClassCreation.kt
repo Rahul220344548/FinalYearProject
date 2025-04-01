@@ -156,4 +156,10 @@ object ValidationClassCreation {
         }
     }
 
+    fun isValidMembershipPrice(price : String ) :Boolean{
+        val cap = price.toIntOrNull()
+        return cap !=null && cap > 0
+    }
+
+
 }
