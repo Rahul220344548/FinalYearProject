@@ -37,7 +37,7 @@ object DialogUtils {
 
     fun showMembershipDialog(
         context: Context,
-        onConfirm: (dialogView: View) -> Unit,
+        onConfirm: (View, AlertDialog) -> Unit,
         onCancel: () -> Unit
     ) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_membership_plan, null)
@@ -62,8 +62,7 @@ object DialogUtils {
         }
 
         btnConfirm.setOnClickListener {
-            alertDialog.dismiss()
-            onConfirm(dialogView)
+            onConfirm(dialogView,alertDialog)
         }
     }
 

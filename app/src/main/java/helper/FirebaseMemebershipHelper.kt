@@ -12,15 +12,15 @@ import kotlinx.coroutines.flow.callbackFlow
 
 class FirebaseMemebershipHelper {
 
-    fun fetchAllMembershipPlansAsList( callback: (List<MembershipPlans>) -> Unit) {
+    fun fetchAllMembershipPlansAsList( callback: (List<NewMembershipPlan>) -> Unit) {
 
-        val database = FirebaseDatabase.getInstance().getReference("membershipPlan")
+        val database = FirebaseDatabase.getInstance().getReference("memberships")
 
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val plans = mutableListOf<MembershipPlans>()
+                val plans = mutableListOf<NewMembershipPlan>()
                 for (planSnapshot in snapshot.children) {
-                    val plan = planSnapshot.getValue(MembershipPlans::class.java)
+                    val plan = planSnapshot.getValue(NewMembershipPlan::class.java)
                     if (plan != null) {
                         plans.add(plan)
                     }

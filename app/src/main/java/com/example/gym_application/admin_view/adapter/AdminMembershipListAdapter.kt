@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.AdminMembershipInfoEditorActivity
 import com.example.gym_application.model.MembershipPlans
+import com.example.gym_application.newModel.NewMembershipPlan
 
 
 class AdminMembershipListAdapter (
-    private var membershipList : List<MembershipPlans>,
+    private var membershipList : List<NewMembershipPlan>,
 ) :
     RecyclerView.Adapter<AdminMembershipListAdapter.ViewHolder>() {
 
@@ -36,13 +37,14 @@ class AdminMembershipListAdapter (
 
         val membership = membershipList[position]
 
-        holder.title.text = membership.title
+        holder.title.text = "${membership.title} PLAN"
         holder.duration.text = membership.duration
         holder.price.text = membership.price.toString()
 
 
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, AdminMembershipInfoEditorActivity::class.java).apply {
+                putExtra("id",membership.id)
                 putExtra("title",membership.title)
                 putExtra("duration", membership.duration)
                 putExtra("price", membership.price)
@@ -54,7 +56,7 @@ class AdminMembershipListAdapter (
 
     override fun getItemCount(): Int = membershipList.size
 
-    fun updateData( newList: List<MembershipPlans>) {
+    fun updateData( newList: List<NewMembershipPlan>) {
         membershipList = newList
         notifyDataSetChanged()
     }

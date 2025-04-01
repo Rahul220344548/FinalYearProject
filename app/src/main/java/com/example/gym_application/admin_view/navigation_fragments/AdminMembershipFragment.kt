@@ -54,7 +54,6 @@ class AdminMembershipFragment : Fragment() {
 
         var goToCreateMembershipBtn :Button = view.findViewById(R.id.btnAddNewMembership)
         goToCreateMembershipBtn.setOnClickListener { btnAddNewMembershipPlan() }
-
         return view
     }
 
@@ -68,15 +67,15 @@ class AdminMembershipFragment : Fragment() {
     fun btnAddNewMembershipPlan() {
         DialogUtils.showMembershipDialog(
             requireContext(),
-            onConfirm = { dialogView ->
+            onConfirm = { dialogView, alertDialog  ->
                 setUpAllFields(dialogView)
-                storeMembershipPlanToDatabase(dialogView)
+                storeMembershipPlanToDatabase(alertDialog)
             },
             onCancel = {}
         )
     }
 
-    private fun storeMembershipPlanToDatabase(dialogView: View) {
+    private fun storeMembershipPlanToDatabase(alertDialog: AlertDialog) {
 
         val validationMessage = validationFields()
 
@@ -94,7 +93,8 @@ class AdminMembershipFragment : Fragment() {
 
         firebaseMembershipHelper.createMembershipEntry(membershipId, newMembershipPlan,
             onSuccess = {
-                Toast.makeText(context, "Class created successfully!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Membership Plan created successfully!", Toast.LENGTH_SHORT).show()
+                alertDialog.dismiss()
             },
             onFailure = { exception ->
                 Toast.makeText(
@@ -105,6 +105,7 @@ class AdminMembershipFragment : Fragment() {
             }
         )
     }
+
 
 
     private fun validationFields(): String {
