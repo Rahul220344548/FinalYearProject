@@ -1,27 +1,19 @@
 package com.example.gym_application.admin_view.adapter
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
+import com.example.gym_application.admin_view.AdminMembershipInfoEditorActivity
 import com.example.gym_application.model.MembershipPlans
-import com.example.gym_application.utils.OnMembershipClickListener
+
 
 class AdminMembershipListAdapter (
-    private val context: Context,
     private var membershipList : List<MembershipPlans>,
-    private val listener: OnMembershipClickListener
 ) :
     RecyclerView.Adapter<AdminMembershipListAdapter.ViewHolder>() {
 
@@ -41,18 +33,24 @@ class AdminMembershipListAdapter (
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         val membership = membershipList[position]
+
         holder.title.text = membership.title
         holder.duration.text = membership.duration
         holder.price.text = membership.price.toString()
 
+
         holder.itemView.setOnClickListener {
-            listener.onMembershipClicked(membership)
+            val intent = Intent(holder.itemView.context, AdminMembershipInfoEditorActivity::class.java).apply {
+                putExtra("title",membership.title)
+                putExtra("duration", membership.duration)
+                putExtra("price", membership.price)
+            }
+            holder.itemView.context.startActivity(intent)
         }
 
-
     }
-
 
     override fun getItemCount(): Int = membershipList.size
 

@@ -5,9 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.RadioGroup
 import android.widget.Toast
-import com.google.android.gms.common.GoogleApiAvailability
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -240,9 +238,10 @@ fun utilsSetUpSelectClassesOptionsDropdown(
 
 fun utilsSetUpSelectMembershipDurationDropdown(
     context: Context,
-    autoCompleteDuration : AutoCompleteTextView,
-    selectedDuration : (String) -> Unit
+    autoCompleteDuration: AutoCompleteTextView,
+    selectedDuration: (String) -> Unit
 ){
+
 
     val durations = context.resources.getStringArray(com.example.gym_application.R.array.duration)
     val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, durations)
