@@ -237,3 +237,20 @@ fun utilsSetUpSelectClassesOptionsDropdown(
         selectedClasses(selected)
     }
 }
+
+fun utilsSetUpSelectMembershipDurationDropdown(
+    context: Context,
+    autoCompleteDuration : AutoCompleteTextView,
+    selectedDuration : (String) -> Unit
+){
+
+    val durations = context.resources.getStringArray(com.example.gym_application.R.array.duration)
+    val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, durations)
+    autoCompleteDuration.setAdapter(arrayAdapter)
+
+    autoCompleteDuration.setOnItemClickListener { parent, _, position, _ ->
+        val selected = parent.getItemAtPosition(position) as String
+        selectedDuration(selected)
+    }
+
+}

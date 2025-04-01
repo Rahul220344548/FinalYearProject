@@ -53,6 +53,14 @@
         <item>Studio B</item>
     </string-array>
 
+    <string-array name="duration">
+        <item>1 MONTH</item>
+        <item>3 MONTH</item>
+        <item>6 MONTH</item>
+        <item>9 MONTH</item>
+        <item>12 MONTH</item>
+    </string-array>
+
     <style name="CustomTabText">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/black</item>
