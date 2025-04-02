@@ -16,6 +16,8 @@ import com.example.gym_application.R
 import com.example.gym_application.controller.FAQAdapter
 import com.example.gym_application.model.FAQ
 import com.example.gym_application.utils.DialogUtils
+import com.example.gym_application.utils.ValidationClassCreation
+import com.example.gym_application.utils.ValidationMembershipCreationFields
 import com.google.firebase.database.FirebaseDatabase
 import helper.FirebaseFAQHelper
 import helper.FirebaseMemebershipHelper
@@ -70,6 +72,13 @@ class AdminFAQFragment : Fragment() {
         editFaqTitle = dialogView.findViewById(R.id.editFaqQuestion)
         editFaqAnswer = dialogView.findViewById(R.id.editFaqAnswer)
 
+        val validationMessage = validationFields()
+
+        if (validationMessage.isNotEmpty()) {
+            Toast.makeText(context, "Error: $validationMessage", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val id = database.push().key ?: return
         val title = editFaqTitle.text.toString().trim()
         val answer = editFaqAnswer.text.toString().trim()
@@ -94,6 +103,17 @@ class AdminFAQFragment : Fragment() {
 
     }
 
+    private fun validationFields(): String {
+        val question = editFaqTitle.text.toString().trim()
+        val answer = editFaqAnswer.text.toString().trim()
 
+        if (!ValidationClassCreation.isValidClassDescription(question)) {
+            return "FAQ Question must be between 1 and 120 words"
+        }
+        if (!ValidationClassCreation.isValidClassDescription(answer)){
+            return "FAQ Answer must be between 1 and 120 words"
+        }
+        return ""
+    }
 
 }
