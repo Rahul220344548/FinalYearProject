@@ -342,4 +342,41 @@ class UserFirebaseDatabaseHelper {
             }
 
     }
+
+
+    fun getAdminUserTotals(
+        onResult: (activeCount: Int, staffCount: Int,
+                   inactiveCount:Int, totalUsers: Int) -> Unit
+    ) {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var activeCount = 0
+                var inactiveCount = 0
+                var staffCount = 0
+                var totalUSers = 0
+
+                for (userSnapshot in snapshot.children) {
+                    totalUSers++
+                    val status = userSnapshot.child("status").getValue(String::class.java)
+                    val role = userSnapshot.child("role").getValue(String::class.java)
+                    if (status == "active" && role == "Member" ) {
+                        activeCount++
+                    } else if (status == "inactive") {
+                        inactiveCount++
+                    }
+                    if (role.equals("Instructor", ignoreCase = true)) {
+                        staffCount++
+                    }
+                }
+                onResult(activeCount,staffCount,inactiveCount,totalUSers)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                onResult(0,0,0,0)
+            }
+        })
+    }
+
+
 }

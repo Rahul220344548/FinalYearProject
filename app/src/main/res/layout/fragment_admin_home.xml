@@ -1,43 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".admin_view.navigation_fragments.AdminHomeFragment">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:id="@+id/relativeLayout"
-        android:layout_height="200dp"
-        android:background="@drawable/rounded_admin_nav_header"
-        android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Admin Dashboard"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textSize="30dp"
-            android:fontFamily="serif-monospace"
-            android:textColor="@color/white"
-            android:textStyle="bold"/>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVertical50"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@id/relativeLayout"
-        android:padding="16dp">
+        app:layout_constraintGuide_percent="0.5" />
 
-    <TextView
-        android:layout_width="match_parent"
+    <include
+        android:id="@+id/adminHeader"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Admin Home Fragment"
-        android:textSize="20sp" />
-</LinearLayout>
+        layout="@layout/admin_dashboard_header" />
+
+    <include
+        android:id="@+id/activeMembersCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        layout="@layout/admin_active_members_card"
+        app:layout_constraintTop_toBottomOf="@id/adminHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guidelineVertical50" />
+
+    <include
+        android:id="@+id/staffMembersCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        layout="@layout/admin_staff_members_card"
+        app:layout_constraintTop_toBottomOf="@id/adminHeader"
+        app:layout_constraintStart_toEndOf="@id/guidelineVertical50"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
-</RelativeLayout>
+    <include
+        android:id="@+id/inactiveMembersCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        layout="@layout/admin_inactive_members_card"
+        app:layout_constraintTop_toBottomOf="@id/activeMembersCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guidelineVertical50" />
+
+    <include
+        android:id="@+id/totalMembersCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        layout="@layout/admin_total_members_card"
+        app:layout_constraintTop_toBottomOf="@id/staffMembersCard"
+        app:layout_constraintStart_toEndOf="@id/guidelineVertical50"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
