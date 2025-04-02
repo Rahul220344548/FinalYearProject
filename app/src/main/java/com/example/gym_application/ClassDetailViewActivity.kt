@@ -191,7 +191,7 @@ class ClassDetailViewActivity : AppCompatActivity() {
         /*
            Delete Bookings Info from users collection
         */
-        firebaseHelper.deleteUserCurrentBookingById(validUserId, validClassId) { success ->
+        firebaseHelper.deleteUserCurrentBookingById(validUserId, validScheduleId) { success ->
             if (!success) {
                 Toast.makeText(this, "Failed to delete booking or booking not found.", Toast.LENGTH_LONG).show()
                 return@deleteUserCurrentBookingById

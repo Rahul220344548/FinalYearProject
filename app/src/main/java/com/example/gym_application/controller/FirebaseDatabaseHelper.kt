@@ -115,7 +115,7 @@ class FirebaseDatabaseHelper {
             }
     }
 
-    fun deleteUserCurrentBookingById(userId: String, classId: String,callback: (Boolean) -> Unit) {
+    fun deleteUserCurrentBookingById(userId: String, scheduleId: String,callback: (Boolean) -> Unit) {
         val userDatabase = FirebaseDatabase.getInstance().reference.child("users").child(userId).child("bookings").child("current")
 
         userDatabase.get().addOnSuccessListener { snapshot ->
@@ -124,7 +124,7 @@ class FirebaseDatabaseHelper {
 
                 for (dataSnapshot in snapshot.children) {
                     val userClassBooking = dataSnapshot.getValue(UserClassBooking::class.java)
-                    if (userClassBooking?.classId == classId) {
+                    if (userClassBooking?.scheduleId == scheduleId) {
                         // Delete the specific booking
                         dataSnapshot.ref.removeValue().addOnSuccessListener {
                             bookingDeleted = true

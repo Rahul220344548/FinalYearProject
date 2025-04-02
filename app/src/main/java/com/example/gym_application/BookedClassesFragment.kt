@@ -18,6 +18,7 @@ import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.model.Schedule
 import com.example.gym_application.newModel.NewSchedule
+import com.example.gym_application.utils.formatDateUtils
 import com.google.firebase.auth.FirebaseAuth
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -73,6 +74,10 @@ class BookedClassesFragment : Fragment() {
         scheduleIds.forEach { scheduleId ->
             scheduleFirebaseHelper.listenToBookedSchedulesFullDetail(scheduleId) { updatedSchedule ->
                 if (updatedSchedule != null && updatedSchedule.status == "active") {
+                    val isOver = formatDateUtils.isClassOver(updatedSchedule.classStartDate, updatedSchedule.classEndTime)
+                    if (isOver){
+                        return@listenToBookedSchedulesFullDetail
+                    }
                     val existingIndex = liveSchedules.indexOfFirst { it.scheduleId == updatedSchedule.scheduleId }
                     if (existingIndex >= 0) {
                         liveSchedules[existingIndex] = updatedSchedule
@@ -85,6 +90,7 @@ class BookedClassesFragment : Fragment() {
             }
         }
     }
+
 
 
 

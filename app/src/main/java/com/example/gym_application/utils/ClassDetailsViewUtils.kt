@@ -59,18 +59,28 @@ fun utilsSetUpClassAvailableFor(activity: Activity,classAvailabilityFor: String)
 
 }
 
-fun utilsSetUpClassStatus(activity: Activity, maxCapacity: Int,
-                          currBookings : Int, status: String) {
+@RequiresApi(Build.VERSION_CODES.O)
+fun utilsSetUpClassStatus(activity: Activity,
+                          maxCapacity: Int,
+                          currBookings : Int,
+                          status: String) {
 
     val remainingSpots = maxCapacity - currBookings
     val txtClassRemainingSpot =activity.findViewById<TextView>(R.id.classRemainingSpots)
     val btnBookClass = activity.findViewById<Button>(R.id.btnBookClass)
 
-    if (status == "inactive") {
-        txtClassRemainingSpot.text = "NOT AVAILABLE"
+    if (isClassOver(activity)) {
+        txtClassRemainingSpot.text = "No Longer Available"
         txtClassRemainingSpot.setTextColor(ContextCompat.getColor(activity, R.color.red))
         return
     }
+
+    if (status == "inactive") {
+        txtClassRemainingSpot.text = "Class Cancelled"
+        txtClassRemainingSpot.setTextColor(ContextCompat.getColor(activity, R.color.red))
+        return
+    }
+
     if (currBookings >= maxCapacity) {
         txtClassRemainingSpot.setTextColor(ContextCompat.getColor(activity,R.color.red))
         txtClassRemainingSpot.text = "Class Full"

@@ -2,6 +2,7 @@ package com.example.gym_application.utils
 
 import android.app.Activity
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.gym_application.model.ClassWithScheduleModel
 import java.time.LocalDate
@@ -72,11 +73,13 @@ object formatDateUtils {
     @RequiresApi(Build.VERSION_CODES.O)
     fun parseDateTime(date: String, time: String): LocalDateTime? {
         return try {
-            LocalDateTime.parse("$date T $time", DateTimeFormatter.ofPattern("dd/MM/yyyy'T'HH:mm"))
+            LocalDateTime.parse("$date$time", DateTimeFormatter.ofPattern("dd/MM/yyyy'T'HH:mm"))
         } catch (e: DateTimeParseException) {
+            Log.e("parseDateTime", "Failed to parse: $date $time - ${e.message}")
             null
         }
     }
+
 
 
     fun convertTimeToMinutes(time: String): Int {
@@ -86,5 +89,22 @@ object formatDateUtils {
         return (hours * 60) + minutes
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun isClassOver(inClassDate: String, inClassEndTime : String): Boolean {
+        val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
+        return try {
+            val classDate = LocalDate.parse(inClassDate, dateFormatter)
+            val classEndTime = LocalTime.parse(inClassEndTime, timeFormatter)
+            val classDateTimeEnd = classDate.atTime(classEndTime)
+
+            val now = LocalDateTime.now()
+            val isOver = now.isAfter(classDateTimeEnd)
+            isOver
+        } catch (e: Exception) {
+            true
+        }
+    }
 
 }

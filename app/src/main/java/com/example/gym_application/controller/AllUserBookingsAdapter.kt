@@ -62,12 +62,26 @@ class AllUserBookingsAdapter (private var classList: List<NewSchedule>) :
     override fun getItemCount() = classList.size
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateData(newList : List<NewSchedule>) {
-        classList = newList.sortedBy { schedule ->
-            formatDateUtils.parseDateTime(schedule.classStartDate, schedule.classStartTime) ?: LocalDateTime.MAX
+    fun updateData(newList: List<NewSchedule>) {
+        val now = LocalDateTime.now()
+
+        val (upcoming, past) = newList.partition { schedule ->
+            val dateTime = formatDateUtils.parseDateTime(schedule.classStartDate, schedule.classStartTime)
+            dateTime != null && dateTime.isAfter(now)
         }
+
+        val sortedUpcoming = upcoming.sortedBy { schedule ->
+            formatDateUtils.parseDateTime(schedule.classStartDate, schedule.classStartTime)
+        }
+
+        val sortedPast = past.sortedByDescending { schedule ->
+            formatDateUtils.parseDateTime(schedule.classStartDate, schedule.classStartTime)
+        }
+
+        classList = sortedUpcoming + sortedPast
         notifyDataSetChanged()
     }
+
 
 
 
