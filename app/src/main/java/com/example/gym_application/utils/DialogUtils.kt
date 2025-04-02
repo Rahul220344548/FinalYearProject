@@ -95,5 +95,35 @@ object DialogUtils {
         }
     }
 
+    fun showFAQDialog(
+        context: Context,
+        onConfirm: (View, AlertDialog) -> Unit,
+        onCancel: () -> Unit
+    ) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_faq, null)
+
+        val dialogBuilder = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+
+        val btnCancelDialog = dialogView.findViewById<MaterialButton>(R.id.btnCancelFaqDialog)
+        val btnConfirm = dialogView.findViewById<MaterialButton>(R.id.btnAddFaqDialog)
+
+
+        btnCancelDialog.setOnClickListener {
+            alertDialog.dismiss()
+            onCancel()
+        }
+
+        btnConfirm.setOnClickListener {
+            onConfirm(dialogView,alertDialog)
+        }
+    }
+
 
 }

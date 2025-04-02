@@ -1,9 +1,7 @@
 package com.example.gym_application.admin_view
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 
 import android.widget.Toast
@@ -22,7 +20,7 @@ import com.example.gym_application.R
 import com.example.gym_application.admin_view.navigation_fragments.AdminClassesFragment
 import com.example.gym_application.admin_view.navigation_fragments.AdminHomeFragment
 import com.example.gym_application.admin_view.navigation_fragments.AdminMembershipFragment
-import com.example.gym_application.admin_view.navigation_fragments.AdminPaymentFragment
+import com.example.gym_application.admin_view.navigation_fragments.AdminFAQFragment
 import com.example.gym_application.admin_view.navigation_fragments.AdminUserFragment
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
@@ -65,7 +63,7 @@ class AdminDashboardActivity : AppCompatActivity(), OnNavigationItemSelectedList
             R.id.nav_users -> replaceFragment(AdminUserFragment())
             R.id.nav_clases -> replaceFragment(AdminClassesFragment())
             R.id.nav_membership -> replaceFragment(AdminMembershipFragment())
-            R.id.nav_payment-> replaceFragment(AdminPaymentFragment())
+            R.id.nav_payment-> replaceFragment(AdminFAQFragment())
                 R.id.nav_logout-> {
                     FirebaseAuth.getInstance().signOut()
                     Toast.makeText(this, "Logged out successfully!", Toast.LENGTH_SHORT).show()
