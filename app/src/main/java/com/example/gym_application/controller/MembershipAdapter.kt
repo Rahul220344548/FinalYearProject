@@ -57,7 +57,7 @@ class MembershipAdapter(
     override fun getItemCount(): Int = plansList.size
 
     fun updateData( newList : List<NewMembershipPlan>) {
-        plansList = newList
+        plansList = newList.sortedBy { it.price }
         notifyDataSetChanged()
     }
 

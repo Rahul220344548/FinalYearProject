@@ -56,10 +56,11 @@ class AdminMembershipListAdapter (
 
     override fun getItemCount(): Int = membershipList.size
 
-    fun updateData( newList: List<NewMembershipPlan>) {
-        membershipList = newList
+    fun updateData(newList: List<NewMembershipPlan>) {
+        membershipList = newList.sortedBy { it.price }
         notifyDataSetChanged()
     }
+
 
 
 
