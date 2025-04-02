@@ -36,8 +36,40 @@ class FirebaseFAQHelper {
                 Log.e("Firebase", "Error fetching data", error.toException())
             }
         })
+    }
 
+    fun updateFAQInfo(
+        id : String,
+        faqUpdate: Map<String,Any>,
+        callback: (Boolean) -> Unit
+    ) {
+        val faqRef = FirebaseDatabase.getInstance().getReference("faq")
+            .child(id)
 
+        faqRef.updateChildren(faqUpdate)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
+    fun deleteFAQFromDatabase(
+        id: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val faqRef = FirebaseDatabase.getInstance().getReference("faq")
+            .child(id)
+
+        faqRef.removeValue()
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener { e ->
+                onFailure(e)
+            }
     }
 
 

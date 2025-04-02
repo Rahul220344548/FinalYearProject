@@ -8,11 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.AdminFaqEditorActivity
-import com.example.gym_application.admin_view.AdminMembershipInfoEditorActivity
-import com.example.gym_application.admin_view.adapter.AdminBookingListAdapter.ViewHolder
 import com.example.gym_application.model.FAQ
 
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 
 class FAQAdapter (
