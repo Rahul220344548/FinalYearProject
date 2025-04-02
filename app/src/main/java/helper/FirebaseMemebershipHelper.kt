@@ -48,5 +48,41 @@ class FirebaseMemebershipHelper {
 
     }
 
+    fun updateMembershipInfo(
+        planId : String,
+        planUpdate: Map<String, Any>,
+        callback: (Boolean) -> Unit
+    ) {
+        val membershipRef = FirebaseDatabase.getInstance().getReference("memberships")
+            .child(planId)
+
+        membershipRef.updateChildren(planUpdate)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+
+    }
+
+    fun deleteMembershipFromDatabase(
+        planId : String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val membershipRef = FirebaseDatabase.getInstance().reference.child("memberships")
+            .child(planId)
+
+        membershipRef.removeValue()
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener { e ->
+                onFailure(e)
+            }
+
+    }
+
 
 }
