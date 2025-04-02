@@ -344,7 +344,7 @@ class UserFirebaseDatabaseHelper {
     }
 
 
-    fun getAdminUserTotals(
+    fun getUserStatsForAdmin(
         onResult: (activeCount: Int, staffCount: Int,
                    inactiveCount:Int, totalUsers: Int) -> Unit
     ) {

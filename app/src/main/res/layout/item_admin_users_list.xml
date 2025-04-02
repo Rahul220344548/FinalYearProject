@@ -50,6 +50,18 @@
                 android:shadowRadius="1"
                 android:textStyle="italic | bold" />
 
+            <TextView
+                android:id="@+id/userStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="role"
+                android:textSize="16sp"
+                android:shadowColor="#AA000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="1"
+                android:textStyle="italic | bold" />
+
 
         </LinearLayout>
 

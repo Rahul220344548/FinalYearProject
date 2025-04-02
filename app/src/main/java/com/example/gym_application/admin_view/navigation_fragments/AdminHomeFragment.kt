@@ -38,7 +38,7 @@ class AdminHomeFragment : Fragment() {
 
     private fun getTotalActiveMembers() {
 
-        userFirebaseHelper.getAdminUserTotals {
+        userFirebaseHelper.getUserStatsForAdmin {
                                               activeCount, staffCount,
                                               inactiveCount, totalUsers ->
             activeMember.text = activeCount.toString()

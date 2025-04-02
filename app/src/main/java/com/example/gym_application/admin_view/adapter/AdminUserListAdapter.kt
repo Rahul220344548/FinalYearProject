@@ -1,6 +1,7 @@
 package com.example.gym_application.admin_view.adapter
 
 import android.content.Intent
+import android.graphics.Color
 import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +23,7 @@ class AdminUserListAdapter (
 
         val userName: TextView = view.findViewById(R.id.userFullName)
         val userRole: TextView = view.findViewById(R.id.userRole)
-
+        val userStatus : TextView = view.findViewById(R.id.userStatus)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,7 +37,11 @@ class AdminUserListAdapter (
         val userId = userIdMap[user] ?: ""
         holder.userName.text = "${user.firstName} ${user.lastName}"
         holder.userRole.text = user .role
+        holder.userStatus.text = user.status
+        setStatusColor(holder.userStatus, user.status)
 
+
+        holder.userStatus.text = user.status
         holder.itemView.setOnClickListener {
             val intent =
                 Intent(holder.itemView.context, AdminUserEditorActivity::class.java).apply {
@@ -61,6 +66,15 @@ class AdminUserListAdapter (
         userIdMap.clear()
         userIdMap.putAll(newUserIdMap)
         notifyDataSetChanged()
+    }
+
+    private fun setStatusColor(textView: TextView, status: String) {
+        val color = if (status.equals("active", ignoreCase = true)) {
+            Color.parseColor("#4CAF50")
+        } else {
+            Color.parseColor("#F44336")
+        }
+        textView.setTextColor(color)
     }
 
 }
