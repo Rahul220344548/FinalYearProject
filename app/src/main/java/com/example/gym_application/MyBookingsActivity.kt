@@ -3,6 +3,7 @@ package com.example.gym_application
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,7 @@ import helper.FirebaseClassesHelper
 @RequiresApi(Build.VERSION_CODES.O)
 class MyBookingsActivity : AppCompatActivity() {
 
+    private lateinit var txtNoClassBookings : TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter : AllUserBookingsAdapter
 
@@ -38,6 +40,8 @@ class MyBookingsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        txtNoClassBookings = findViewById(R.id.txtNoClassBookings)
 
         val toolbar: Toolbar = findViewById(R.id.admin_toolbar)
         setSupportActionBar(toolbar)
@@ -58,6 +62,8 @@ class MyBookingsActivity : AppCompatActivity() {
         userFirebaseHelper.listenToUserCurrentBookingsLive(userId ?: "") { bookings ->
             if (bookings.isNotEmpty()) {
                 fetchAllBookedClasses(bookings)
+            }else {
+                txtNoClassBookings.visibility = View.VISIBLE
             }
         }
     }

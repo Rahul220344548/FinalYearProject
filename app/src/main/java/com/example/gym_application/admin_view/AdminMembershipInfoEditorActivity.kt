@@ -82,8 +82,6 @@ class AdminMembershipInfoEditorActivity : AppCompatActivity() {
 
     }
 
-
-
     private fun initalizeTextFields(){
 
         inPlanTitle = intent.getStringExtra("title")?:""
