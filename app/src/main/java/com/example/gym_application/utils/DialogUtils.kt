@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.gym_application.R
 import com.google.android.material.button.MaterialButton
@@ -123,6 +124,32 @@ object DialogUtils {
         btnConfirm.setOnClickListener {
             onConfirm(dialogView,alertDialog)
         }
+    }
+
+    fun showUserViewFAQDialog(context: Context, question: String, answer: String){
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_view_faq, null)
+
+        val dialogBuilder = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+        val txtQuestion = dialogView.findViewById<TextView>(R.id.txtViewFaqQuestion)
+        val txtAnswer = dialogView.findViewById<TextView>(R.id.txtViewFaqAnswer)
+        txtQuestion.text = question
+        txtAnswer.text = answer
+
+        val btnCloseDialog = dialogView.findViewById<MaterialButton>(R.id.btnCloseFaqDialog)
+
+        btnCloseDialog.setOnClickListener {
+            alertDialog.dismiss()
+
+        }
+
+
     }
 
 

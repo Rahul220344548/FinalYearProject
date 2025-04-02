@@ -101,6 +101,7 @@
                 android:textAlignment="viewStart"/>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnFAQ"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginTop="20dp"

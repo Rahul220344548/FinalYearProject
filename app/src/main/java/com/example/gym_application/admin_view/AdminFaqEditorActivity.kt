@@ -108,7 +108,6 @@ class AdminFaqEditorActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to update FAQ", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
     private fun deleteFaqFromDatabase() {

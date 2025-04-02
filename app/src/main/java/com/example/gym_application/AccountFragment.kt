@@ -58,6 +58,11 @@ class AccountFragment : Fragment() {
             checkMembershipStatus()
         }
 
+        val btnFaq : AppCompatButton = view.findViewById(R.id.btnFAQ)
+        btnFaq.setOnClickListener{
+            goToFaqPage()
+        }
+
 
         val btnSignOut = view.findViewById<Button>(R.id.btnUserignOut)
         btnSignOut.setOnClickListener {
@@ -79,6 +84,11 @@ class AccountFragment : Fragment() {
 
     private fun goToMembershipPage(){
         val intent = Intent(requireContext(), MembershipActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToFaqPage(){
+        val intent = Intent(requireContext(), FAQActivity::class.java)
         startActivity(intent)
     }
 
