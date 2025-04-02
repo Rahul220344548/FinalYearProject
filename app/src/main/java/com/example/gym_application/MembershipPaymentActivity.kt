@@ -17,6 +17,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.model.Membership
 import com.example.gym_application.model.MembershipPlans
+import com.example.gym_application.utils.MembershipUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.paypal.android.sdk.payments.PayPalConfiguration
@@ -24,6 +25,7 @@ import com.paypal.android.sdk.payments.PayPalPayment
 import com.paypal.android.sdk.payments.PayPalService
 import com.paypal.android.sdk.payments.PaymentActivity
 import com.paypal.android.sdk.payments.PaymentConfirmation
+import helper.FirebaseMemebershipHelper
 import org.w3c.dom.Text
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
@@ -39,6 +41,8 @@ class MembershipPaymentActivity : AppCompatActivity() {
     private lateinit var txtMembershipStartDate: TextView
     private lateinit var txtMembershipEndDate: TextView
 
+    private val firebaseMembershipHelper = FirebaseMemebershipHelper()
+    private val userId = getCurrentUserId().toString()
 
     private val PAYPAL_REQUEST_CODE = 123
     private val database = FirebaseDatabase.getInstance().getReference("users")
@@ -87,10 +91,10 @@ class MembershipPaymentActivity : AppCompatActivity() {
         txtMembershipDuration.text = "$planDuration"
         txtMembershipDuration.visibility = View.VISIBLE
 
-        txtMembershipStartDate.text = calculateMembershipStartDate()
+        txtMembershipStartDate.text = MembershipUtils.calculateMembershipStartDate()
         txtMembershipStartDate.visibility = View.VISIBLE
 
-        txtMembershipEndDate.text = calculateMembershipEndDate( planDuration )
+        txtMembershipEndDate.text = MembershipUtils.calculateMembershipEndDate( planDuration )
         txtMembershipEndDate.visibility = View.VISIBLE
 
         val formattedAmount = String.format("%.2f", planAmount.toDouble())
@@ -139,39 +143,18 @@ class MembershipPaymentActivity : AppCompatActivity() {
                 val confirm = data?.getParcelableExtra<PaymentConfirmation>(PaymentActivity.EXTRA_RESULT_CONFIRMATION)
                 if (confirm != null) {
 
-                    auth = FirebaseAuth.getInstance()
-                    val uId = auth.currentUser?.uid
-                    val database = FirebaseDatabase.getInstance().reference
+                    val membership = MembershipUtils.createMembershipFromIntent(intent)
 
-                    val membershipAmount = intent.getIntExtra("planPrice",0)
-                    val membershipDuration = intent.getStringExtra( "planDuration") ?: "Default Plan Title"
-                    val membershipTitle = intent.getStringExtra("planTitle") ?: "Default Plan Title"
-
-                    val membership = Membership(
-
-                        membershipTitle= membershipTitle,
-                        planPrice = membershipAmount,
-                        membershipStatus = "active",
-                        membershipDuration = membershipDuration,
-                        date = calculateMembershipStartDate(),
-                        startDate =  calculateMembershipStartDate(),
-                        endDate = calculateMembershipEndDate( membershipDuration ),
-
-                    )
-
-                    uId?.let {
-                        database.child("users").child(it).child("membershipDetails").setValue(membership)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    Toast.makeText(this, "Payment Successful! Membership Activated.", Toast.LENGTH_SHORT).show()
-                                    val intent = Intent(this, HomeActivity::class.java)
-                                    startActivity(intent)
-                                } else {
-                                    Toast.makeText(this, "Failed to save membership data.", Toast.LENGTH_SHORT).show()
-                                }
-                            }
+                    if (userId != null) {
+                        firebaseMembershipHelper.writeMembershipDetailsToUser( userId, membership, onSuccess = {
+                            Toast.makeText(this, "Payment Successful! Membership Activated.", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, HomeActivity::class.java)
+                            startActivity(intent)
+                        },
+                            onFailure = {e ->
+                                Toast.makeText(this, "Something went wrong!${e.message}", Toast.LENGTH_LONG).show()
+                            })
                     }
-
                 }
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Payment is canceled", Toast.LENGTH_SHORT).show()
@@ -183,27 +166,21 @@ class MembershipPaymentActivity : AppCompatActivity() {
         }
     }
 
-    private fun calculateMembershipStartDate(): String{
-        val calendar = Calendar.getInstance()
-        return SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(calendar.time)
-    }
-
-    private fun calculateMembershipEndDate( duration : String): String {
-        val numberOfMonths = duration.split(" ")[0].toIntOrNull() ?: 0
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MONTH, numberOfMonths)
-        return SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(calendar.time)
-    }
 
     private fun setMembershipTypeTitleColors(planTitle: String) {
 
         when (planTitle) {
-            "Bronze Plan" -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.bronze))
-            "Silver Plan" -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.silver))
-            "Gold Plan" -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.gold))
-            else -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.black)) // Default color
+            "Bronze" -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.bronze))
+            "Silver" -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.silver))
+            "Gold" -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.gold))
+            else -> txtMembershipTypeTitle.setTextColor(ContextCompat.getColor(this, R.color.black))
         }
 
+    }
+
+    private fun getCurrentUserId(): String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        return user?.uid
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -2,13 +2,16 @@ package helper
 
 import android.util.Log
 import android.widget.Toast
+import com.example.gym_application.model.Membership
 import com.example.gym_application.model.MembershipPlans
 import com.example.gym_application.newModel.NewMembershipPlan
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.paypal.android.sdk.cy.e
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.handleCoroutineException
 
 class FirebaseMemebershipHelper {
 
@@ -83,6 +86,30 @@ class FirebaseMemebershipHelper {
             }
 
     }
+
+    fun writeMembershipDetailsToUser(
+        userId: String,
+        membership : Membership,
+        onSuccess: () -> Unit = {},
+        onFailure: (Exception) -> Unit = {}
+    ) {
+
+        val userRef = FirebaseDatabase.getInstance().reference.child("users")
+            .child(userId)
+            .child("membershipDetails")
+
+        userRef.setValue(membership)
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
+
+
+
+    }
+
 
 
 }
