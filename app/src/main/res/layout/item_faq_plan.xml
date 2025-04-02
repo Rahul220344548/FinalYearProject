@@ -27,7 +27,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/userFullName"
+                android:id="@+id/faqTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="How do you reset password?"

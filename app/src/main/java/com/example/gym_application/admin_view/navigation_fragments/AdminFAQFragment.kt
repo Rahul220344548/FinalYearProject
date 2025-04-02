@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.gym_application.R
 import com.example.gym_application.controller.FAQAdapter
@@ -29,7 +30,7 @@ class AdminFAQFragment : Fragment() {
     private lateinit var editFaqAnswer : EditText
 
 
-    private lateinit var recyclerView: View
+    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: FAQAdapter
     private val database = FirebaseDatabase.getInstance().getReference("faq")
 
@@ -42,11 +43,12 @@ class AdminFAQFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_admin_payment, container, false)
 
-//        recyclerView = view.findViewById(R.id.adminFaqListRecyclerView)
-//        recyclerView.layoutManager = LinearLayoutManager(context)
-//        adapter = FAQAdapter(emptyList())
-//        recyclerView.adapter = adapter
-//
+        recyclerView = view.findViewById(R.id.adminFaqListRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = FAQAdapter(emptyList())
+        recyclerView.adapter = adapter
+
+
         fetchFAQList()
 
         var goToCreateFAQBtn : Button = view.findViewById(R.id.btnAddNewFAQ)
@@ -56,6 +58,9 @@ class AdminFAQFragment : Fragment() {
     }
 
     private fun fetchFAQList() {
+        firebaseFaqHelper.fetchAllFAQAsList { FAQs ->
+            adapter.updateData(FAQs)
+        }
     }
 
     fun showFAQDialog() {
