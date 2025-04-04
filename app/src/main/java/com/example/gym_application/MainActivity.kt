@@ -61,12 +61,12 @@ class MainActivity : AppCompatActivity() {
 
         val btnJohnAutoLogin: Button = findViewById(R.id.btnJohnAutoLogin)
         btnJohnAutoLogin.setOnClickListener {
-            autoRahulLogin()
+            autoJohnLogin()
         }
 
         val btnRahulAutoLogin: Button = findViewById(R.id.btnRahulAutoLogin)
         btnRahulAutoLogin.setOnClickListener {
-            autoJohnLogin()
+            autoRahulLogin()
         }
 
         val btnAdminAutoLogin : Button = findViewById(R.id.btnAdminAutoLogin)
@@ -101,15 +101,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun autoJohnLogin() {
-        val testEmail = "test@gmail.com"
-        val testPassword = "password123"
+        val testEmail = "staff@staff.com"
+        val testPassword = "staff123"
 
         auth.signInWithEmailAndPassword(testEmail, testPassword)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Auto Login successful!", Toast.LENGTH_SHORT).show()
 
-                    val intent = Intent(this, HomeActivity::class.java)
+                    val intent = Intent(this, StaffHomeActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {
@@ -120,8 +120,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun autoRahulLogin() {
-        val testEmail = "testname@gmail.com"
-        val testPassword = "password1"
+        val testEmail = "test@gmail.com"
+        val testPassword = "password123"
 
         auth.signInWithEmailAndPassword(testEmail, testPassword)
             .addOnCompleteListener { task ->

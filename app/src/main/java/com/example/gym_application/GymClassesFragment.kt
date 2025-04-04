@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.controller.ScheduleFirebaseHelper
+import com.example.gym_application.utils.CalendarUtils
 import com.google.firebase.database.FirebaseDatabase
 import helper.FirebaseClassesHelper
 import java.text.SimpleDateFormat
@@ -53,7 +54,7 @@ class GymClassesFragment : Fragment() {
         classesRecyclerView.adapter = classAdapter
 
         adapter = CalendarAdapter { selectedDate ->
-            val formattedDate = formatDate(selectedDate.toString())
+            val formattedDate = CalendarUtils.formatDate(selectedDate.toString())
 
             scheduleFirebaseHelper.removeScheduleListener()
 
@@ -66,54 +67,15 @@ class GymClassesFragment : Fragment() {
 
         recyclerView.adapter = adapter
 
-        val ivCalendarPrevious: ImageView = view.findViewById(R.id.iv_calendar_previous)
-        val ivCalendarNext: ImageView = view.findViewById(R.id.iv_calendar_next)
-        val textDateMonth: TextView = view.findViewById(R.id.text_date_month)
-
-        ivCalendarPrevious.setOnClickListener {
-            val previousMonth = currentMonth.minusMonths(1)
-            val now = LocalDate.now().withDayOfMonth(1)
-
-            if (!previousMonth.isBefore(now)) {
-                currentMonth = previousMonth
-                updateMonthDisplay(textDateMonth)
-                updateRecyclerView()
-            }
-        }
-
-
-        ivCalendarNext.setOnClickListener {
-            currentMonth = currentMonth.plusMonths(1)
-            updateMonthDisplay(textDateMonth)
-            updateRecyclerView()
-        }
-
-        updateMonthDisplay(textDateMonth)
-        updateRecyclerView()
+        CalendarUtils.setupCalendarNavigation(
+            view = view,
+            currentMonthProvider = { currentMonth },
+            setCurrentMonth = { newMonth -> currentMonth = newMonth },
+            adapter = adapter
+        )
         return view
     }
 
-    private fun formatDate(inputDate: String): String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
-        val date = inputFormat.parse(inputDate)
-        return outputFormat.format(date!!)
-    }
-
-    private fun updateMonthDisplay(textView: TextView) {
-        val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
-        textView.text = currentMonth.format(formatter)
-    }
-
-    private fun updateRecyclerView() {
-        val today = LocalDate.now()
-        val daysInMonth = YearMonth.from(currentMonth).lengthOfMonth()
-        val dates = (1..daysInMonth).map { day ->
-            LocalDate.of(currentMonth.year, currentMonth.month, day)
-        }.filter { it.isEqual(today) || it.isAfter(today) }
-        adapter.submitList(dates)
-    }
 
 
 
