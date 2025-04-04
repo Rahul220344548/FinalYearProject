@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AutoCompleteTextView
 import com.example.gym_application.R
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.newModel.Instructor
 import com.google.android.gms.common.GoogleApiAvailability
 
 object ClassBookingUtils {
@@ -101,7 +102,7 @@ object ClassBookingUtils {
     fun setUpSelectInstructordropdown(
         context: Context,
         dialogView: View,
-        selectedInstructor: (String) -> Unit
+        selectedInstructor: (Instructor) -> Unit
     ){
         val userFirebaseHelper = UserFirebaseDatabaseHelper()
         val autoCompleteInstructorView = dialogView.findViewById<AutoCompleteTextView>(R.id.auto_complete_schedule_instructor)
@@ -111,7 +112,7 @@ object ClassBookingUtils {
                 context = context,
                 instructorList = instructorList,
                 autoCompleteInstructorView,
-                selectedInstructor
+                selectedInstructor = selectedInstructor
             )
         }
     }

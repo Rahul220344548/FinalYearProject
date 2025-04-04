@@ -22,7 +22,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminScheduleListAdapter
 import com.example.gym_application.controller.ScheduleFirebaseHelper
+import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.newModel.Instructor
 import com.example.gym_application.utils.ClassBookingUtils
+import com.example.gym_application.utils.DialogUtils
 import com.example.gym_application.utils.ScheduleUtils.createScheduleFromClassTemplate
 import com.example.gym_application.utils.ScheduleUtils.generateNewScheduleId
 import com.example.gym_application.utils.ValidationClassScheduleFields
@@ -64,7 +67,7 @@ class FragmentScheduleList : Fragment() {
 
     private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
     private val classFirebaseHelper = FirebaseDatabaseHelper()
-    private val newClassFirebaseHelper = FirebaseClassesHelper()
+    private val userFirebaseHelper = UserFirebaseDatabaseHelper()
     private lateinit var viewModel: ScheduleViewModel
 
     override fun onCreateView(
@@ -130,13 +133,25 @@ class FragmentScheduleList : Fragment() {
             alertDialog.dismiss()
         }
 
+        var selectedInstructorObj: Instructor? = null
+        ClassBookingUtils.setUpSelectInstructordropdown(requireContext(),dialogView) { instructor  ->
+            selectedInstructorObj = instructor
+        }
+
+
         btnConfirm.setOnClickListener {
-            onAddNewScheduleToDatabase(alertDialog)
+
+            if (selectedInstructorObj == null) {
+                Toast.makeText(requireContext(), "Please select an instructor.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            onAddNewScheduleToDatabase(alertDialog, selectedInstructorObj!!)
         }
 
     }
 
-    private fun onAddNewScheduleToDatabase(alertDialog: AlertDialog){
+    private fun onAddNewScheduleToDatabase(alertDialog: AlertDialog, selectedInstructor: Instructor){
 
         val validationMessage = validationFields()
 
@@ -144,6 +159,9 @@ class FragmentScheduleList : Fragment() {
             Toast.makeText(context, "Schedule Creation failed: $validationMessage", Toast.LENGTH_SHORT).show()
             return
         }
+
+        val instructorId = selectedInstructor.userId
+        val instructorName = selectedInstructor.name
 
         val selectedClassTitle = autoCompleteClassName.text.toString().trim()
         val selectedClassId = classTitleToIdMap[selectedClassTitle]
@@ -182,7 +200,13 @@ class FragmentScheduleList : Fragment() {
 
                 scheduleFirebaseHelper.newCreateClassScheduleEntry(
                     schedule = newSchedule,
-                    onSuccess = {
+                    onSuccess = { actualScheduleId ->
+                        userFirebaseHelper.createScheduleEntryToInstructor(
+                            context = requireContext(),
+                            instructorId = instructorId,
+                            classStartDate = classStartDate,
+                            scheduleId = actualScheduleId
+                        )
                         Toast.makeText(context, "Schedule created successfully!", Toast.LENGTH_SHORT).show()
                         alertDialog.dismiss()
                     },
@@ -193,6 +217,7 @@ class FragmentScheduleList : Fragment() {
             }
 
         }
+
 
 
     }
@@ -223,10 +248,18 @@ class FragmentScheduleList : Fragment() {
             classTitleToIdMap.putAll(classMap)
         }
         ClassBookingUtils.setUpSelectRoomdropdown(requireContext(),dialogView) { selectedRoom -> }
-        ClassBookingUtils.setUpSelectInstructordropdown(requireContext(),dialogView) { selectedInstructor -> }
+
+        var selectedInstructorObj: Instructor? = null
+        ClassBookingUtils.setUpSelectInstructordropdown(requireContext(),dialogView) { instructor  ->
+            selectedInstructorObj = instructor
+        }
+
+
+
         ClassBookingUtils.setUpStartTimeDropdown(requireContext(),dialogView)
         ClassBookingUtils.setUpEndTimeDropdown(requireContext(), dialogView)
         ClassBookingUtils.setUpStartDate(requireContext(), dialogView)
     }
+
 
 }

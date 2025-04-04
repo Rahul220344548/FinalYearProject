@@ -23,14 +23,14 @@ class ScheduleFirebaseHelper {
 
     fun newCreateClassScheduleEntry(
         schedule: NewSchedule,
-        onSuccess: () -> Unit,
+        onSuccess: (String) -> Unit,
         onFailure: (Exception) -> Unit
     ){
         val databaseRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
         val newScheduleId = databaseRef.push().key ?: return
         val scheduleWithId = schedule.copy(scheduleId = newScheduleId)
         databaseRef.child(newScheduleId).setValue(scheduleWithId)
-            .addOnSuccessListener { onSuccess() }
+            .addOnSuccessListener { onSuccess(newScheduleId) }
             .addOnFailureListener { exception -> onFailure(exception) }
 
     }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import com.example.gym_application.newModel.Instructor
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -63,16 +64,17 @@ fun utilsSetUpSelectRoomDropdown(
 
 fun utilsSetUpSelectInstructorDropdown(
     context: Context,
-    instructorList: List<String>,
+    instructorList: List<Instructor>,
     autoCompleteInstructorTextView : AutoCompleteTextView,
-    selectedInstructor: (String) -> Unit,
+    selectedInstructor: (Instructor) -> Unit,
 ) {
 
-    val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, instructorList)
+    val namesList = instructorList.map { it.name }
+    val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, namesList)
     autoCompleteInstructorTextView.setAdapter(arrayAdapter)
 
     autoCompleteInstructorTextView.setOnItemClickListener { parent, _, position, _ ->
-        val selected = parent.getItemAtPosition(position) as String
+        val selected = instructorList[position]
         selectedInstructor(selected)
     }
 

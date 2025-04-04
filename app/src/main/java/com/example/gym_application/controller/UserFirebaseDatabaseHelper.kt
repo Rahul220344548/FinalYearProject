@@ -1,12 +1,20 @@
 package com.example.gym_application.controller
 
+import android.content.Context
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.example.gym_application.model.MembershipInfo
 import com.example.gym_application.model.UserClassBooking
 import com.example.gym_application.model.UserDetails
+import com.example.gym_application.newModel.Instructor
 import com.example.gym_application.newModel.newUserClassBooking
+import com.example.gym_application.utils.formatDateUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class UserFirebaseDatabaseHelper {
@@ -208,10 +216,10 @@ class UserFirebaseDatabaseHelper {
             }
     }
 
-    fun fetchInstructors (callback: (List<String>) -> Unit) {
+    fun fetchInstructors (callback: (List<Instructor>) -> Unit) {
 
         val databaseReference = FirebaseDatabase.getInstance().getReference("users")
-        val instructorList = mutableListOf<String>()
+        val instructors = mutableListOf<Instructor>()
 
         databaseReference.get().addOnSuccessListener { snapshot ->
             if (snapshot.exists()) {
@@ -219,13 +227,14 @@ class UserFirebaseDatabaseHelper {
                     val role = userSnapshot.child("role").getValue(String::class.java)
                     val status = userSnapshot.child("status").getValue(String::class.java)?: ""
                     if (role == "Instructor" && status == "active") {
+                        val userId = userSnapshot.key ?: continue
                         val firstName = userSnapshot.child("firstName").getValue(String::class.java) ?: ""
                         val lastName = userSnapshot.child("lastName").getValue(String::class.java) ?: ""
                         val fullName = "$firstName $lastName"
-                        instructorList.add(fullName)
+                        instructors.add(Instructor(name = fullName, userId = userId))
                     }
                 }
-                callback(instructorList)
+                callback(instructors)
             }else {
                 callback(emptyList())
             }
@@ -377,6 +386,36 @@ class UserFirebaseDatabaseHelper {
             }
         })
     }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createScheduleEntryToInstructor(
+        context: Context,
+        instructorId: String,
+        classStartDate : String,
+        scheduleId: String
+    ) {
+
+        val classStartDate = formatDateUtils.formatDateForFirebase(classStartDate)
+
+        val userDatabaseRef = FirebaseDatabase.getInstance().reference.child("users")
+            .child(instructorId)
+            .child("mySchedules")
+            .child(classStartDate)
+            .child(scheduleId)
+
+
+        userDatabaseRef.setValue(true)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Schedule linked to instructor!", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error linking schedule: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+
+    }
+
+
 
 
 }

@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun autoJohnLogin() {
-        val testEmail = "staff@staff.com"
+        val testEmail = "staff123@staff.com"
         val testPassword = "staff123"
 
         auth.signInWithEmailAndPassword(testEmail, testPassword)

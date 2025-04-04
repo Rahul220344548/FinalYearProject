@@ -15,6 +15,7 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.Date
 import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 object formatDateUtils {
@@ -138,6 +139,18 @@ object formatDateUtils {
                 LocalDateTime.MIN
             }
         }
+    }
+
+    fun formatDateForFirebase(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date!!)
+    }
+
+    fun formatDateForStaffView(date: String): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return sdf.format(date)
     }
 
 
