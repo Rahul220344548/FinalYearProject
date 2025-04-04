@@ -74,7 +74,7 @@ class BookedClassesFragment : Fragment() {
         scheduleIds.forEach { scheduleId ->
             scheduleFirebaseHelper.listenToBookedSchedulesFullDetail(scheduleId) { updatedSchedule ->
                 if (updatedSchedule != null && updatedSchedule.status == "active") {
-                    val isOver = formatDateUtils.isClassOver(updatedSchedule.classStartDate, updatedSchedule.classEndTime)
+                    val isOver = formatDateUtils.isClassOverForSchedules(updatedSchedule.classStartDate, updatedSchedule.classEndTime)
                     if (isOver){
                         return@listenToBookedSchedulesFullDetail
                     }

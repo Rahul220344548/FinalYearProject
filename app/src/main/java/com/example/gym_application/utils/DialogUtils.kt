@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.gym_application.R
 import com.google.android.material.button.MaterialButton
@@ -150,6 +151,11 @@ object DialogUtils {
         }
 
 
+    }
+
+    fun showToast(context: Context, message: String, isLong: Boolean = false) {
+        val duration = if (isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+        Toast.makeText(context, message, duration).show()
     }
 
 

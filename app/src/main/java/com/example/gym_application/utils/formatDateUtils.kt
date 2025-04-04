@@ -90,7 +90,7 @@ object formatDateUtils {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun isClassOver(inClassDate: String, inClassEndTime : String): Boolean {
+    fun isClassOverForSchedules(inClassDate: String, inClassEndTime : String): Boolean {
         val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 

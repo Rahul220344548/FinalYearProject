@@ -3,6 +3,7 @@ package com.example.gym_application
 import FirebaseDatabaseHelper
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +13,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.gym_application.controller.ScheduleFirebaseHelper
 import com.example.gym_application.utils.ClassBookingUtils
+import com.example.gym_application.utils.DialogUtils
 import com.example.gym_application.utils.ValidationClassCreationFields
 import com.google.android.material.button.MaterialButton
 
@@ -42,6 +46,7 @@ class AdminClassEditorActivity : AppCompatActivity() {
     private lateinit var classId: String
 
     private val firebaseHelper = FirebaseDatabaseHelper()
+    private val firebaseScheduleHelper = ScheduleFirebaseHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +108,8 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
     }
 
-    fun onUpdateBtn( view: View) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun onUpdateBtn(view: View) {
 
         val validationMessage = validationFields()
 
@@ -127,12 +133,27 @@ class AdminClassEditorActivity : AppCompatActivity() {
 
         firebaseHelper.updateClassDetails(classId, classUpdate) { success ->
             if (success) {
-                Toast.makeText(this, "Class updated successfully", Toast.LENGTH_SHORT).show()
-                finish()
+                val scheduleUpdate = mapOf<String,Any> (
+                    "classTitle" to title,
+                    "classDescription" to description,
+                    "classColor" to color,
+                    "classMaxCapacity" to capacity,
+                    "classAvailabilityFor" to classAvailableFor,
+                )
+                firebaseScheduleHelper.updateScheduleDetails(classId, scheduleUpdate) { success ->
+                    if (success) {
+                        DialogUtils.showToast(this, "Schedules updated successfully")
+                        finish()
+
+                    } else {
+                        DialogUtils.showToast(this, "There are no active schedules to update!")
+                    }
+                }
             } else {
-                Toast.makeText(this, "Failed to update class", Toast.LENGTH_SHORT).show()
+                DialogUtils.showToast(this, "Failed to update class")
             }
         }
+
 
     }
 

@@ -20,6 +20,7 @@ import com.example.gym_application.controller.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.utils.formatDateUtils
 import com.example.gym_application.utils.formatDateUtils.getTodayDate
+import com.example.gym_application.viewmodel.ScheduleViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import org.w3c.dom.Text
@@ -52,6 +53,7 @@ class HomeFragment : Fragment() {
     private lateinit var database: DatabaseReference
     private val firebaseHelper = UserFirebaseDatabaseHelper()
     private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
+    private lateinit var viewModel: ScheduleViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -152,22 +154,33 @@ class HomeFragment : Fragment() {
         val userId = auth.currentUser?.uid ?: return
         val todayDate = formatDateUtils.getTodayDate()
 
-        firebaseHelper.fetchUserCurrentBookings(userId) { fetchedClassIds ->
-            if (fetchedClassIds.isNullOrEmpty()) {
-                txtUpcomingBookingTitle.text = "No upcoming bookings"
-                return@fetchUserCurrentBookings
-            }
+//        firebaseHelper.listenToUserCurrentBookingsLive( userId) { bookings ->
+//            if (bookings.isNotEmpty()) {
+//                viewModel.attachListenerForDate(todayDate) { schedules, error ->
+//
+//                }
+//            }else {
+//                txtUpcomingBookingTitle.text = "No bookings for today"
+//            }
+//        }
 
-            scheduleFirebaseHelper.fetchClassesForADate(todayDate) { allClassesForToday ->
-                val upcomingBookings = getUpcomingUserBookingsForToday(allClassesForToday, fetchedClassIds)
 
-                if (upcomingBookings.isNotEmpty()) {
-                    displayBookingDetails(upcomingBookings.first())
-                } else {
-                    txtUpcomingBookingTitle.text = "No bookings for today"
-                }
-            }
-        }
+//        firebaseHelper.fetchUserCurrentBookings(userId) { fetchedClassIds ->
+//            if (fetchedClassIds.isNullOrEmpty()) {
+//                txtUpcomingBookingTitle.text = "No upcoming bookings"
+//                return@fetchUserCurrentBookings
+//            }
+//
+//            scheduleFirebaseHelper.fetchClassesForADate(todayDate) { allClassesForToday ->
+//                val upcomingBookings = getUpcomingUserBookingsForToday(allClassesForToday, fetchedClassIds)
+//
+//                if (upcomingBookings.isNotEmpty()) {
+//                    displayBookingDetails(upcomingBookings.first())
+//                } else {
+//                    txtUpcomingBookingTitle.text = "No bookings for today"
+//                }
+//            }
+//        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

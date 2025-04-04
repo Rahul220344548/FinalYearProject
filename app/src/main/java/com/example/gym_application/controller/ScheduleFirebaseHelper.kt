@@ -1,11 +1,14 @@
 package com.example.gym_application.controller
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.gym_application.model.ClassTemplate
 import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.model.Schedule
 import com.example.gym_application.model.UserScheduleBooking
 import com.example.gym_application.newModel.NewSchedule
 import com.example.gym_application.newModel.booking
+import com.example.gym_application.utils.formatDateUtils
 import com.google.firebase.database.*
 
 class ScheduleFirebaseHelper {
@@ -49,6 +52,59 @@ class ScheduleFirebaseHelper {
             .addOnFailureListener { exception -> onFailure(exception) }
 
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateScheduleDetails(
+        classId: String,
+        updatedFields: Map<String, Any>,
+        callback: (Boolean) -> Unit
+    ) {
+        val scheduleRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
+
+        scheduleRef.get().addOnSuccessListener { snapshot ->
+            var matched = 0
+            var completed = 0
+            var anySuccess = false
+
+            for (scheduleSnapshot in snapshot.children) {
+                val data = scheduleSnapshot.value as? Map<*, *> ?: continue
+
+                if (
+                    data["classId"] == classId &&
+                    data["status"] == "active"
+                    ) {
+
+                    val startDate = data["classStartDate"] as? String ?: continue
+                    val endTime = data["classEndTime"] as? String ?: continue
+
+                    if (!formatDateUtils.isClassOverForSchedules(startDate, endTime)) {
+                        val scheduleId = scheduleSnapshot.key ?: continue
+                        matched++
+
+                        scheduleRef.child(scheduleId).updateChildren(updatedFields)
+                            .addOnSuccessListener {
+                                anySuccess = true
+                                completed++
+                                if (completed == matched) callback(anySuccess)
+                            }
+                            .addOnFailureListener {
+                                completed++
+                                if (completed == matched) callback(anySuccess)
+                            }
+                    }
+
+                }
+            }
+            if (matched == 0) {
+                callback(false)
+            }
+        }.addOnFailureListener {
+            Log.e("FIREBASE", "Database read failed: ${it.message}")
+            callback(false)
+        }
+    }
+
+
 
     fun checkForDuplicateSchedules(
         classId: String,
