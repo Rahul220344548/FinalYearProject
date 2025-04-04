@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
 
-        tools:listitem="@layout/item_scheduled_classes"
+        tools:listitem="@layout/item_admin_all_schedules"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
         app:layout_constraintTop_toBottomOf="@id/btnDeactivatePastSchedules"

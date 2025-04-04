@@ -18,6 +18,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.admin_view.AdminDashboardActivity
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.view.StaffHomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -188,7 +189,7 @@ class MainActivity : AppCompatActivity() {
 
                 when (role) {
                     "Admin" -> startActivity(Intent(this, AdminDashboardActivity::class.java))
-                    "Instructor" -> startActivity(Intent(this, SignUp::class.java))
+                    "Instructor" -> startActivity(Intent(this, StaffHomeActivity::class.java))
                     else -> startActivity(Intent(this, HomeActivity::class.java))
                 }
                 finish()
