@@ -369,7 +369,49 @@ class ScheduleFirebaseHelper {
         scheduleListeners.clear()
     }
 
+    fun listenForScheduleUpdates(
+        onDataChanged : (List<NewSchedule>) -> Unit){
 
+        val scheduleRef = FirebaseDatabase.getInstance().reference
+            .child("schedulesInfo")
+
+        scheduleRef.addValueEventListener(object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val scheduleList = mutableListOf<NewSchedule>()
+                for (scheduleSnapshot in snapshot.children) {
+                    val scheduleData =  scheduleSnapshot.getValue(NewSchedule::class.java)
+                    scheduleData?.let { scheduleList.add(it) }
+                }
+                onDataChanged(scheduleList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Error Fetching Schedules: ${error.message}")
+            }
+
+        })
+
+    }
+
+    fun reactiveSchedule(
+        scheduleId: String,
+        onComplete : (Boolean) -> Unit
+    ) {
+
+        val scheduleRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
+            .child(scheduleId)
+
+        scheduleRef.child("status").setValue("active")
+            .addOnSuccessListener {
+                onComplete(true)
+            }
+            .addOnFailureListener {
+                onComplete(false)
+            }
+
+
+    }
 
 
 

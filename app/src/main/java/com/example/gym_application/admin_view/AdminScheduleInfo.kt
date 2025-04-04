@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -17,9 +18,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Visibility
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminBookingListAdapter
+import com.example.gym_application.controller.ScheduleFirebaseHelper
 import com.example.gym_application.model.UserDetails
+import com.example.gym_application.utils.DialogUtils
 import com.example.gym_application.utils.formatDateUtils
 import com.google.android.material.button.MaterialButton
 import helper.FirebaseClassesHelper
@@ -62,17 +66,15 @@ class AdminScheduleInfo : AppCompatActivity() {
         adapter = AdminBookingListAdapter(emptyList())
         recyclerView.adapter = adapter
 
-
-
         scheduleId = intent.getStringExtra("scheduleId")?:""
         classId = intent.getStringExtra("classId")?:""
 
         initialTextFields()
-
         fetchBookingForSchedule()
 
 
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun initialTextFields() {
@@ -85,6 +87,7 @@ class AdminScheduleInfo : AppCompatActivity() {
         val currBookings = intent.getIntExtra("classCurrentBookings",0)
         val inClassLocation = intent.getStringExtra("classLocation") ?: ""
         val inClassInstructor = intent.getStringExtra("classInstructor") ?: ""
+        val inClassStatus = intent.getStringExtra("status") ?: ""
 
         classTitle = findViewById<TextView>(R.id.adminCurrentScheduleTitle)
         classTitle.text = inClassTitle
@@ -105,9 +108,28 @@ class AdminScheduleInfo : AppCompatActivity() {
         classRemainingSpots = findViewById<TextView>(R.id.adminCurrentBookings)
         classRemainingSpots.setText("${currBookings.toString()} / ${maxCapacity.toString()}")
 
+        val check = formatDateUtils.isClassOverForSchedules(inClassStartDate,inClassEndTime)
+        if (inClassStatus == "active" && !check) {
+            showCancelScheduleBtn()
+            return
+        }
+        if (!check && inClassStatus == "inactive" ) {
+            showReActiveScheduleBtn()
+            return
+        }
+
+
     }
 
+    private fun showCancelScheduleBtn() {
+        val btnCancelSchedule : Button = findViewById(R.id.btnDeleteSchedule)
+        btnCancelSchedule.visibility = View.VISIBLE
+    }
 
+    private fun showReActiveScheduleBtn(){
+        val btnReactivateSchedule : Button = findViewById(R.id.btnReactiveSchedule)
+        btnReactivateSchedule.visibility = View.VISIBLE
+    }
 
     private fun fetchBookingForSchedule() {
 
@@ -174,6 +196,18 @@ class AdminScheduleInfo : AppCompatActivity() {
 
     fun onCancelScheduleBtn(view : View) {
         showDeleteUserDialog()
+    }
+
+    fun onReactivateBtn(view : View) {
+        val scheduleHelper = ScheduleFirebaseHelper()
+        scheduleHelper.reactiveSchedule(scheduleId) { success ->
+            if(success) {
+                DialogUtils.showToast(this,"Schedule re-activated succesfully!")
+                finish()
+            }else {
+                DialogUtils.showToast(this,"Failed to re-activate schedule!")
+            }
+        }
     }
 
     private fun deactivateSchedule() {

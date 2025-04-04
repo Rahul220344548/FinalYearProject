@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.gym_application.model.ClassWithScheduleModel
+import com.example.gym_application.newModel.NewSchedule
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -75,7 +76,6 @@ object formatDateUtils {
         return try {
             LocalDateTime.parse("$date$time", DateTimeFormatter.ofPattern("dd/MM/yyyy'T'HH:mm"))
         } catch (e: DateTimeParseException) {
-            Log.e("parseDateTime", "Failed to parse: $date $time - ${e.message}")
             null
         }
     }
@@ -106,5 +106,35 @@ object formatDateUtils {
             true
         }
     }
+
+
+    object Order {
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun orderSchedulesInOrder(scheduleList: List<NewSchedule>): List<NewSchedule> {
+            val dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+            val now = LocalDateTime.now()
+
+            return scheduleList.sortedWith { a, b ->
+                val aDateTime = parseDateTime(a.classStartDate, a.classStartTime, dateTimeFormat)
+                val bDateTime = parseDateTime(b.classStartDate, b.classStartTime, dateTimeFormat)
+
+                when {
+                    aDateTime.isAfter(now) && bDateTime.isBefore(now) -> -1
+                    aDateTime.isBefore(now) && bDateTime.isAfter(now) -> 1
+                    else -> aDateTime.compareTo(bDateTime)
+                }
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        private fun parseDateTime(date: String, time: String, formatter: DateTimeFormatter): LocalDateTime {
+            return try {
+                LocalDateTime.parse("$date $time", formatter)
+            } catch (e: Exception) {
+                LocalDateTime.MIN
+            }
+        }
+    }
+
 
 }
