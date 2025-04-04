@@ -13,12 +13,11 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.admin_view.AdminDashboardActivity
 import com.example.gym_application.controller.UserFirebaseDatabaseHelper
-import com.example.gym_application.view.StaffHomeActivity
+import com.example.gym_application.staff.StaffHomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
