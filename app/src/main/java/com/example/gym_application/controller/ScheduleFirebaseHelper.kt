@@ -413,6 +413,36 @@ class ScheduleFirebaseHelper {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setExpiredSchedulesToInactive(
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+
+        val schedulesRef = FirebaseDatabase.getInstance().getReference("schedulesInfo")
+
+        schedulesRef.get().addOnSuccessListener { snapshot ->
+            for (scheduleSnapshot in snapshot.children) {
+                val data = scheduleSnapshot.getValue(NewSchedule::class.java) ?: continue
+                val startDate = data.classStartDate ?: continue
+                val endTime = data.classEndTime ?: continue
+                val scheduleId = data.scheduleId ?: continue
+                val isOver = formatDateUtils.isClassOverForSchedules(startDate, endTime)
+                if (isOver && data.status != "inactive") {
+                    schedulesRef.child(scheduleId).child("status").setValue("inactive")
+                }
+            }
+            onSuccess()
+
+        }.addOnFailureListener { exception ->
+            onFailure(exception)
+        }
+
+    }
+
+
+
+
 
 
 }

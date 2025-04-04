@@ -6,23 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminAllScheduleListAdapter
-import com.example.gym_application.admin_view.adapter.AdminClassListAdapter
-import com.example.gym_application.controller.AllUserBookingsAdapter
 import com.example.gym_application.controller.ScheduleFirebaseHelper
-import com.example.gym_application.model.ClassTemplate
 import com.example.gym_application.newModel.NewSchedule
 import com.example.gym_application.utils.DialogUtils
-import com.example.gym_application.utils.formatDateUtils
 import com.example.gym_application.utils.formatDateUtils.Order.orderSchedulesInOrder
 
 
-class FragmentBookingList : Fragment() {
+class FragmentAllSchedulesList : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter : AdminAllScheduleListAdapter
@@ -35,7 +32,7 @@ class FragmentBookingList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_booking_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_all_schedule_list, container, false)
 
         recyclerView = view.findViewById(R.id.adminAllSchedulesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -43,6 +40,15 @@ class FragmentBookingList : Fragment() {
         recyclerView.adapter = adapter
 
         fetchAllSchedulesList()
+
+        val btnDeactivatePastSchedules : Button = view.findViewById(R.id.btnDeactivatePastSchedules)
+        btnDeactivatePastSchedules.setOnClickListener {
+            DialogUtils.showConfirmationDialog(
+                requireContext(),
+                onConfirm = {deactivatePastSchedules() },
+                onCancel = {}
+            )
+        }
 
         return view
     }
@@ -59,9 +65,15 @@ class FragmentBookingList : Fragment() {
         }
     }
 
-
-
-
-
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun deactivatePastSchedules() {
+        scheduleFirebaseHelper.setExpiredSchedulesToInactive(
+            onSuccess = {
+                Toast.makeText(context, "Past schedules marked inactive!", Toast.LENGTH_SHORT).show()
+            },
+            onFailure = { error ->
+                Toast.makeText(context, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
 }

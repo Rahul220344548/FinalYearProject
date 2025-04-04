@@ -16,8 +16,22 @@
         android:textSize="25sp"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnDeactivatePastSchedules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/available_green"
+        android:drawableLeft="@drawable/baseline_done_24"
+        android:text="Deactivate Past Schedules"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtAllMyBookings" />
 
 
 
@@ -25,11 +39,11 @@
         android:id="@+id/adminAllSchedulesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="15dp"
+
         tools:listitem="@layout/item_scheduled_classes"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
-        app:layout_constraintTop_toBottomOf="@id/txtAllMyBookings"
+        app:layout_constraintTop_toBottomOf="@id/btnDeactivatePastSchedules"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
