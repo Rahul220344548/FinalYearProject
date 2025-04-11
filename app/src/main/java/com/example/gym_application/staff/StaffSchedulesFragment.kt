@@ -30,7 +30,7 @@ class StaffSchedulesFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CalendarAdapter
-    private lateinit var classAdapter: AdminScheduleListAdapter
+    private lateinit var classAdapter: StaffSchedulesAdapter
     private var currentMonth: LocalDate = LocalDate.now()
 
     private val scheduleFirebaseHelper = ScheduleFirebaseHelper()
@@ -47,14 +47,11 @@ class StaffSchedulesFragment : Fragment() {
 
         val classesRecyclerView: RecyclerView =  view.findViewById(R.id.classesRecyclerView)
         classesRecyclerView.layoutManager = LinearLayoutManager(context)
-        classAdapter = AdminScheduleListAdapter(emptyList())
+        classAdapter = StaffSchedulesAdapter(emptyList())
         classesRecyclerView.adapter = classAdapter
 
         adapter = CalendarAdapter { selectedDate ->
-//            val formattedDate = formatDateUtils.formatDateForStaffView(selectedDate.toString())
             fetchSchedulesForDate(instructorId, selectedDate.toString())
-
-
         }
 
         recyclerView.adapter = adapter
@@ -78,15 +75,19 @@ class StaffSchedulesFragment : Fragment() {
 
         dateRef.get().addOnSuccessListener { snapshot ->
             val scheduleIds = mutableListOf<String>()
-
             for (child in snapshot.children) {
                 val scheduleId = child.key
                 if (scheduleId != null) {
                     scheduleIds.add(scheduleId)
                 }
             }
+            if (scheduleIds.isEmpty()) {
+                classAdapter.updateData(emptyList())
+            } else {
+                loadSchedulesByIds(scheduleIds)
+            }
 
-            loadSchedulesByIds(scheduleIds)
+
         }.addOnFailureListener {
             Toast.makeText(context, "Failed to load schedules.", Toast.LENGTH_SHORT).show()
         }

@@ -15,6 +15,9 @@
         android:theme="@style/Theme.GymApplication"
         tools:targetApi="31">
         <activity
+            android:name=".staff.StaffScheduleInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".staff.StaffHomeActivity"
             android:exported="false" />
         <activity
