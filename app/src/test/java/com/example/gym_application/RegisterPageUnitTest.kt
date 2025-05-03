@@ -13,14 +13,31 @@ class RegisterPageUnitTest {
 
     @Test
     fun `invalid email without TLD should return false`() {
+        assertFalse(ValidationUtils.isValidEmail(""))
         assertFalse(ValidationUtils.isValidEmail("test@gmail"))
         assertFalse(ValidationUtils.isValidEmail("test@gmail."))
-
     }
 
     @Test
     fun `valid password should return true`() {
         assertTrue(ValidationUtils.isValidPassword("StrongPass123"))
+    }
+
+
+    @Test fun `empty firstname should return false`() {
+        assertFalse(ValidationUtils.isValidFirstname(""))
+    }
+
+    @Test fun `short firstname should return false`() {
+        assertFalse(ValidationUtils.isValidFirstname("A"))
+    }
+
+    @Test fun `empty lastname should return false`() {
+        assertFalse(ValidationUtils.isValidLastName(""))
+    }
+
+    @Test fun `short last should return false`() {
+        assertFalse(ValidationUtils.isValidLastName("A"))
     }
 
     @Test
