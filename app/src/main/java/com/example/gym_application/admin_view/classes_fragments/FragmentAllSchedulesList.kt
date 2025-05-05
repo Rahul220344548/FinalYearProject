@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminAllScheduleListAdapter
-import com.example.gym_application.controller.ScheduleFirebaseHelper
+import com.example.gym_application.adapter.ScheduleFirebaseHelper
 import com.example.gym_application.newModel.NewSchedule
 import com.example.gym_application.utils.DialogUtils
 import com.example.gym_application.utils.formatDateUtils.Order.orderSchedulesInOrder

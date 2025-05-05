@@ -18,10 +18,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminBookingListAdapter
-import com.example.gym_application.controller.ScheduleFirebaseHelper
+import com.example.gym_application.adapter.ScheduleFirebaseHelper
 import com.example.gym_application.model.UserDetails
 import com.example.gym_application.utils.DialogUtils
 import com.example.gym_application.utils.formatDateUtils

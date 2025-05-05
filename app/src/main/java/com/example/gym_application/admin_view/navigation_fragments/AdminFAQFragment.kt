@@ -5,24 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.gym_application.R
-import com.example.gym_application.controller.FAQAdapter
+import com.example.gym_application.adapter.FAQAdapter
 import com.example.gym_application.model.FAQ
 import com.example.gym_application.utils.DialogUtils
 import com.example.gym_application.utils.FaqUtils
-import com.example.gym_application.utils.ValidationClassCreation
-import com.example.gym_application.utils.ValidationMembershipCreationFields
 import com.google.firebase.database.FirebaseDatabase
 import helper.FirebaseFAQHelper
-import helper.FirebaseMemebershipHelper
 
 
 class AdminFAQFragment : Fragment() {

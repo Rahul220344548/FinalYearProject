@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.example.gym_application.R
-import com.example.gym_application.controller.ScheduleFirebaseHelper
+import com.example.gym_application.adapter.ScheduleFirebaseHelper
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime

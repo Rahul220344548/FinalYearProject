@@ -1,7 +1,6 @@
 package com.example.gym_application.admin_view.classes_fragments
 
 import FirebaseDatabaseHelper
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -21,11 +20,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.adapter.AdminScheduleListAdapter
-import com.example.gym_application.controller.ScheduleFirebaseHelper
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.adapter.ScheduleFirebaseHelper
+import com.example.gym_application.adapter.UserFirebaseDatabaseHelper
 import com.example.gym_application.newModel.Instructor
 import com.example.gym_application.utils.ClassBookingUtils
-import com.example.gym_application.utils.DialogUtils
 import com.example.gym_application.utils.ScheduleUtils.createScheduleFromClassTemplate
 import com.example.gym_application.utils.ScheduleUtils.generateNewScheduleId
 import com.example.gym_application.utils.ValidationClassScheduleFields
@@ -35,7 +33,6 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import helper.FirebaseClassesHelper
 
 @RequiresApi(Build.VERSION_CODES.O)
 class FragmentScheduleList : Fragment() {

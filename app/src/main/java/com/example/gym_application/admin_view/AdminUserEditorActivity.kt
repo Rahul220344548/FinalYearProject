@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -19,13 +18,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.adapter.UserFirebaseDatabaseHelper
 import com.example.gym_application.utils.ValidationUserFields
 import com.example.gym_application.utils.utilsSetUpSelectActivateUser
 import com.example.gym_application.utils.utilsSetUpSelectUserGender
 import com.example.gym_application.utils.utilsSetUpSelectUserRoles
 import com.google.android.material.button.MaterialButton
-import org.w3c.dom.Text
 
 class AdminUserEditorActivity : AppCompatActivity() {
 

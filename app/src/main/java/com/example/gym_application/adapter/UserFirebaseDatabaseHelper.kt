@@ -1,4 +1,4 @@
-package com.example.gym_application.controller
+package com.example.gym_application.adapter
 
 import android.content.Context
 import android.os.Build
@@ -13,8 +13,6 @@ import com.example.gym_application.newModel.newUserClassBooking
 import com.example.gym_application.utils.formatDateUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 
 class UserFirebaseDatabaseHelper {

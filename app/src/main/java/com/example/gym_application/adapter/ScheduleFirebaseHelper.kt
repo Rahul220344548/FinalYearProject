@@ -1,11 +1,10 @@
-package com.example.gym_application.controller
+package com.example.gym_application.adapter
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.gym_application.model.ClassTemplate
 import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.model.Schedule
-import com.example.gym_application.model.UserScheduleBooking
 import com.example.gym_application.newModel.NewSchedule
 import com.example.gym_application.newModel.booking
 import com.example.gym_application.utils.formatDateUtils

@@ -7,20 +7,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gym_application.controller.ScheduleFirebaseHelper
+import com.example.gym_application.adapter.ScheduleFirebaseHelper
 import com.example.gym_application.utils.CalendarUtils
 import com.google.firebase.database.FirebaseDatabase
 import helper.FirebaseClassesHelper
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.YearMonth
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 class GymClassesFragment : Fragment() {

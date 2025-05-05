@@ -14,20 +14,15 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.FragmentManager
-import com.example.gym_application.controller.ScheduleFirebaseHelper
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.adapter.ScheduleFirebaseHelper
+import com.example.gym_application.adapter.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.utils.formatDateUtils
-import com.example.gym_application.utils.formatDateUtils.getTodayDate
 import com.example.gym_application.viewmodel.ScheduleViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import org.w3c.dom.Text
-import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 class HomeFragment : Fragment() {
 

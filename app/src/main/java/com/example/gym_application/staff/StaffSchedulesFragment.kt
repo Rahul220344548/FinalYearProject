@@ -1,6 +1,5 @@
 package com.example.gym_application.staff
 
-import GymClassesAdapter
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,13 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.CalendarAdapter
 import com.example.gym_application.R
-import com.example.gym_application.admin_view.adapter.AdminScheduleListAdapter
-import com.example.gym_application.controller.ScheduleFirebaseHelper
-import com.example.gym_application.model.Schedule
+import com.example.gym_application.adapter.ScheduleFirebaseHelper
 import com.example.gym_application.newModel.NewSchedule
 import com.example.gym_application.utils.CalendarUtils
-import com.example.gym_application.utils.DialogUtils
-import com.example.gym_application.utils.formatDateUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.time.LocalDate

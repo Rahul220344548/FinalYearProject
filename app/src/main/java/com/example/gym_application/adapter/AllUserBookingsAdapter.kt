@@ -1,4 +1,4 @@
-package com.example.gym_application.controller
+package com.example.gym_application.adapter
 
 import android.content.Intent
 import android.os.Build
@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.ClassDetailViewActivity
 import com.example.gym_application.R
-import com.example.gym_application.controller.BookedClassesAdapter.ViewHolder
 import com.example.gym_application.newModel.NewSchedule
 import com.example.gym_application.utils.formatDateUtils
 import java.time.LocalDateTime

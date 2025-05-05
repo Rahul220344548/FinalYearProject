@@ -12,7 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.gym_application.R
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.adapter.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.UserDetails
 import com.example.gym_application.utils.ValidationStaffFields
 import com.example.gym_application.utils.utilsSetUpSelectUserGender

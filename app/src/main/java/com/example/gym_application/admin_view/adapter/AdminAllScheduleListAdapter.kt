@@ -9,9 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.AdminScheduleInfo
-import com.example.gym_application.controller.AllUserBookingsAdapter.ViewHolder
 import com.example.gym_application.newModel.NewSchedule
-import org.w3c.dom.Text
 
 class AdminAllScheduleListAdapter (private var scheduleList : List<NewSchedule>) :
     RecyclerView.Adapter<AdminAllScheduleListAdapter.ViewHolder>(){

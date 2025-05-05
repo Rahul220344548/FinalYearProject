@@ -8,7 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gym_application.controller.UserFAQAdapter
+import com.example.gym_application.adapter.UserFAQAdapter
 import helper.FirebaseFAQHelper
 
 class FAQActivity : AppCompatActivity() {

@@ -3,7 +3,6 @@ package com.example.gym_application
 import FirebaseDatabaseHelper
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +11,9 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gym_application.controller.BookedClassesAdapter
-import com.example.gym_application.controller.ScheduleFirebaseHelper
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
-import com.example.gym_application.model.ClassWithScheduleModel
-import com.example.gym_application.model.Schedule
+import com.example.gym_application.adapter.BookedClassesAdapter
+import com.example.gym_application.adapter.ScheduleFirebaseHelper
+import com.example.gym_application.adapter.UserFirebaseDatabaseHelper
 import com.example.gym_application.newModel.NewSchedule
 import com.example.gym_application.utils.formatDateUtils
 import com.google.firebase.auth.FirebaseAuth

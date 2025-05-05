@@ -1,14 +1,12 @@
 package com.example.gym_application.utils
 
 import FirebaseDatabaseHelper
-import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.widget.AutoCompleteTextView
 import com.example.gym_application.R
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.adapter.UserFirebaseDatabaseHelper
 import com.example.gym_application.newModel.Instructor
-import com.google.android.gms.common.GoogleApiAvailability
 
 object ClassBookingUtils {
 

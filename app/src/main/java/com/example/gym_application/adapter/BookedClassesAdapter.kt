@@ -1,4 +1,4 @@
-package com.example.gym_application.controller
+package com.example.gym_application.adapter
 
 
 import android.content.Intent
@@ -11,9 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.ClassDetailViewActivity
 import com.example.gym_application.R
-import com.example.gym_application.model.ClassWithScheduleModel
 import com.example.gym_application.newModel.NewSchedule
-import com.example.gym_application.utils.ClassBookingUtils
 import com.example.gym_application.utils.ValidationClassCreation.isClassUpcomingOrToday
 
 class BookedClassesAdapter (private var classList: List<NewSchedule>) :

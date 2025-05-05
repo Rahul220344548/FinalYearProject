@@ -54,7 +54,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:text="Booking List"
+            android:text="All schedule"
             android:background="@drawable/class_button_style"/>
     </LinearLayout>
 

@@ -12,13 +12,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gym_application.admin_view.adapter.AdminBookingListAdapter
-import com.example.gym_application.controller.AllUserBookingsAdapter
-import com.example.gym_application.controller.ScheduleFirebaseHelper
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.adapter.AllUserBookingsAdapter
+import com.example.gym_application.adapter.ScheduleFirebaseHelper
+import com.example.gym_application.adapter.UserFirebaseDatabaseHelper
 import com.example.gym_application.newModel.NewSchedule
 import com.google.firebase.auth.FirebaseAuth
-import helper.FirebaseClassesHelper
+
 @RequiresApi(Build.VERSION_CODES.O)
 class MyBookingsActivity : AppCompatActivity() {
 

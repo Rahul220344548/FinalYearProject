@@ -13,9 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gym_application.R
 import com.example.gym_application.admin_view.AdminAddStaff
-import com.example.gym_application.admin_view.CreateAClass
 import com.example.gym_application.admin_view.adapter.AdminUserListAdapter
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.adapter.UserFirebaseDatabaseHelper
 import com.example.gym_application.model.UserDetails
 
 

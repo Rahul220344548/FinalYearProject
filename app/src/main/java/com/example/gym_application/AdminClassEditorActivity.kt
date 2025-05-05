@@ -18,7 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.gym_application.controller.ScheduleFirebaseHelper
+import com.example.gym_application.adapter.ScheduleFirebaseHelper
 import com.example.gym_application.utils.ClassBookingUtils
 import com.example.gym_application.utils.DialogUtils
 import com.example.gym_application.utils.ValidationClassCreationFields

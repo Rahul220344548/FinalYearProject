@@ -13,7 +13,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.gym_application.controller.UserFirebaseDatabaseHelper
+import com.example.gym_application.adapter.UserFirebaseDatabaseHelper
 import com.example.gym_application.newModel.booking
 import com.example.gym_application.utils.scheduleFirebaseHelper
 import com.example.gym_application.utils.utilsSetUpBookAndCancelButton
