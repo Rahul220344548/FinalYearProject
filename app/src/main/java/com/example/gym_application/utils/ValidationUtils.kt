@@ -17,12 +17,13 @@ object ValidationUtils {
     fun isValidMonth(month: String): Boolean {
         return month.isNotEmpty() && month.toIntOrNull() in 1..12
     }
-
+    // Validates that the year is not empty and is between 1900 and the current year
     fun isValidYear(year: String): Boolean {
         val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
         return year.isNotEmpty() && year.toIntOrNull() in 1900..currentYear
     }
 
+    // // Combines the day, month, and year checks, and also ensures the date is not in the future
     fun isValidDateOfBirth(day: String, month: String, year: String): Boolean {
         if (!isValidDay(day) || !isValidMonth(month) || !isValidYear(year)) return false
 
@@ -42,6 +43,7 @@ object ValidationUtils {
         return password.length >= 6
     }
 
+    //checks if the phone number matches a pattern for 10 to 15 digits (with optional + sign)
     fun isValidPhoneNumber(phoneNumber: String): Boolean {
         val phonePattern = "^[+]?[0-9]{10,15}$"
         return phoneNumber.matches(phonePattern.toRegex())
@@ -54,7 +56,7 @@ object ValidationUtils {
     fun isValidGender(gender: Int): Boolean {
         return gender != -1
     }
-
+    // checks if gender is selected from dropdown
     fun isValidGenderdropdown(selectedGender : String?):Boolean {
         return !selectedGender.isNullOrEmpty()
     }

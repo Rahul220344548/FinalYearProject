@@ -67,6 +67,11 @@ class MembershipActivity : AppCompatActivity() {
 
     }
 
+    /*
+    Gets all membership plans from firebase
+    update.date populates the recycler view
+     */
+
     private fun fetchMembershipList() {
         firebaseMembershipHelper.fetchAllMembershipPlansAsList { plans ->
             adapter.updateData(plans)

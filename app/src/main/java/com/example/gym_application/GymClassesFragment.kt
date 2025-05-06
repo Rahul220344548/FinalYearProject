@@ -39,14 +39,23 @@ class GymClassesFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_gym_classes, container, false)
 
+        //  Setup horizontal calendar RecyclerView
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         val classesRecyclerView: RecyclerView = view.findViewById(R.id.classesRecyclerView)
         classesRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        //  Initialize class adapter with empty list
         classAdapter = GymClassesAdapter(emptyList())
         classesRecyclerView.adapter = classAdapter
 
+
+        /*
+            - Initialize calendar adapter
+            - Fetch class schedules from Firebase for selected date
+            - Update the classes RecyclerView with the fetched data
+         */
         adapter = CalendarAdapter { selectedDate ->
             val formattedDate = CalendarUtils.formatDate(selectedDate.toString())
 
@@ -58,7 +67,7 @@ class GymClassesFragment : Fragment() {
             }
         }
 
-
+        // Set up navigation for changing calendar months
         recyclerView.adapter = adapter
 
         CalendarUtils.setupCalendarNavigation(

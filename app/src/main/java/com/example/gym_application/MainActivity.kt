@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,20 +62,7 @@ class MainActivity : AppCompatActivity() {
         forgotPassword = findViewById(R.id.idForgotPassword)
 
 
-        val btnJohnAutoLogin: Button = findViewById(R.id.btnJohnAutoLogin)
-        btnJohnAutoLogin.setOnClickListener {
-            autoJohnLogin()
-        }
 
-        val btnRahulAutoLogin: Button = findViewById(R.id.btnRahulAutoLogin)
-        btnRahulAutoLogin.setOnClickListener {
-            autoRahulLogin()
-        }
-
-        val btnAdminAutoLogin : Button = findViewById(R.id.btnAdminAutoLogin)
-        btnAdminAutoLogin.setOnClickListener {
-            autoAdminLogin()
-        }
 
         forgotPassword.setOnClickListener {
             val builder = AlertDialog.Builder(this)
@@ -102,63 +90,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun autoJohnLogin() {
-        val testEmail = "staff123@staff.com"
-        val testPassword = "staff123"
 
-        auth.signInWithEmailAndPassword(testEmail, testPassword)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this, "Auto Login successful!", Toast.LENGTH_SHORT).show()
-
-                    val intent = Intent(this, StaffHomeActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-
-                    Toast.makeText(this, "Auto Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-    }
-
-    fun autoRahulLogin() {
-        val testEmail = "test@gmail.com"
-        val testPassword = "password123"
-
-        auth.signInWithEmailAndPassword(testEmail, testPassword)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this, "Auto Login successful!", Toast.LENGTH_SHORT).show()
-
-                    val intent = Intent(this, HomeActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-
-                    Toast.makeText(this, "Auto Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-    }
-
-    fun autoAdminLogin() {
-        val testEmail = "admin@admin.com"
-        val testPassword = "admin123"
-
-        auth.signInWithEmailAndPassword(testEmail, testPassword)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this, "Auto Login successful!", Toast.LENGTH_SHORT).show()
-
-                    val intent = Intent(this, AdminDashboardActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-
-                    Toast.makeText(this, "Auto Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-    }
     // Login user
     fun loginUser(view: View) {
         val email = emailEditText.text.toString().trim()
@@ -168,7 +100,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
-
+        //// Try to sign in the user with Firebase Authentication
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -180,6 +112,11 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    /*
+       check's the users role using id
+       and checks if account is active
+
+     */
     fun checkUserRoleAndStatus( userId : String) {
 
         val firebaseHelper = UserFirebaseDatabaseHelper()

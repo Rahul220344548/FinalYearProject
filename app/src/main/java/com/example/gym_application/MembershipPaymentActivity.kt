@@ -64,9 +64,10 @@ class MembershipPaymentActivity : AppCompatActivity() {
         val amount = intent.getIntExtra("planPrice",0)
 
         setConfirmationCardDetails()
-
+        // Set up PayPal configuration and start the service
         val config = createPayPalConfig()
         startPayPalService(config)
+        //  Set up button to start PayPal payment process
         setupPaymentButton(config, amount)
     }
 
@@ -116,7 +117,7 @@ class MembershipPaymentActivity : AppCompatActivity() {
         }
         startService(intent)
     }
-
+    // When the pay button is clicked, this launches the PayPal payment screen
     private fun setupPaymentButton(config: PayPalConfiguration, amount: Int) {
         val button = findViewById<Button>(R.id.btnPay)
         button.setOnClickListener {
@@ -128,14 +129,14 @@ class MembershipPaymentActivity : AppCompatActivity() {
             startActivityForResult(intent, PAYPAL_REQUEST_CODE)
         }
     }
-
+    // Creates a PayPal payment object with amount and currency
     private fun createPayPalPayment(amount: Int): PayPalPayment {
         return PayPalPayment(
             BigDecimal.valueOf(amount.toDouble()), "GBP", "Gym Memberrship",
             PayPalPayment.PAYMENT_INTENT_SALE
         )
     }
-
+    // Handles the result of the PayPal payment
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PAYPAL_REQUEST_CODE) {
@@ -144,7 +145,7 @@ class MembershipPaymentActivity : AppCompatActivity() {
                 if (confirm != null) {
 
                     val membership = MembershipUtils.createMembershipFromIntent(intent)
-
+                    // Save membership to Firebase if user is logged in
                     if (userId != null) {
                         firebaseMembershipHelper.writeMembershipDetailsToUser( userId, membership, onSuccess = {
                             Toast.makeText(this, "Payment Successful! Membership Activated.", Toast.LENGTH_SHORT).show()

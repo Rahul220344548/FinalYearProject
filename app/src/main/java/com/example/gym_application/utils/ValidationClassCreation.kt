@@ -18,7 +18,7 @@ object ValidationClassCreation {
     fun isValidClassTitle(title : String) : Boolean{
         return title.length >2  && !title.any { it.isDigit() }
     }
-
+    // Validates that the class description is not empty and has between 1 and 120 words
     fun isValidClassDescription(description: String): Boolean {
         if (description.isEmpty()) {
             return false
@@ -47,7 +47,7 @@ object ValidationClassCreation {
     fun isValidGenderSelection(selectedGenderId: Int): Boolean {
         return selectedGenderId != -1
     }
-
+    //vaalidates that end time is after start time and duration is exactly 30 or 60 minutes
     fun isValidTime(startTime: String, endTime: String): Boolean {
         val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
@@ -65,7 +65,7 @@ object ValidationClassCreation {
             false
         }
     }
-
+    // Checks that a start date has been selected
     fun isValidScheduledDate(startDate: String) : Boolean{
         return startDate.isNotEmpty()
     }
@@ -89,6 +89,7 @@ object ValidationClassCreation {
         }
     }
 
+    // Validates that a class option name has been selected
     fun isValidSelectClassOptionName(selectedClassName : String?):Boolean {
         return !selectedClassName.isNullOrEmpty()
     }
@@ -96,7 +97,7 @@ object ValidationClassCreation {
     fun isValidOccurrences(occurrences: List<String>): Boolean {
         return occurrences.isNotEmpty()
     }
-
+    //  Converts a time string in "HH:mm" format to total minutes
     fun convertTimeToMinutes(time: String): Int {
         val parts = time.split(":")
         val hours = parts[0].toInt()
@@ -104,6 +105,7 @@ object ValidationClassCreation {
         return (hours * 60) + minutes
     }
 
+    //  // Formats a date string like "06/05/2025" into "Tuesday 06, May"
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatDate(inputDate: String): String {
         val inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -119,7 +121,7 @@ object ValidationClassCreation {
             "Invalid date format"
         }
     }
-
+    // Checks if the scheduled class date and time is in the future
     @RequiresApi(Build.VERSION_CODES.O)
     fun isScheduleTimeInFuture(classDate: String, classTime: String): Boolean {
 
@@ -133,7 +135,7 @@ object ValidationClassCreation {
             false
         }
     }
-
+    // Checks if a class is either upcoming or happening later today
     @RequiresApi(Build.VERSION_CODES.O)
     fun isClassUpcomingOrToday(classItem: NewSchedule): Boolean {
         return try {
@@ -155,7 +157,7 @@ object ValidationClassCreation {
             false
         }
     }
-
+    // Checks if the entered membership price is a positive number
     fun isValidMembershipPrice(price : String ) :Boolean{
         val cap = price.toIntOrNull()
         return cap !=null && cap > 0
